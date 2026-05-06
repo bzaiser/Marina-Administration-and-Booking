@@ -48,18 +48,26 @@
         { field: "max_weight", headerName: "W (t)", width: 70 },
         { field: "current_boat", headerName: "Current Boat", flex: 1, cellRenderer: function(params) {
             if (params.value === 'None') return '<span class="text-muted">-</span>';
-            const flagCode = params.data.flag || 'un';
+            const flagCode = params.data.flag || 'xx';
             const popoverContent = `
                 <div class="p-1">
                     <img src="${params.data.boat_image}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
-                    <div class="d-flex align-items-center mb-1">
+                    <div class="mb-1 d-flex align-items-center">
                         <span class="fi fi-${flagCode} fis me-2"></span>
                         <strong>${params.data.owner}</strong>
                     </div>
                     <div class="small text-muted">
                         <i class="bi bi-ship"></i> ${params.data.boat_type}<br>
                         <i class="bi bi-calendar-check"></i> In: ${params.data.check_in}<br>
-                        <i class="bi bi-calendar-x"></i> Out: ${params.data.check_out}
+                        <i class="bi bi-calendar-x"></i> Out: ${params.data.check_out}<br>
+                        <hr class="my-1">
+                        <i class="bi bi-telephone"></i> ${params.data.phone}<br>
+                        <i class="bi bi-gear"></i> ${params.data.engine}<br>
+                        <i class="bi bi-arrows-fullscreen"></i> ${params.data.length}m x ${params.data.width}m (${params.data.draft}m)<br>
+                        <i class="bi bi-fuel-pump"></i> ${params.data.diesel}L | <i class="bi bi-droplet"></i> ${params.data.water}L<br>
+                        <i class="bi bi-translate"></i> ${params.data.language} | <i class="bi bi-calendar3"></i> ${params.data.year}<br>
+                        <i class="bi bi-hash"></i> Ref: ${params.data.ref}
+                        ${params.data.notes ? `<div class="mt-2 p-1 bg-light border-start border-3 border-warning small">Note: ${params.data.notes}</div>` : ''}
                     </div>
                 </div>
             `.replace(/"/g, '&quot;');
@@ -69,9 +77,11 @@
                     <i class="bi bi-info-circle text-primary me-2" 
                        style="cursor: pointer;"
                        data-bs-toggle="popover" 
+                       data-bs-trigger="hover focus"
                        data-bs-html="true" 
-                       data-bs-title="${params.value}" 
+                       data-bs-title="<strong>${params.value}</strong>" 
                        data-bs-content="${popoverContent}"></i>
+                    <span class="fi fi-${flagCode} fis me-2" style="flex-shrink:0;"></span>
                     <a href="javascript:void(0)" onclick="editBoat('${params.data.boat_id}')" class="text-decoration-none fw-bold text-dark">
                         ${params.value}
                     </a>

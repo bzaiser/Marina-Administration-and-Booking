@@ -1,5 +1,5 @@
 from django import forms
-from .models import Booking, Boat, Customer, Berth
+from .models import Booking, Boat, Customer, Berth, Country
 
 class BookingForm(forms.ModelForm):
     class Meta:

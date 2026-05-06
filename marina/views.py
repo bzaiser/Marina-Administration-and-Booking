@@ -386,19 +386,26 @@ def api_resources(request):
     
     resources = []
     # Add Blocks as parent groups
-    for block in blocks:
+    for idx, block in enumerate(blocks):
         resources.append({
             'id': f"block_{block.id}",
-            'content': f"{block.name}",
+            'content': f"Block {block.name}",
             'nestedGroups': [b.id for b in block.berths.all()],
-            'className': 'bg-light fw-bold'
+            'className': 'bg-light fw-bold',
+            'order': idx * 1000
         })
         
     # Add Berths as child groups
     for berth in berths:
+        try:
+            b_order = int(berth.number)
+        except ValueError:
+            b_order = 999
+            
         resources.append({
             'id': berth.id,
-            'content': f"Berth {berth.number}",
+            'content': f"{berth.number}",
+            'order': b_order
         })
         
     return JsonResponse(resources, safe=False)
@@ -427,7 +434,7 @@ def api_events(request):
             'type': b.booking_type,
             'is_at_sea': b.is_at_sea,
             'color': b.boat.color,
-            'flag': b.boat.flag.lower(),
+            'flag': (b.boat.flag or 'xx').lower(),
             'owner': b.boat.owner.name,
             'boat_type': b.boat.get_boat_type_display(),
             'length': b.boat.length
@@ -461,15 +468,26 @@ def api_berths(request):
             'number': berth.number,
             'max_length': berth.max_length,
             'max_weight': berth.max_weight,
-            'current_boat': current_booking.boat.name if current_booking else 'None',
-            'owner': current_booking.boat.owner.name if current_booking else 'None',
-            'owner_email': current_booking.boat.owner.email if current_booking else '',
-            'flag': current_booking.boat.owner.nationality.lower() if current_booking else '',
-            'check_in': current_booking.start_date.strftime('%d.%m.') if current_booking else '',
-            'check_out': current_booking.end_date.strftime('%d.%m.') if current_booking else '',
-            'boat_type': current_booking.boat.boat_type if current_booking else '',
-            'boat_image': current_booking.boat.image.url if current_booking and current_booking.boat.image else '/static/img/default-boat.png',
-            'boat_id': current_booking.boat.id if current_booking else None,
+            'current_boat': current_booking.boat.name if (current_booking and current_booking.boat) else 'None',
+            'owner': current_booking.boat.owner.name if (current_booking and current_booking.boat and current_booking.boat.owner) else 'None',
+            'owner_email': current_booking.boat.owner.email if (current_booking and current_booking.boat and current_booking.boat.owner) else '',
+            'phone': current_booking.boat.owner.phone if (current_booking and current_booking.boat and current_booking.boat.owner) else '',
+            'flag': (current_booking.boat.flag or 'xx').lower() if (current_booking and current_booking.boat) else '',
+            'engine': current_booking.boat.engine if (current_booking and current_booking.boat) else '',
+            'length': current_booking.boat.length if (current_booking and current_booking.boat) else '',
+            'width': current_booking.boat.width if (current_booking and current_booking.boat) else 0,
+            'draft': current_booking.boat.draft if (current_booking and current_booking.boat) else 0,
+            'diesel': current_booking.boat.diesel_tank if (current_booking and current_booking.boat) else 0,
+            'water': current_booking.boat.water_tank if (current_booking and current_booking.boat) else 0,
+            'year': current_booking.boat.year_built if (current_booking and current_booking.boat) else '',
+            'language': current_booking.boat.owner.language if (current_booking and current_booking.boat and current_booking.boat.owner) else '',
+            'notes': current_booking.notes if current_booking else '',
+            'ref': current_booking.reference if current_booking else '',
+            'check_in': current_booking.start_date.strftime('%d.%m.%Y') if current_booking else '',
+            'check_out': current_booking.end_date.strftime('%d.%m.%Y') if current_booking else '',
+            'boat_type': current_booking.boat.boat_type if (current_booking and current_booking.boat) else '',
+            'boat_image': current_booking.boat.image.url if (current_booking and current_booking.boat and current_booking.boat.image) else '/static/img/default-boat.png',
+            'boat_id': current_booking.boat.id if (current_booking and current_booking.boat) else None,
             'booking_id': current_booking.id if current_booking else None,
             'status': status
         })

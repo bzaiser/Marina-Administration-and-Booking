@@ -3,10 +3,10 @@
 
 {% block title %}Timeline - Marina Samos{% endblock %}
 
-{% block content %}
-{% block extra_css %}
+{% block extra_head %}
 <link href="{% static 'vendor/visjs/vis-timeline-graph2d.min.css' %}" rel="stylesheet" type="text/css" />
 <link href="{% static 'vendor/flag-icons/css/flag-icons.min.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
 <style>
     .vis-item {
         font-size: 13px;
@@ -30,13 +30,18 @@
     .badge-guest { background: #ffc107; color: #212529; }
     
     .vis-time-axis .vis-text { color: #7f8c8d; }
-    .vis-panel.vis-left { background-color: #f8f9fa; font-weight: bold; border-right: 2px solid #ddd; }
+    .vis-panel.vis-left { background-color: #f5f5f5; border-right: 1px solid #ddd; width: 110px !important; }
+    .vis-label { height: 38px !important; border-bottom: 1px solid #ddd !important; color: #444 !important; }
+    .vis-label .vis-inner { padding: 8px 10px !important; display: block; }
+    .vis-label.vis-nested .vis-inner { padding-left: 25px !important; background-color: white !important; }
+    .vis-group-level-unknown-but-gte1 { border: 1px solid #ddd !important; background-color: #f5f5f5 !important; }
 </style>
 {% endblock %}
 
+{% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-2">
-        <h5 class="mb-0"><i class="bi bi-calendar3 text-primary me-2"></i>Booking Timeline</h5>
+        <h5 class="mb-0"><i class="bi bi-calendar3 text-secondary me-2"></i><span class="fi fi-de fis me-2"></span>Booking Timeline</h5>
         <div class="d-flex gap-2 align-items-center">
             <input type="text" id="searchBoat" class="form-control form-control-sm" placeholder="Search boat..." style="width: 150px;">
             <div class="btn-group btn-group-sm">
@@ -64,7 +69,7 @@
         
         const options = {
             stack: true, // Allow multiple bookings in one row
-            groupOrder: 'content',
+            groupOrder: 'order',
             horizontalScroll: true,
             zoomKey: 'ctrlKey',
             orientation: 'top',
@@ -90,6 +95,15 @@
         loadData();
     }
 
+    function getEmojiFlag(countryCode) {
+        if (!countryCode || countryCode === 'xx') return '🏳️';
+        const codePoints = countryCode
+            .toUpperCase()
+            .split('')
+            .map(char => 127397 + char.charCodeAt());
+        return String.fromCodePoint(...codePoints);
+    }
+
     function loadData() {
         Promise.all([
             fetch('/api/resources/').then(r => r.json()),
@@ -98,7 +112,11 @@
             groups.clear();
             groups.add(resData.map(r => ({
                 id: r.id,
-                content: `<div class="p-2 fw-bold text-primary">${r.name}</div>`
+                content: `<div>${r.content}</div>`,
+                nestedGroups: r.nestedGroups || null,
+                showNested: true,
+                className: r.className || '',
+                order: r.order || 0
             })));
 
             items.clear();
@@ -119,6 +137,25 @@
                 }
                 
                 statusLabel = `<span class="status-badge ${badgeClass}">${statusText}</span>`;
+                const flagEmoji = getEmojiFlag(e.flag);
+
+                const popoverContent = `
+                    <div class="p-1">
+                        <img src="${e.image}" class="img-fluid rounded mb-2" style="max-height: 100px; width: 100%; object-fit: cover;">
+                        <div class="mb-1"><strong>Owner: ${e.owner}</strong></div>
+                        <div class="small text-muted">
+                            <i class="bi bi-ship"></i> ${e.boat_type}<br>
+                            <hr class="my-1">
+                            <i class="bi bi-telephone"></i> ${e.phone}<br>
+                            <i class="bi bi-gear"></i> ${e.engine}<br>
+                            <i class="bi bi-arrows-fullscreen"></i> ${e.length}m x ${e.width}m (${e.draft}m)<br>
+                            <i class="bi bi-fuel-pump"></i> ${e.diesel}L | <i class="bi bi-droplet"></i> ${e.water}L<br>
+                            <i class="bi bi-translate"></i> ${e.language} | <i class="bi bi-calendar3"></i> ${e.year}<br>
+                            <i class="bi bi-hash"></i> Ref: ${e.ref}
+                            ${e.notes ? `<div class="mt-2 p-1 bg-light border-start border-3 border-warning small">Note: ${e.notes}</div>` : ''}
+                        </div>
+                    </div>
+                `.replace(/"/g, '&quot;').replace(/\s+/g, ' ');
 
                 return {
                     id: e.id,
@@ -127,7 +164,14 @@
                     end: e.end,
                     content: `
                         <div style="display: flex; align-items: center; padding: 2px 5px;">
-                            <span class="fi fi-${e.flag}" style="width:18px; height:13px; margin-right:8px; border:1px solid #ddd; flex-shrink:0;"></span>
+                            <span class="text-primary me-2" 
+                                  style="font-weight: bold; cursor: pointer;"
+                                  data-bs-toggle="popover" 
+                                  data-bs-trigger="hover focus"
+                                  data-bs-html="true" 
+                                  data-bs-title="<strong>${e.text}</strong>" 
+                                  data-bs-content="${popoverContent}">ⓘ</span>
+                            <span style="margin-right: 8px; font-size: 1.2em;">${flagEmoji}</span>
                             <span style="font-weight: 600;">${e.text}</span>
                             ${statusLabel}
                         </div>
@@ -137,6 +181,14 @@
                     title: `${e.text} (${statusText}) - Owner: ${e.owner}`
                 };
             }));
+
+            // Initialize Popovers
+            setTimeout(() => {
+                const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                popoverTriggerList.map(el => new bootstrap.Popover(el, {
+                    container: 'body'
+                }));
+            }, 500);
         });
     }
 
