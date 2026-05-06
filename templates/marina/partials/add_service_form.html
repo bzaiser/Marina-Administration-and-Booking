@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h5 class="modal-title">Add Service for {{ booking.boat.name }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form hx-post="{% url 'add_service' booking.id %}" hx-target="#modals-here .modal-content">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Service</label>
+            <select name="service" class="form-select" required>
+                {% for s in services %}
+                <option value="{{ s.id }}">{{ s.name }} (€{{ s.price|stringformat:".2f" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="quantity" class="form-control" value="1" step="0.1" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add to Invoice</button>
+    </div>
+</form>

@@ -1,0 +1,88 @@
+<form hx-post="{% url 'boat_edit' boat.id %}" hx-encoding="multipart/form-data" hx-target="this" hx-swap="outerHTML" class="modal-content border-0">
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title"><i class="bi bi-water me-2"></i>Edit Boat: {{ boat.name }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label class="form-label fw-bold">Boat Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}<div class="text-danger small">{{ form.name.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Type</label>
+                {{ form.boat_type }}
+                {% if form.boat_type.errors %}<div class="text-danger small">{{ form.boat_type.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Length (m)</label>
+                {{ form.length }}
+                {% if form.length.errors %}<div class="text-danger small">{{ form.length.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Weight (t)</label>
+                {{ form.weight }}
+                {% if form.weight.errors %}<div class="text-danger small">{{ form.weight.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Flag (ISO)</label>
+                {{ form.flag }}
+                {% if form.flag.errors %}<div class="text-danger small">{{ form.flag.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Year Built</label>
+                {{ form.year_built }}
+                {% if form.year_built.errors %}<div class="text-danger small">{{ form.year_built.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Color</label>
+                {{ form.color }}
+                {% if form.color.errors %}<div class="text-danger small">{{ form.color.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Diesel (L)</label>
+                {{ form.diesel_tank }}
+                {% if form.diesel_tank.errors %}<div class="text-danger small">{{ form.diesel_tank.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Water (L)</label>
+                {{ form.water_tank }}
+                {% if form.water_tank.errors %}<div class="text-danger small">{{ form.water_tank.errors }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold">Last Maintenance</label>
+                {{ form.last_maintenance }}
+                {% if form.last_maintenance.errors %}<div class="text-danger small">{{ form.last_maintenance.errors }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold">Technical Notes</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}<div class="text-danger small">{{ form.notes.errors }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold">Boat Photo</label>
+                {% if boat.image %}
+                <div class="mb-2">
+                    <img src="{{ boat.image.url }}" class="img-thumbnail" style="max-height: 150px;">
+                    <div class="small text-muted">Current photo</div>
+                </div>
+                {% endif %}
+                {{ form.image }}
+                {% if form.image.errors %}<div class="text-danger small">{{ form.image.errors }}</div>{% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Update Boat Data</button>
+    </div>
+</form>

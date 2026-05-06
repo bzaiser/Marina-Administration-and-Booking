@@ -3,44 +3,101 @@
 {% block title %}Invoices - Marina Samos{% endblock %}
 
 {% block content %}
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="mb-0">Invoice Management</h5>
+        <h5 class="mb-0"><i class="bi bi-receipt text-primary me-2"></i>Invoice Management</h5>
+        <div class="small text-muted">Manage your billing and payments</div>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" id="invoiceTable">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 40px;"></th>
                         <th>ID</th>
                         <th>Customer</th>
                         <th>Date</th>
                         <th>Status</th>
-                        <th>Amount</th>
-                        <th>Actions</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for invoice in invoices %}
-                    <tr>
-                        <td>#{{ invoice.id }}</td>
-                        <td>{{ invoice.customer.name }}</td>
-                        <td>{{ invoice.date }}</td>
+                    <tr class="align-middle">
                         <td>
-                            <span class="badge {% if invoice.status == 'PAID' %}bg-success{% else %}bg-warning{% endif %}">
-                                {{ invoice.status }}
+                            <button class="btn btn-sm btn-link text-decoration-none p-0" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#items-{{ invoice.id }}">
+                                <i class="bi bi-chevron-right toggle-icon"></i>
+                            </button>
+                        </td>
+                        <td><span class="text-muted">#{{ invoice.id }}</span></td>
+                        <td>
+                            <div class="fw-bold">{{ invoice.customer.name }}</div>
+                            {% if invoice.booking %}
+                                <small class="text-muted"><i class="bi bi-water me-1"></i>{{ invoice.booking.boat.name }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ invoice.date|date:"d.m.Y" }}</td>
+                        <td>
+                            <span class="badge {% if invoice.status == 'PAID' %}bg-success{% elif invoice.status == 'OPEN' %}bg-warning text-dark{% else %}bg-info{% endif %} px-2">
+                                {{ invoice.get_status_display }}
                             </span>
                         </td>
-                        <td>€{{ invoice.total_amount }}</td>
-                        <td>
-                            <a href="/invoice/pdf/{{ invoice.id }}/" class="btn btn-sm btn-outline-danger" target="_blank">
-                                <i class="bi bi-file-pdf"></i> PDF
-                            </a>
+                        <td class="text-end fw-bold">€{{ invoice.total_amount }}</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'invoice_pdf' invoice.id %}" class="btn btn-outline-danger" target="_blank" title="Download PDF">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </a>
+                                {% if invoice.status != 'PAID' %}
+                                <a href="{% url 'invoice_mark_paid' invoice.id %}" class="btn btn-outline-success" title="Mark as Paid">
+                                    <i class="bi bi-check-lg"></i>
+                                </a>
+                                {% endif %}
+                                <button class="btn btn-outline-secondary" hx-get="{% url 'invoice_delete' invoice.id %}" hx-target="#modal-content" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Expandable Item Row -->
+                    <tr class="collapse-row">
+                        <td colspan="7" class="p-0 border-0">
+                            <div class="collapse bg-light" id="items-{{ invoice.id }}">
+                                <div class="px-5 py-3">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <thead class="border-bottom">
+                                            <tr class="small text-muted">
+                                                <th>Description</th>
+                                                <th class="text-end">Qty</th>
+                                                <th class="text-end">Unit Price</th>
+                                                <th class="text-end">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in invoice.items.all %}
+                                            <tr class="small">
+                                                <td>{{ item.description }}</td>
+                                                <td class="text-end">{{ item.quantity }}</td>
+                                                <td class="text-end">€{{ item.unit_price }}</td>
+                                                <td class="text-end fw-bold">€{{ item.subtotal|floatformat:2 }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center py-4">No invoices found.</td>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-receipt fs-1 d-block mb-2"></i>
+                            No invoices recorded.
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -48,4 +105,26 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div id="modal-content" class="modal-content border-0 shadow"></div>
+    </div>
+</div>
+
+<style>
+    .toggle-icon { transition: transform 0.3s; }
+    [aria-expanded="true"] .toggle-icon { transform: rotate(90deg); }
+    .collapse-row td { background-color: #f8f9fa; }
+</style>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (e) => {
+        if (e.detail.target.id === "modal-content") {
+            const modal = new bootstrap.Modal(document.getElementById('invoiceModal'));
+            modal.show();
+        }
+    });
+</script>
 {% endblock %}

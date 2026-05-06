@@ -47,42 +47,213 @@
 
 <div class="row">
     <div class="col-lg-8">
-        <div class="card mb-4">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0">Marina Layout (Draft)</h5>
+        <div class="card mb-4 overflow-hidden">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-map-fill me-2"></i> Schematic Marina Plan</h5>
+                <div class="small text-muted">Click on a berth to manage</div>
             </div>
-            <div class="card-body overflow-auto" style="max-height: 500px;">
-                <div class="d-flex flex-wrap gap-2 p-2" id="marina-map">
-                    <!-- Placeholder for the graphical view -->
-                    {% regroup berths by block as block_list %}
-                    {% for block in block_list %}
-                        <div class="block-container mb-3 w-100">
-                            <h6 class="fw-bold">Block {{ block.grouper }}</h6>
-                            <div class="d-flex flex-wrap gap-1">
-                                {% for berth in block.list %}
-                                    <div class="berth-box text-center p-1 rounded" 
-                                         style="background-color: {{ berth.color }}; width: 60px; height: 40px; font-size: 0.8rem; cursor: pointer; color: white; border: 2px solid rgba(0,0,0,0.1);"
-                                         title="Berth {{ berth.block }}{{ berth.number }}">
-                                        {{ berth.block }}{{ berth.number }}
-                                    </div>
-                                {% endfor %}
-                            </div>
+            <div class="card-body p-0 bg-light-subtle position-relative overflow-hidden" style="height: 800px;">
+                <!-- Hover Tooltip -->
+                <div id="boat-tooltip" class="position-absolute shadow-lg border rounded p-3 bg-white" 
+                     style="display: none; z-index: 1000; width: 220px; pointer-events: none; backdrop-filter: blur(5px); background: rgba(255,255,255,0.95) !important;">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-ship-wheel text-primary me-2 fs-5"></i>
+                        <h6 class="mb-0 text-primary" id="tt-boat-name"></h6>
+                    </div>
+                    <div class="small">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Owner:</span>
+                            <span class="fw-bold" id="tt-owner"></span>
                         </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Length:</span>
+                            <span class="fw-bold" id="tt-length"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Arrival:</span>
+                            <span class="fw-bold" id="tt-start"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Departure:</span>
+                            <span class="fw-bold" id="tt-end"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schematic SVG Map -->
+                <svg id="marina-svg" viewBox="0 0 1000 800" class="w-100 h-100 shadow-inner" style="background-color: #e3f2fd; cursor: grab;">
+                    <!-- Water background -->
+                    <rect width="1000" height="800" fill="#e3f2fd" />
+                    
+                    <!-- LAND (Top) -->
+                    <rect width="1000" height="120" fill="#f5f5f5" />
+                    <text x="20" y="45" font-size="20" font-weight="bold" fill="#999">SAMOS MARINA</text>
+
+                    <!-- BLOCK STRUCTURES (Slanted) -->
+                    <!-- Right Quay (Wide Concrete Area) -->
+                    <rect x="850" y="100" width="130" height="650" fill="#ddd" />
+                    <rect x="850" y="100" width="8" height="650" fill="#9b59b6" opacity="0.6" />
+                    
+                    <!-- Buildings on Quay -->
+                    <rect x="900" y="150" width="60" height="40" fill="#555" rx="2" />
+                    <text x="930" y="175" font-size="10" text-anchor="middle" fill="white" font-weight="bold">OFFICE</text>
+                    <rect x="905" y="210" width="50" height="30" fill="#777" rx="2" />
+                    <text x="930" y="230" font-size="8" text-anchor="middle" fill="white">WASH</text>
+
+                    <!-- Slanted Piers -->
+                    <g transform="rotate(-2, 850, 120)">
+                        <!-- Block A Shore -->
+                        <rect x="150" y="120" width="700" height="10" fill="#999" />
+                        <rect x="150" y="120" width="700" height="4" fill="#3498db" opacity="0.6" />
+                    </g>
+                    
+                    <g transform="rotate(-15, 850, 350)">
+                        <!-- Middle Pier -->
+                        <rect x="100" y="350" width="750" height="15" fill="#999" />
+                        <rect x="100" y="356" width="750" height="3" fill="#2ecc71" opacity="0.6" />
+                    </g>
+                    
+                    <g transform="rotate(-15, 850, 650)">
+                        <!-- Breakwater -->
+                        <rect x="50" y="650" width="800" height="35" fill="#777" />
+                        <rect x="50" y="650" width="800" height="5" fill="#f1c40f" opacity="0.6" />
+                    </g>
+
+                    <!-- RENDER BERTHS -->
+                    {% for item in all_berths %}
+                        {% if item.obj.block.name == 'E' %}
+                            <g transform="translate({{ item.x }}, {{ item.y }}) rotate(90)" cursor="pointer" onclick="window.location='/berths/?block=E&berth={{ item.obj.number }}'"
+                               onmouseenter="showBoatInfo(event, '{{ item.boat_name }}', '{{ item.owner }}', '{{ item.length }}', '{{ item.start }}', '{{ item.end }}')"
+                               onmouseleave="hideBoatInfo()">
+                        {% else %}
+                            <g transform="rotate({% if item.obj.block.name == 'A' %}-2{% else %}-15{% endif %}, 850, {% if item.obj.block.name == 'A' %}120{% elif item.obj.block.name == 'B' or item.obj.block.name == 'C' %}350{% else %}650{% endif %}) translate({{ item.x }}, {{ item.y }})" 
+                               cursor="pointer" onclick="window.location='/berths/?block={{ item.obj.block.name }}&berth={{ item.obj.number }}'"
+                               onmouseenter="showBoatInfo(event, '{{ item.boat_name }}', '{{ item.owner }}', '{{ item.length }}', '{{ item.start }}', '{{ item.end }}')"
+                               onmouseleave="hideBoatInfo()">
+                        {% endif %}
+                            
+                            <!-- Berth Box (Longer & Uniform) -->
+                            <rect width="15" height="55" rx="1" 
+                                  fill="{% if item.booking %}white{% else %}rgba(255,255,255,0.2){% endif %}" 
+                                  stroke="{{ item.obj.block.color }}" 
+                                  stroke-width="1.5" />
+                            
+                            {% if item.booking %}
+                                <!-- Boat Icon -->
+                                <path d="M3,5 L12,5 L14,15 L12,45 L3,45 L1,15 Z" fill="{{ item.obj.block.color }}" />
+                                <text x="7.5" y="28" font-size="5" text-anchor="middle" fill="white" font-weight="bold" transform="rotate(-90, 7.5, 28)">
+                                    {{ item.booking.boat.name|truncatechars:8 }}
+                                </text>
+                            {% else %}
+                                <text x="7.5" y="30" font-size="7" text-anchor="middle" fill="{{ item.obj.block.color }}" opacity="0.6">
+                                    {{ item.obj.number }}
+                                </text>
+                            {% endif %}
+                        </g>
                     {% endfor %}
+                </svg>
+            </div>
+            </div>
+        </div>
+        
+        <!-- Schematic Cards below for details -->
+        <div class="row g-3 mb-4">
+            {% for block in block_stats %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid {{ block.color }} !important;">
+                    <div class="card-body p-2 px-3">
+                        <div class="d-flex justify-content-between small align-items-center">
+                            <span class="fw-bold">Block {{ block.name }}</span>
+                            <span class="text-muted">{{ block.occupied }}/{{ block.total }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header bg-white py-3">
-                <h5 class="mb-0">Recent Activity</h5>
+                <h5 class="mb-0">Occupancy by Block</h5>
             </div>
             <div class="card-body">
-                <p class="text-muted">No recent bookings recorded.</p>
-                <a href="/calendar/" class="btn btn-primary w-100">New Booking</a>
+                <canvas id="occupancyChart" style="height: 200px;"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="/calendar/" class="btn btn-primary w-100 mb-2">New Booking</a>
+                <a href="/berths/" class="btn btn-outline-primary w-100">Quick Checkout</a>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const panZoom = svgPanZoom('#marina-svg', {
+            zoomEnabled: true,
+            controlIconsEnabled: true,
+            fit: true,
+            center: true,
+            minZoom: 0.5,
+            maxZoom: 10
+        });
+    });
+
+    function showBoatInfo(event, boatName, owner, length, start, end) {
+        if (!boatName) return;
+        const tt = document.getElementById('boat-tooltip');
+        document.getElementById('tt-boat-name').innerText = boatName;
+        document.getElementById('tt-owner').innerText = owner;
+        document.getElementById('tt-length').innerText = length + 'm';
+        document.getElementById('tt-start').innerText = start;
+        document.getElementById('tt-end').innerText = end;
+        
+        tt.style.display = 'block';
+        
+        // Position tooltip near mouse
+        const rect = event.currentTarget.getBoundingClientRect();
+        const containerRect = tt.parentElement.getBoundingClientRect();
+        
+        let left = event.clientX - containerRect.left + 15;
+        let top = event.clientY - containerRect.top + 15;
+        
+        // Keep inside container
+        if (left + 220 > containerRect.width) left -= 240;
+        
+        tt.style.left = left + 'px';
+        tt.style.top = top + 'px';
+    }
+
+    function hideBoatInfo() {
+        document.getElementById('boat-tooltip').style.display = 'none';
+    }
+
+    const ctx = document.getElementById('occupancyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ block_labels|safe }},
+            datasets: [{
+                data: {{ block_occupancy|safe }},
+                backgroundColor: {{ block_colors|safe }}
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
 {% endblock %}

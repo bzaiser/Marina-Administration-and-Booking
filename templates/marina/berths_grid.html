@@ -4,28 +4,37 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">Berths Management</h5>
+    <h5 class="mb-0"><i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>Berths Management</h5>
     <div class="d-flex gap-2">
         <input type="text" id="filter-text-box" class="form-control form-control-sm" placeholder="Global search..." oninput="onFilterTextBoxChanged()">
     </div>
 </div>
 
 <div class="accordion" id="marinaAccordion">
-    {% for block in "ABCDE"|make_list %}
-    <div class="accordion-item mb-2 shadow-sm border-0 rounded">
-        <h2 class="accordion-header" id="heading{{ block }}">
-            <button class="accordion-button {% if block != 'A' %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ block }}">
-                <i class="bi bi-box me-2"></i> <strong>Block {{ block }}</strong>
-                <span class="badge bg-light text-dark ms-2 border" id="count-{{ block }}">15 Berths</span>
+    {% for block in blocks %}
+    <div class="accordion-item mb-2 shadow-sm border-0 rounded overflow-hidden">
+        <h2 class="accordion-header" id="heading{{ block.id }}">
+            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ block.id }}" style="border-left: 5px solid {{ block.color }};">
+                <i class="bi bi-box me-2 text-primary"></i> 
+                <div>
+                    <strong>Block {{ block.name }}</strong>
+                    <span class="badge bg-light text-muted ms-2 border" id="count-{{ block.id }}">Loading...</span>
+                </div>
             </button>
         </h2>
-        <div id="collapse{{ block }}" class="accordion-collapse collapse {% if block == 'A' %}show{% endif %}" data-bs-parent="#marinaAccordion">
+        <div id="collapse{{ block.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#marinaAccordion">
             <div class="accordion-body p-0">
-                <div id="grid-{{ block }}" class="ag-theme-alpine w-100" style="height: 300px;"></div>
+                <div id="grid-{{ block.id }}" class="ag-theme-alpine w-100" style="height: 350px;"></div>
             </div>
         </div>
     </div>
     {% endfor %}
+</div>
+
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
 </div>
 {% endblock %}
 
@@ -34,76 +43,188 @@
     const gridApis = {};
 
     const columnDefs = [
-        { field: "number", headerName: "Berth #", width: 100, sortable: true },
-        { field: "max_length", headerName: "Max Length (m)", width: 150 },
-        { field: "max_weight", headerName: "Max Weight (t)", width: 150 },
-        { field: "current_boat", headerName: "Current Boat", flex: 1 },
-        { field: "status", headerName: "Status", width: 150, cellRenderer: function(params) {
-            let color = 'success';
-            if (params.value === 'Occupied') color = 'danger';
-            if (params.value.includes('At Sea')) color = 'info';
+        { field: "number", headerName: "Berth #", width: 90, sortable: true },
+        { field: "max_length", headerName: "L (m)", width: 70 },
+        { field: "max_weight", headerName: "W (t)", width: 70 },
+        { field: "current_boat", headerName: "Current Boat", flex: 1, cellRenderer: function(params) {
+            if (params.value === 'None') return '<span class="text-muted">-</span>';
+            const flagCode = params.data.flag || 'un';
+            const popoverContent = `
+                <div class="p-1">
+                    <img src="${params.data.boat_image}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="fi fi-${flagCode} fis me-2"></span>
+                        <strong>${params.data.owner}</strong>
+                    </div>
+                    <div class="small text-muted">
+                        <i class="bi bi-ship"></i> ${params.data.boat_type}<br>
+                        <i class="bi bi-calendar-check"></i> In: ${params.data.check_in}<br>
+                        <i class="bi bi-calendar-x"></i> Out: ${params.data.check_out}
+                    </div>
+                </div>
+            `.replace(/"/g, '&quot;');
+            
+            return `
+                <span class="d-flex align-items-center">
+                    <i class="bi bi-info-circle text-primary me-2" 
+                       style="cursor: pointer;"
+                       data-bs-toggle="popover" 
+                       data-bs-html="true" 
+                       data-bs-title="${params.value}" 
+                       data-bs-content="${popoverContent}"></i>
+                    <a href="javascript:void(0)" onclick="editBoat('${params.data.boat_id}')" class="text-decoration-none fw-bold text-dark">
+                        ${params.value}
+                    </a>
+                </span>
+            `;
+        }},
+        { field: "check_in", headerName: "In", width: 90 },
+        { field: "check_out", headerName: "Out", width: 90 },
+        { field: "status", headerName: "Status", width: 110, cellRenderer: function(params) {
+            let color = params.value === 'Occupied' ? 'danger' : (params.value.includes('Sea') ? 'info' : 'success');
             return `<span class="badge bg-${color}">${params.value}</span>`;
         }},
-        { headerName: "Actions", width: 120, cellRenderer: function(params) {
-            if (params.data && params.data.status !== 'Vacant') {
-                return `<button class="btn btn-xs btn-outline-primary py-0" style="font-size: 0.7rem;" onclick="checkout('${params.data.id}')">Checkout</button>`;
+        { headerName: "Actions", width: 150, cellRenderer: function(params) {
+            if (!params.data) return '';
+            if (params.data.status === 'Vacant') {
+                return `
+                    <button class="btn btn-xs btn-outline-success py-0 px-2" title="New Booking" onclick="openBookingModal('${params.data.id}')">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                `;
+            } else {
+                return `
+                    <div class="btn-group">
+                        <button class="btn btn-xs btn-outline-primary py-0 px-2" title="Edit" onclick="editBooking('${params.data.booking_id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-xs btn-outline-danger py-0 px-2" title="Checkout" onclick="checkout('${params.data.id}')">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-xs btn-outline-secondary py-0 px-2" title="Delete Booking" onclick="deleteBooking('${params.data.booking_id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
             }
-            return '';
         }}
     ];
 
-    function createGrid(block) {
-        const gridDiv = document.querySelector(`#grid-${block}`);
-        const options = {
+    function createGrid(blockId) {
+        const gridDiv = document.getElementById(`grid-${blockId}`);
+        if (!gridDiv) return;
+        
+        const gridOptions = {
             columnDefs: columnDefs,
             defaultColDef: { resizable: true, sortable: true, filter: true },
             rowData: [],
             animateRows: true,
-            domLayout: 'autoHeight'
+            onCellDoubleClicked: function(params) {
+                if (params.data && params.data.boat_id) {
+                    editBoat(params.data.boat_id);
+                } else if (params.data && !params.data.booking_id) {
+                    openBookingModal(params.data.id);
+                }
+            }
         };
-        gridApis[block] = agGrid.createGrid(gridDiv, options);
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        ['A', 'B', 'C', 'D', 'E'].forEach(block => createGrid(block));
-        loadData();
-    });
+        if (typeof agGrid.createGrid === 'function') {
+            gridApis[blockId] = agGrid.createGrid(gridDiv, gridOptions);
+        } else {
+            new agGrid.Grid(gridDiv, gridOptions);
+            gridApis[blockId] = gridOptions.api;
+        }
+    }
 
     function loadData() {
         fetch('/api/berths/')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                ['A', 'B', 'C', 'D', 'E'].forEach(block => {
-                    const blockData = data.filter(d => d.block === block);
-                    gridApis[block].setGridOption('rowData', blockData);
-                    
-                    const occupied = blockData.filter(d => d.status === 'Occupied').length;
-                    const atSea = blockData.filter(d => d.status.includes('At Sea')).length;
-                    document.getElementById(`count-${block}`).innerText = `${blockData.length} Berths (${occupied} Occ, ${atSea} Sea)`;
+                const blockIds = [{% for block in blocks %}"{{ block.id }}",{% endfor %}];
+                blockIds.forEach(id => {
+                    const blockData = data.filter(d => String(d.block_id) === String(id));
+                    if (gridApis[id]) {
+                        if (typeof gridApis[id].setGridOption === 'function') {
+                            gridApis[id].setGridOption('rowData', blockData);
+                        } else {
+                            gridApis[id].setRowData(blockData);
+                        }
+                        const countEl = document.getElementById(`count-${id}`);
+                        if (countEl) countEl.innerText = `${blockData.length} Berths`;
+                    }
                 });
+                
+                // Initialize Popovers after a short delay to ensure DOM is ready
+                setTimeout(() => {
+                    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                    popoverTriggerList.map(function (popoverTriggerEl) {
+                        return new bootstrap.Popover(popoverTriggerEl, {
+                            trigger: 'hover' // Change to 'click' if preferred
+                        });
+                    });
+                }, 500);
             });
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        {% for block in blocks %}createGrid("{{ block.id }}");{% endfor %}
+        loadData();
+
+        // Auto-refresh data every 30 seconds
+        setInterval(() => {
+            console.log("Auto-refreshing berths data...");
+            loadData();
+        }, 30000);
+    });
 
     function onFilterTextBoxChanged() {
         const val = document.getElementById('filter-text-box').value;
         Object.values(gridApis).forEach(api => {
-            api.setGridOption('quickFilterText', val);
+            if (typeof api.setGridOption === 'function') {
+                api.setGridOption('quickFilterText', val);
+            } else {
+                api.setQuickFilter(val);
+            }
+        });
+    }
+
+    function openBookingModal(berthId) {
+        htmx.ajax('GET', `/booking/create/?resource=${berthId}`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            new bootstrap.Modal(document.getElementById('modals-here')).show();
+        });
+    }
+
+    function editBooking(bookingId) {
+        htmx.ajax('GET', `/booking/edit/${bookingId}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            new bootstrap.Modal(document.getElementById('modals-here')).show();
         });
     }
 
     function checkout(berthId) {
-        const url = `/checkout/${berthId}/`;
-        const modalElement = document.getElementById('modals-here');
-        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
+        htmx.ajax('GET', `/checkout/${berthId}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            new bootstrap.Modal(document.getElementById('modals-here')).show();
         });
     }
-</script>
 
-<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content"></div>
-    </div>
-</div>
+    function deleteBooking(bookingId) {
+        if (confirm("Are you sure you want to delete this booking permanently?")) {
+            fetch(`/booking/delete/${bookingId}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            }).then(() => loadData());
+        }
+    }
+
+    function editBoat(boatId) {
+        htmx.ajax('GET', `/boats/edit/${boatId}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            new bootstrap.Modal(document.getElementById('modals-here')).show();
+        });
+    }
+    document.addEventListener('boatChanged', () => {
+        const modalEl = document.getElementById('modals-here');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        loadData();
+    });
+</script>
 {% endblock %}

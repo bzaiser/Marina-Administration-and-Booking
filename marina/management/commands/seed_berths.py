@@ -1,31 +1,34 @@
 from django.core.management.base import BaseCommand
-from marina.models import Berth
+from marina.models import Berth, Block
 
 class Command(BaseCommand):
-    help = 'Seeds the initial berths for the Marina'
+    help = 'Seeds 75 berths across 5 blocks'
 
     def handle(self, *args, **options):
-        blocks = [
-            ('A', '#3498db'), # Blue
-            ('B', '#e74c3c'), # Red
-            ('C', '#2ecc71'), # Green
-            ('D', '#f1c40f'), # Yellow
-            ('E', '#9b59b6'), # Purple
+        # Create Blocks
+        blocks_data = [
+            {'name': 'A', 'color': '#3498db', 'desc': 'Main Pier - North'},
+            {'name': 'B', 'color': '#2ecc71', 'desc': 'Main Pier - South'},
+            {'name': 'C', 'color': '#f1c40f', 'desc': 'Outer Breakwater'},
+            {'name': 'D', 'color': '#e67e22', 'desc': 'Transient Dock'},
+            {'name': 'E', 'color': '#9b59b6', 'desc': 'Mega Yacht Slips'},
         ]
         
-        count = 0
-        for block_code, color in blocks:
+        for b_data in blocks_data:
+            block, _ = Block.objects.get_or_create(
+                name=b_data['name'],
+                defaults={'color': b_data['color'], 'description': b_data['desc']}
+            )
+            
+            # Create 15 berths per block
             for i in range(1, 16):
-                berth, created = Berth.objects.get_or_create(
-                    block=block_code,
-                    number=i,
+                Berth.objects.get_or_create(
+                    block=block,
+                    number=str(i),
                     defaults={
-                        'color': color,
-                        'max_length': 20.0,
-                        'max_weight': 50.0
+                        'max_length': 15.0 + (i % 5) * 5,
+                        'max_weight': 20.0 + (i % 5) * 10
                     }
                 )
-                if created:
-                    count += 1
         
-        self.stdout.write(self.style.SUCCESS(f'Successfully created {count} berths.'))
+        self.stdout.write(self.style.SUCCESS('Successfully seeded blocks and berths'))

@@ -1,31 +1,35 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Marina Management Samos{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚓</text></svg>">
     
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="{% static 'vendor/flag-icons/css/flag-icons.min.css' %}"/>
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     
     <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="{% static 'vendor/alpinejs/alpine.min.js' %}"></script>
     <!-- HTMX -->
-    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <script src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
     
-    <!-- DayPilot Lite -->
-    <script src="https://cdn.daypilot.org/daypilot-all.min.js"></script>
+    <!-- DayPilot Lite (Locally Hosted) -->
+    <script src="{% static 'js/daypilot-all.min.js' %}"></script>
     
     <!-- AG Grid -->
-    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
-
+    <script src="{% static 'vendor/ag-grid/ag-grid-community.min.js' %}"></script>
+    
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'vendor/chartjs/chart.min.js' %}"></script>
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -76,7 +80,7 @@
     </main>
 
     <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

@@ -73,7 +73,19 @@ class Command(BaseCommand):
                 }
             )
 
-        # 5. Invoices
+        # 5. Booking Services (Add some demo usage)
+        from marina.models import BookingService
+        active_bookings_objs = Booking.objects.filter(status='ACTIVE')
+        all_services = list(Service.objects.all())
+        for b in active_bookings_objs:
+            if all_services:
+                BookingService.objects.create(
+                    booking=b,
+                    service=random.choice(all_services),
+                    quantity=random.uniform(1, 10)
+                )
+
+        # 6. Invoices
         for c, b in customers:
             inv = Invoice.objects.create(customer=c, status='PAID', total_amount=150.00, payment_method='CARD')
             InvoiceItem.objects.create(invoice=inv, description="Berth Fee", quantity=1, unit_price=100.00)

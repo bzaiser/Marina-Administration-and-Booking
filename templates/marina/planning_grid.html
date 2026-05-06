@@ -24,7 +24,9 @@
 {% block extra_js %}
 <script>
     const columnDefs = [
-        { field: "block", rowGroup: true, hide: true },
+        { field: "block", rowGroup: true, hide: true, cellRenderer: function(params) {
+            return `<span style="border-left: 10px solid ${params.data.block_color}; padding-left: 5px;">${params.value}</span>`;
+        }},
         { field: "berth", rowGroup: true, hide: true, headerName: "Berth #" },
         { field: "date", headerName: "Date", sortable: true, filter: 'agDateColumnFilter', sort: 'asc' },
         { field: "boat_name", headerName: "Boat Name", flex: 1 },

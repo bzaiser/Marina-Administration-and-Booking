@@ -1,5 +1,19 @@
 from django.contrib import admin
-from .models import Customer, Boat, Berth, PriceRate, Booking, Service, Invoice, InvoiceItem
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, BookingService, Country
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ('iso_code', 'name')
+    search_fields = ('iso_code', 'name')
+
+@admin.register(BookingService)
+class BookingServiceAdmin(admin.ModelAdmin):
+    list_display = ('booking', 'service', 'quantity', 'date')
+    list_filter = ('service', 'date')
+
+@admin.register(Block)
+class BlockAdmin(admin.ModelAdmin):
+    list_display = ('name', 'color', 'description')
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
@@ -14,7 +28,7 @@ class BoatAdmin(admin.ModelAdmin):
 
 @admin.register(Berth)
 class BerthAdmin(admin.ModelAdmin):
-    list_display = ('block', 'number', 'color', 'max_length', 'max_weight')
+    list_display = ('block', 'number', 'max_length', 'max_weight')
     list_filter = ('block',)
     ordering = ('block', 'number')
 

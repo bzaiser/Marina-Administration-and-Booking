@@ -49,3 +49,67 @@ body {
     --ag-border-radius: 12px;
     height: 600px;
 }
+
+/* Dashboard Map Markers */
+.marker-pulse {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    animation: pulse-white 2s infinite;
+}
+
+@keyframes pulse-white {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.marker-label {
+    background: white;
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.block-hotspot:hover .marker-label {
+    opacity: 1;
+}
+
+.block-overlay {
+    transition: background-color 0.3s, border-width 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.block-overlay:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-width: 4px !important;
+}
+
+.overlay-label {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+    pointer-events: none;
+}
+
+.block-overlay:hover .overlay-label {
+    opacity: 1;
+}

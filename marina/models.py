@@ -2,11 +2,25 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
 
+class Country(models.Model):
+    iso_code = models.CharField(_("ISO Code"), max_length=2, unique=True, help_text="e.g. 'de', 'gr'")
+    name = models.CharField(_("Country Name"), max_length=100, help_text="e.g. 'Germany'")
+    
+    def __str__(self):
+        return f"{self.iso_code.upper()} - {self.name}"
+
+    class Meta:
+        verbose_name = _("Country")
+        verbose_name_plural = _("Countries")
+        ordering = ['iso_code']
+
 class Customer(models.Model):
     name = models.CharField(_("Name"), max_length=255)
     email = models.EmailField(_("Email"), blank=True, null=True)
     phone = models.CharField(_("Phone"), max_length=50, blank=True, null=True)
     address = models.TextField(_("Address"), blank=True, null=True)
+    nationality = models.CharField(_("Nationality"), max_length=2, default='DE', help_text="ISO Country Code (DE, GR, US, etc.)")
+    language = models.CharField(_("Preferred Language"), max_length=2, default='DE', help_text="ISO Language Code (DE, EN, etc.)")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -17,36 +31,52 @@ class Customer(models.Model):
         verbose_name_plural = _("Customers")
 
 class Boat(models.Model):
+    BOAT_TYPES = [
+        ('SAIL', 'Sailing Yacht'),
+        ('MOTOR', 'Motorboat'),
+        ('CAT', 'Catamaran'),
+        ('RIB', 'RIB / Zodiac'),
+        ('OTHER', 'Other'),
+    ]
     name = models.CharField(_("Boat Name"), max_length=255)
     owner = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="boats")
+    boat_type = models.CharField(_("Type"), max_length=10, choices=BOAT_TYPES, default='SAIL')
     weight = models.FloatField(_("Weight (tons)"), help_text="Weight in metric tons")
     length = models.FloatField(_("Length (meters)"), help_text="Length in meters")
     flag = models.CharField(_("Flag"), max_length=3, help_text="ISO Country Code, e.g. AUS")
+    color = models.CharField(_("Color"), max_length=7, default='#3498db', help_text="Hex color for timeline")
+    image = models.ImageField(_("Boat Photo"), upload_to='boats/', blank=True, null=True)
+    year_built = models.IntegerField(_("Year Built"), blank=True, null=True)
+    last_maintenance = models.DateField(_("Last Maintenance"), blank=True, null=True)
+    diesel_tank = models.IntegerField(_("Diesel Tank (L)"), default=0)
+    water_tank = models.IntegerField(_("Water Tank (L)"), default=0)
+    notes = models.TextField(_("Technical Notes"), blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} ({self.flag})"
+        return f"{self.name} ({self.get_boat_type_display()})"
 
     class Meta:
         verbose_name = _("Boat")
         verbose_name_plural = _("Boats")
 
+class Block(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    color = ColorField(default='#3498db')
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='blocks/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Block {self.name}"
+
 class Berth(models.Model):
-    BLOCK_CHOICES = [
-        ('A', 'Block A'),
-        ('B', 'Block B'),
-        ('C', 'Block C'),
-        ('D', 'Block D'),
-        ('E', 'Block E'),
-    ]
-    block = models.CharField(_("Block"), max_length=1, choices=BLOCK_CHOICES)
-    number = models.PositiveIntegerField(_("Number"))
-    color = ColorField(default='#FFFFFF')
+    block = models.ForeignKey(Block, on_delete=models.CASCADE, related_name='berths')
+    number = models.CharField(_("Number"), max_length=10)
     max_length = models.FloatField(_("Max Length (m)"), default=20.0)
     max_weight = models.FloatField(_("Max Weight (t)"), default=50.0)
 
     def __str__(self):
-        return f"{self.block}{self.number}"
+        return f"{self.block.name}{self.number}"
 
     class Meta:
         unique_together = ('block', 'number')
@@ -122,6 +152,19 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+
+class BookingService(models.Model):
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='services')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    quantity = models.FloatField(default=1.0)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.service.name} for {self.booking}"
+
+    @property
+    def total_price(self):
+        return self.quantity * self.service.price
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [

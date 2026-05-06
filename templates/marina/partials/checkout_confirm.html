@@ -7,7 +7,17 @@
     <ul>
         <li>Arrival: {{ booking.start_date }}</li>
         <li>Duration: {{ booking.duration_days }} days</li>
-        <li>Estimated Amount: <strong>€{{ booking.calculate_price|stringformat:".2f" }}</strong></li>
+        <li>Berth Fee: €{{ berth_fee|stringformat:".2f" }}</li>
+        {% if booked_services %}
+        <li>Services:
+            <ul class="small text-muted">
+                {% for s in booked_services %}
+                <li>{{ s.service.name }} ({{ s.quantity }}x): €{{ s.total_price|stringformat:".2f" }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        <li><strong>Total Amount: €{{ total_price|stringformat:".2f" }}</strong></li>
     </ul>
 </div>
 <div class="modal-footer">

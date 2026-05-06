@@ -51,10 +51,35 @@ A professional management and booking tool for a Marina on the Greek island of S
    python manage.py createsuperuser
    ```
 
+5. **Download Vendor Libraries (Offline Support)**:
+   ```bash
+   python manage.py update_vendor
+   ```
+
 6. **Run Server**:
    ```bash
    python manage.py runserver
    ```
+
+## 📶 Offline Support & Vendor Management
+The system is designed to be fully operational without an internet connection (e.g., in a harbor environment). All major libraries are hosted locally in `static/vendor/`.
+
+To update the local libraries from the internet, run:
+```bash
+python manage.py update_vendor
+```
+This command fetches the latest stable versions of Bootstrap, HTMX, Alpine.js, AG-Grid, Vis.js, and Chart.js.
+
+## 🚩 Country & Flag Management
+Flags are managed dynamically through the database.
+
+1. **Add a new Country**: Go to the Django Admin -> Countries and add the ISO code (e.g., `be`) and Name (e.g., `Belgium`).
+2. **Download the Flag**: Run `python manage.py update_vendor`. The system will automatically detect new countries and download their SVG flags to the local storage.
+3. **Usage**: The new country will immediately appear as a choice in the Boat Edit/Create masks.
+
+## 🔄 Automatic Updates
+- **Berths Grid**: Automatically refreshes its data every 30 seconds via HTMX to ensure the occupancy status is always up-to-date.
+- **Modals**: HTMX-driven modals allow updating boat and booking data without a full page reload.
 
 ## 📂 Project Structure
 - `marina/`: Main application logic, models, and views.

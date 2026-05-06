@@ -1,0 +1,73 @@
+<div class="bg-light p-4 rounded border mb-3 shadow-sm">
+    <h6 class="mb-3 fw-bold text-primary"><i class="bi bi-person-plus me-1"></i> New Customer & Boat Details</h6>
+    <div class="row g-3">
+        <!-- Customer Data -->
+        <div class="col-md-8">
+            <label class="small fw-bold text-muted">Customer Name</label>
+            {{ c_form.name }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Boat Name</label>
+            {{ b_form.name }}
+        </div>
+        <div class="col-md-6">
+            <label class="small fw-bold text-muted">Email</label>
+            {{ c_form.email }}
+        </div>
+        <div class="col-md-6">
+            <label class="small fw-bold text-muted">Phone</label>
+            {{ c_form.phone }}
+        </div>
+        
+        <!-- Technical Data -->
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Boat Type</label>
+            {{ b_form.boat_type }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Length (m)</label>
+            {{ b_form.length }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Flag (ISO)</label>
+            {{ b_form.flag }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Diesel Tank (L)</label>
+            {{ b_form.diesel_tank }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Water Tank (L)</label>
+            {{ b_form.water_tank }}
+        </div>
+        <div class="col-md-4">
+            <label class="small fw-bold text-muted">Year Built</label>
+            {{ b_form.year_built }}
+        </div>
+    </div>
+    <div class="mt-4 pt-3 border-top text-end">
+        <button type="button" class="btn btn-secondary" hx-get="{% url 'booking_create' %}" hx-target="#modals-here .modal-content">Cancel</button>
+        <button type="button" class="btn btn-success" hx-post="{% url 'quick_boat_create' %}" hx-include="closest .bg-light" hx-encoding="multipart/form-data">
+            <i class="bi bi-check-circle me-1"></i> Create & Register
+        </button>
+    </div>
+</div>
+
+<script>
+    function selectNewBoat(id, name) {
+        // Find the boat select in the parent form and add the new option
+        const select = document.querySelector('select[name="boat"]');
+        if (select) {
+            const option = new Option(name, id, true, true);
+            select.add(option);
+            // Switch back to normal form view if needed, or just let HTMX do its thing
+            // For now, we'll just reload the whole modal content to be clean
+            htmx.ajax('GET', '{% url "booking_create" %}', {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+                setTimeout(() => {
+                    const newSelect = document.querySelector('select[name="boat"]');
+                    newSelect.value = id;
+                }, 100);
+            });
+        }
+    }
+</script>

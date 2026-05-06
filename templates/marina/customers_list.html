@@ -3,38 +3,153 @@
 {% block title %}Customers - Marina Samos{% endblock %}
 
 {% block content %}
-<div class="card">
+<div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="mb-0">Customer Management</h5>
+        <h5 class="mb-0"><i class="bi bi-people-fill text-primary me-2"></i>Customer Management</h5>
+        <button class="btn btn-primary btn-sm" hx-get="{% url 'quick_boat_create' %}" hx-target="#modal-content">
+            <i class="bi bi-person-plus-fill me-1"></i> New Customer
+        </button>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" id="customerTable">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 40px;"></th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Nat | Lang</th>
+                        <th>Contact</th>
                         <th>Boats</th>
-                        <th>Created</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for customer in customers %}
-                    <tr>
-                        <td><strong>{{ customer.name }}</strong></td>
-                        <td>{{ customer.email }}</td>
-                        <td>{{ customer.phone|default:"-" }}</td>
+                    <!-- Customer Row -->
+                    <tr class="align-middle">
                         <td>
-                            {% for boat in customer.boats.all %}
-                                <span class="badge bg-secondary">{{ boat.name }}</span>
-                            {% endfor %}
+                            <button class="btn btn-sm btn-link text-decoration-none p-0" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#boats-{{ customer.id }}">
+                                <i class="bi bi-chevron-right toggle-icon"></i>
+                            </button>
                         </td>
-                        <td>{{ customer.created_at|date:"Y-m-d" }}</td>
+                        <td>
+                            <div class="fw-bold text-primary">{{ customer.name }}</div>
+                            <small class="text-muted">ID: #{{ customer.id }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">{{ customer.nationality }}</span>
+                            <span class="badge bg-light text-secondary border">{{ customer.language }}</span>
+                        </td>
+                        <td>
+                            <div class="small"><i class="bi bi-envelope me-1"></i>{{ customer.email|default:"-" }}</div>
+                            <div class="small"><i class="bi bi-telephone me-1"></i>{{ customer.phone|default:"-" }}</div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill bg-info text-white">
+                                {{ customer.boats.count }} Boat{{ customer.boats.count|pluralize }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" 
+                                        hx-get="{% url 'customer_edit' customer.id %}" 
+                                        hx-target="#modal-content"
+                                        title="Edit Customer">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger" 
+                                        hx-get="{% url 'customer_delete' customer.id %}" 
+                                        hx-target="#modal-content"
+                                        title="Delete Customer">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Expandable Boat Row -->
+                    <tr class="collapse-row">
+                        <td colspan="6" class="p-0 border-0">
+                            <div class="collapse bg-light" id="boats-{{ customer.id }}">
+                                <div class="p-3">
+                                    <h6 class="small fw-bold text-uppercase text-muted mb-3">Owned Boats</h6>
+                                    <div class="row g-3">
+                                        {% for boat in customer.boats.all %}
+                                        <div class="col-md-6">
+                                            <div class="card border-0 shadow-sm overflow-hidden" 
+                                                 style="cursor: pointer;"
+                                                 ondblclick="bootstrap.Modal.getOrCreateInstance(document.getElementById('mainModal')).show(); htmx.ajax('GET', '{% url 'boat_edit' boat.id %}', {target: '#modal-content'})">
+                                                <div class="row g-0">
+                                                    {% if boat.image %}
+                                                    <div class="col-4">
+                                                        <img src="{{ boat.image.url }}" class="img-fluid h-100 object-fit-cover" alt="{{ boat.name }}">
+                                                    </div>
+                                                    {% endif %}
+                                                    <div class="{% if boat.image %}col-8{% else %}col-12{% endif %}">
+                                                        <div class="card-body py-2">
+                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                <div>
+                                                                    <h6 class="mb-0 fw-bold text-primary" 
+                                                                        hx-get="{% url 'boat_edit' boat.id %}" 
+                                                                        hx-target="#modal-content"
+                                                                        style="cursor: pointer;">
+                                                                        {{ boat.name }}
+                                                                    </h6>
+                                                                    <span class="badge bg-secondary-subtle text-secondary small">{{ boat.get_boat_type_display }}</span>
+                                                                </div>
+                                                                <div class="d-flex gap-2">
+                                                                    <span class="fi fi-{{ boat.flag|lower }} fis shadow-sm rounded-circle" style="width: 20px; height: 20px;"></span>
+                                                                    <div class="dropdown">
+                                                                        <button class="btn btn-sm btn-link p-0 text-muted" data-bs-toggle="dropdown">
+                                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                                                            <li><a class="dropdown-item py-2" hx-get="{% url 'boat_edit' boat.id %}" hx-target="#modal-content"><i class="bi bi-pencil me-2 text-primary"></i> Edit Boat</a></li>
+                                                                            <li><a class="dropdown-item py-2 text-danger" hx-get="{% url 'boat_delete' boat.id %}" hx-target="#modal-content"><i class="bi bi-trash me-2"></i> Delete</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-2 small text-muted">
+                                                                <div class="col-6"><i class="bi bi-arrows-fullscreen me-1"></i> {{ boat.length }}m / {{ boat.weight }}t</div>
+                                                                <div class="col-6"><i class="bi bi-calendar-event me-1"></i> built {{ boat.year_built|default:"-" }}</div>
+                                                                <div class="col-6"><i class="bi bi-fuel-pump me-1"></i> Diesel: {{ boat.diesel_tank }}L</div>
+                                                                <div class="col-6"><i class="bi bi-droplets me-1"></i> Water: {{ boat.water_tank }}L</div>
+                                                            </div>
+                                                            {% if boat.last_maintenance %}
+                                                            <hr class="my-1 opacity-25">
+                                                            <div class="small text-muted">
+                                                                <i class="bi bi-tools me-1"></i> Last Maint: <span class="fw-bold">{{ boat.last_maintenance|date:"d.m.Y" }}</span>
+                                                            </div>
+                                                            {% endif %}
+                                                            {% if boat.notes %}
+                                                            <div class="mt-2 p-2 bg-light rounded small italic border-start border-primary border-3">
+                                                                {{ boat.notes|truncatechars:100 }}
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+{% empty %}
+                                        <div class="col-12">
+                                            <div class="text-muted small italic">No boats registered for this customer.</div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center py-4">No customers found.</td>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="bi bi-people text-muted fs-1 d-block mb-2"></i>
+                            <p class="text-muted">No customers found in the database.</p>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -42,4 +157,35 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div class="modal fade" id="mainModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div id="modal-content" class="modal-content border-0 shadow">
+            <!-- Content loaded via HTMX -->
+        </div>
+    </div>
+</div>
+
+<style>
+    .toggle-icon { transition: transform 0.3s; }
+    [aria-expanded="true"] .toggle-icon { transform: rotate(90deg); }
+    .collapse-row td { background-color: #f8f9fa; }
+    .fi { border: 1px solid #eee; }
+</style>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (e) => {
+        if (e.detail.target.id === "modal-content") {
+            const modal = new bootstrap.Modal(document.getElementById('mainModal'));
+            modal.show();
+        }
+    });
+    document.addEventListener('boatChanged', () => {
+        const modalEl = document.getElementById('mainModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        window.location.reload(); // Simplest way to refresh the Django template list
+    });
+</script>
 {% endblock %}
