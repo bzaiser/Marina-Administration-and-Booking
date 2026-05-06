@@ -147,15 +147,18 @@
                 `.replace(/"/g, '&quot;').replace(/\s+/g, ' ');
 
                 return `
-                    <div data-bs-toggle="popover" 
-                         data-bs-trigger="hover focus"
-                         data-bs-html="true" 
-                         data-bs-container="body"
-                         data-bs-title="<strong>${item.content}</strong>" 
-                         data-bs-content="${popoverContent}"
-                         style="height: 30px; line-height: 30px; display: block; overflow: hidden;">
-                        <span style="display: inline-block; vertical-align: middle; line-height: normal; margin-right: 4px; font-size: 16px;">${flagEmoji}</span>
-                        <span style="display: inline-block; vertical-align: middle; line-height: normal;">${item.content}</span>
+                    <div style="height: 30px; line-height: 30px; display: block; overflow: hidden;">
+                        <span data-bs-toggle="popover" 
+                              data-bs-trigger="hover focus"
+                              data-bs-placement="bottom"
+                              data-bs-html="true" 
+                              data-bs-container="body"
+                              data-bs-title="<strong>${item.content}</strong>" 
+                              data-bs-content="${popoverContent}"
+                              style="cursor: help;">
+                            <span style="display: inline-block; vertical-align: middle; line-height: normal; margin-right: 4px; font-size: 16px;">${flagEmoji}</span>
+                            <span style="display: inline-block; vertical-align: middle; line-height: normal;">${item.content}</span>
+                        </span>
                     </div>
                 `;
             }
