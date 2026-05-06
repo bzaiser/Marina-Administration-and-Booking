@@ -68,7 +68,7 @@
         const container = document.getElementById('visualization');
         
         const options = {
-            stack: true, // Allow multiple bookings in one row
+            stack: false, // Don't stack overlapping bookings, let them overlay
             groupOrder: 'order',
             horizontalScroll: true,
             zoomKey: 'ctrlKey',
