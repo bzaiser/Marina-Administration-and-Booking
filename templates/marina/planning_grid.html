@@ -118,6 +118,7 @@
             end: new Date(new Date().getTime() + fortyFiveDays),
             zoomMin: 1000 * 60 * 60 * 24 * 7, // 7 days
             zoomMax: 1000 * 60 * 60 * 24 * 365 * 2, // 2 years
+            xss: { disabled: true },
             editable: false,
             margin: { item: 4, axis: 5 },
             template: function(item) {
@@ -172,9 +173,14 @@
 
     function editBooking(bookingId) {
         if (!bookingId) return;
-        htmx.ajax('GET', `/booking/edit/${bookingId}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-            new bootstrap.Modal(document.getElementById('modals-here')).show();
+        const url = `/booking/edit/${bookingId}/`;
+        const modalEl = document.getElementById('modals-here');
+        modalEl.addEventListener('htmx:afterSwap', function handler() {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            modalEl.removeEventListener('htmx:afterSwap', handler);
         });
+        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
     }
 
     function loadData() {
@@ -189,16 +195,17 @@
                 
                 items.clear();
                 items.add(data.items);
-                
-                // Initialize Popovers
-                setTimeout(() => {
-                    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-                    popoverTriggerList.map(function (popoverTriggerEl) {
-                        return new bootstrap.Popover(popoverTriggerEl);
-                    });
-                }, 1000);
             });
     }
+
+    // Global Event Delegation for Popovers
+    document.body.addEventListener('mouseover', function (e) {
+        const target = e.target.closest('[data-bs-toggle="popover"]');
+        if (target && !target.hasAttribute('data-popover-initialized')) {
+            new bootstrap.Popover(target, { container: 'body' }).show();
+            target.setAttribute('data-popover-initialized', 'true');
+        }
+    });
 
     function filterByBoat() {
         const search = document.getElementById('searchBoat').value.toLowerCase();
