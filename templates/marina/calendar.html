@@ -86,7 +86,7 @@
                 const url = `/booking/create/?start=${item.start.toISOString()}&end=${endDate.toISOString()}&resource=${item.group}`;
                 const modalEl = document.getElementById('modals-here');
                 modalEl.addEventListener('htmx:afterSwap', function handler() {
-                    const modal = new bootstrap.Modal(modalEl);
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                     modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
@@ -97,7 +97,7 @@
                 const url = `/booking/edit/${item.id}/`;
                 const modalEl = document.getElementById('modals-here');
                 modalEl.addEventListener('htmx:afterSwap', function handler() {
-                    const modal = new bootstrap.Modal(modalEl);
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                     modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
@@ -113,7 +113,7 @@
                 const url = `/booking/edit/${properties.item}/`;
                 const modalEl = document.getElementById('modals-here');
                 modalEl.addEventListener('htmx:afterSwap', function handler() {
-                    const modal = new bootstrap.Modal(modalEl);
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                     modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
