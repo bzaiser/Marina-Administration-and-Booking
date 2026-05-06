@@ -82,7 +82,8 @@
                 remove: true
             },
             onAdd: function(item, callback) {
-                const url = `/booking/create/?start=${item.start.toISOString()}&end=${item.end.toISOString()}&resource=${item.group}`;
+                let endDate = item.end || new Date(item.start.getTime() + 24 * 60 * 60 * 1000);
+                const url = `/booking/create/?start=${item.start.toISOString()}&end=${endDate.toISOString()}&resource=${item.group}`;
                 htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
                     const modal = new bootstrap.Modal(document.getElementById('modals-here'));
                     modal.show();
@@ -100,6 +101,17 @@
         };
 
         timeline = new vis.Timeline(container, items, groups, options);
+        
+        timeline.on('doubleClick', function (properties) {
+            if (properties.item) {
+                const url = `/booking/edit/${properties.item}/`;
+                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+                    const modal = new bootstrap.Modal(document.getElementById('modals-here'));
+                    modal.show();
+                });
+            }
+        });
+
         loadData();
     }
 
