@@ -19,8 +19,26 @@ A professional management and booking tool for a Marina on the Greek island of S
 - **Invoicing**: Automatic price calculation based on boat length and duration. Export to PDF.
 - **Planning Grid**: Massive denormalized view for daily occupancy tracking across the entire year.
 - **Analytics**: Revenue charts, occupancy rates, and top customer statistics.
+- **Offline Ready**: No CDN dependencies, all libraries and flags are hosted locally.
 
-## 🛠 Installation & Setup
+## ⚡ Quick Start (The Easy Way)
+
+If you just want to get started quickly without manual setup, use our automated scripts:
+
+### 🪟 Windows Users (Portable)
+1.  Download or copy the **`Beispiel-Mobil.bat`** file.
+2.  Double-click it.
+3.  The script will automatically download the code, create a local Python environment, and set everything up.
+4.  Follow the prompt to create **Desktop Icons** for easy access.
+
+### 🐧 Linux Users
+1.  Open your terminal in the project folder.
+2.  Run **`./start-marina.sh`** to start the application.
+3.  Run **`./update-marina.sh`** at any time to pull updates and refresh the system.
+
+---
+
+## 🛠 Manual Installation & Setup
 
 1. **Clone the repository**:
    ```bash
