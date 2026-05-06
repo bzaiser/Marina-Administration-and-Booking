@@ -105,9 +105,10 @@
     }
 
     function loadData() {
+        const t = Date.now();
         Promise.all([
-            fetch('/api/resources/').then(r => r.json()),
-            fetch('/api/events/').then(r => r.json())
+            fetch(`/api/resources/?t=${t}`).then(r => r.json()),
+            fetch(`/api/events/?t=${t}`).then(r => r.json())
         ]).then(([resData, evData]) => {
             groups.clear();
             groups.add(resData.map(r => ({
