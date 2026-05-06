@@ -446,21 +446,33 @@ def api_events(request):
         clean_end = end[:10]
         bookings = bookings.filter(start_date__lt=clean_end, end_date__gt=clean_start)
     
+    import datetime
     events = []
     for b in bookings:
         events.append({
             'id': b.id,
             'text': f"{b.boat.name}",
             'start': b.start_date.isoformat(),
-            'end': b.end_date.isoformat(),
+            'end': (b.end_date + datetime.timedelta(days=1)).isoformat(),
             'resource': b.berth.id,
             'type': b.booking_type,
             'is_at_sea': b.is_at_sea,
             'color': b.boat.color,
             'flag': (b.boat.flag or 'xx').lower(),
-            'owner': b.boat.owner.name,
+            'owner': b.boat.owner.name if b.boat.owner else '',
+            'phone': b.boat.owner.phone if b.boat.owner else '',
+            'image': b.boat.image.url if b.boat.image else '/static/img/no-boat.png',
             'boat_type': b.boat.get_boat_type_display(),
-            'length': b.boat.length
+            'engine': b.boat.engine,
+            'length': b.boat.length,
+            'width': b.boat.width,
+            'draft': b.boat.draft,
+            'diesel': b.boat.diesel_tank if hasattr(b.boat, 'diesel_tank') else 0,
+            'water': b.boat.water_tank if hasattr(b.boat, 'water_tank') else 0,
+            'language': b.boat.owner.language if b.boat.owner else '',
+            'year': b.boat.year_built if hasattr(b.boat, 'year_built') else '',
+            'ref': b.reference,
+            'notes': b.notes
         })
     return JsonResponse(events, safe=False)
 
