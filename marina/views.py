@@ -347,6 +347,7 @@ def api_planning_data(request):
             'content': f"Block {block.name}",
             'nestedGroups': berth_ids,
             'className': 'bg-light fw-bold',
+            'color': block.color,
             'order': idx * 1000
         })
     
@@ -354,6 +355,7 @@ def api_planning_data(request):
         resources.append({
             'id': str(berth.id),
             'content': f"{berth.number}",
+            'block_color': berth.block.color,
             'order': int(berth.number) if str(berth.number).isdigit() else 999
         })
 

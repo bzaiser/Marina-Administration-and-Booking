@@ -195,7 +195,19 @@
                 allGroups = data.groups;
                 allItems = data.items;
                 groups.clear();
-                groups.add(data.groups);
+                groups.add(data.groups.map(g => {
+                    const isBlock = String(g.id).startsWith('block_');
+                    const color = g.color || g.block_color || '#aaa';
+                    return {
+                        ...g,
+                        content: isBlock
+                            ? `<div style="display:flex; align-items:center; gap:6px;">
+                                 <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${color}; flex-shrink:0;"></span>
+                                 <strong>${g.content}</strong>
+                               </div>`
+                            : `<div style="border-left: 3px solid ${color}; padding-left: 6px;">${g.content}</div>`
+                    };
+                }));
                 
                 items.clear();
                 items.add(data.items);
