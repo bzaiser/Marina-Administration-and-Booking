@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <h5 class="modal-title">New Booking</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form hx-post="{% url 'booking_create' %}" hx-target="#modals-here .modal-content">
+    <div class="modal-body">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Customer/Boat</label>
+                {{ form.boat }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Berth</label>
+                {{ form.berth }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Arrival</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Departure</label>
+                {{ form.end_date }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Booking Type</label>
+                {{ form.booking_type }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Reference</label>
+                {{ form.reference }}
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    {{ form.is_at_sea }}
+                    <label class="form-check-label" for="{{ form.is_at_sea.id_for_label }}">
+                        Tenant is currently at sea (Available for sub-lease)
+                    </label>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Notes</label>
+                {{ form.notes }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Booking</button>
+    </div>
+</form>

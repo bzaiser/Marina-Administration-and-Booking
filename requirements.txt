@@ -1,0 +1,9 @@
+django>=4.2,<5.0
+django-admin-interface
+django-htmx
+django-extensions
+django-colorfield
+pillow
+python-dotenv
+pytest-django
+xhtml2pdf

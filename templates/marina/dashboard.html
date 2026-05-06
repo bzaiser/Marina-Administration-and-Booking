@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 bg-primary text-white rounded p-3 me-3">
+                    <i class="bi bi-grid-3x3-gap fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-0">Total Berths</h6>
+                    <h3 class="mb-0">{{ berths_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 bg-success text-white rounded p-3 me-3">
+                    <i class="bi bi-check-circle fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-0">Active Bookings</h6>
+                    <h3 class="mb-0">{{ active_bookings }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0 bg-info text-white rounded p-3 me-3">
+                    <i class="bi bi-people fs-3"></i>
+                </div>
+                <div>
+                    <h6 class="text-muted mb-0">Customers</h6>
+                    <h3 class="mb-0">{{ customers_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Marina Layout (Draft)</h5>
+            </div>
+            <div class="card-body overflow-auto" style="max-height: 500px;">
+                <div class="d-flex flex-wrap gap-2 p-2" id="marina-map">
+                    <!-- Placeholder for the graphical view -->
+                    {% regroup berths by block as block_list %}
+                    {% for block in block_list %}
+                        <div class="block-container mb-3 w-100">
+                            <h6 class="fw-bold">Block {{ block.grouper }}</h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for berth in block.list %}
+                                    <div class="berth-box text-center p-1 rounded" 
+                                         style="background-color: {{ berth.color }}; width: 60px; height: 40px; font-size: 0.8rem; cursor: pointer; color: white; border: 2px solid rgba(0,0,0,0.1);"
+                                         title="Berth {{ berth.block }}{{ berth.number }}">
+                                        {{ berth.block }}{{ berth.number }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">No recent bookings recorded.</p>
+                <a href="/calendar/" class="btn btn-primary w-100">New Booking</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

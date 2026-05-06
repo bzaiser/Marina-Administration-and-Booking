@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-2">
+        <h5 class="mb-0">Booking Calendar</h5>
+        <div class="d-flex gap-2 align-items-center">
+            <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-primary" onclick="switchView('Day')">Day</button>
+                <button class="btn btn-outline-primary" onclick="switchView('Week')">Week</button>
+                <button class="btn btn-outline-primary" onclick="switchView('Month')">Month</button>
+                <button class="btn btn-outline-primary" onclick="switchView('Year')">Year</button>
+            </div>
+            <input type="text" id="filter" class="form-control form-control-sm" placeholder="Filter boats..." style="width: 150px;" oninput="applyFilter()">
+            <div class="btn-group btn-group-sm ms-2">
+                <button class="btn btn-outline-secondary" id="prevDay"><i class="bi bi-chevron-left"></i></button>
+                <button class="btn btn-outline-secondary" id="today">Today</button>
+                <button class="btn btn-outline-secondary" id="nextDay"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div id="dp"></div>
+    </div>
+</div>
+
+<!-- Modal for new booking -->
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const dp = new DayPilot.Scheduler("dp", {
+        viewType: "Days",
+        days: 30,
+        startDate: DayPilot.Date.today(),
+        scale: "Day",
+        timeHeaders: [
+            { groupBy: "Month" },
+            { groupBy: "Day", format: "d" }
+        ],
+        resources: [],
+        events: [],
+        onBeforeEventRender: function(args) {
+            const isLongTerm = args.data.type === 'LONG';
+            const isAtSea = args.data.is_at_sea;
+            
+            args.data.barColor = isLongTerm ? "#3498db" : "#e67e22";
+            if (isAtSea) {
+                args.data.barColor = "#1abc9c"; // Turquoise for At Sea
+                args.data.text += " [AT SEA]";
+            }
+            
+            args.data.html = `<b>${args.data.text}</b>`;
+        },
+        onTimeRangeSelected: function(args) {
+            const start = args.start.toString();
+            const end = args.end.toString();
+            const resource = args.resource;
+            
+            const url = `/booking/create/?start=${start}&end=${end}&resource=${resource}`;
+            
+            // Trigger HTMX to load the modal content
+            const modalElement = document.getElementById('modals-here');
+            const modalContent = modalElement.querySelector('.modal-content');
+            
+            htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                dp.clearSelection();
+            });
+        }
+    });
+    dp.init();
+
+    function switchView(view) {
+        switch(view) {
+            case 'Day':
+                dp.scale = "Hour";
+                dp.days = 1;
+                dp.timeHeaders = [{ groupBy: "Day" }, { groupBy: "Hour" }];
+                break;
+            case 'Week':
+                dp.scale = "Day";
+                dp.days = 7;
+                dp.timeHeaders = [{ groupBy: "Month" }, { groupBy: "Day", format: "d" }];
+                break;
+            case 'Month':
+                dp.scale = "Day";
+                dp.days = 30;
+                dp.timeHeaders = [{ groupBy: "Month" }, { groupBy: "Day", format: "d" }];
+                break;
+            case 'Year':
+                dp.scale = "Month";
+                dp.days = 365;
+                dp.timeHeaders = [{ groupBy: "Year" }, { groupBy: "Month" }];
+                break;
+        }
+        loadData();
+    }
+
+    function applyFilter() {
+        const query = document.getElementById("filter").value.toLowerCase();
+        dp.onBeforeEventRender = function(args) {
+            const isLongTerm = args.data.type === 'LONG';
+            const isAtSea = args.data.is_at_sea;
+            
+            args.data.barColor = isLongTerm ? "#3498db" : "#e67e22";
+            if (isAtSea) {
+                args.data.barColor = "#1abc9c"; 
+                args.data.text += " [AT SEA]";
+            }
+            
+            args.data.html = `<b>${args.data.text}</b>`;
+            
+            // Apply filtering logic
+            if (query && !args.data.text.toLowerCase().includes(query)) {
+                args.data.visible = false;
+            } else {
+                args.data.visible = true;
+            }
+        };
+        dp.update();
+    }
+
+    function loadData() {
+        const start = dp.startDate.toString();
+        const end = dp.startDate.addDays(dp.days).toString();
+
+        // Load resources (Berths)
+        fetch('/api/resources/')
+            .then(response => response.json())
+            .then(data => {
+                dp.resources = data;
+                dp.update();
+            });
+
+        // Load events (Bookings)
+        fetch(`/api/events/?start=${start}&end=${end}`)
+            .then(response => response.json())
+            .then(data => {
+                dp.events.list = data;
+                dp.update();
+            });
+    }
+
+    loadData();
+
+    document.getElementById("prevDay").addEventListener("click", () => {
+        dp.startDate = dp.startDate.addDays(dp.scale === "Month" ? -365 : -dp.days);
+        loadData();
+    });
+    document.getElementById("nextDay").addEventListener("click", () => {
+        dp.startDate = dp.startDate.addDays(dp.scale === "Month" ? 365 : dp.days);
+        loadData();
+    });
+    document.getElementById("today").addEventListener("click", () => {
+        dp.startDate = DayPilot.Date.today();
+        loadData();
+    });
+</script>
+{% endblock %}

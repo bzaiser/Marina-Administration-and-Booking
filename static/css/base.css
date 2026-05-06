@@ -1,0 +1,51 @@
+:root {
+    /* Design System - HSL Tokens */
+    --primary-h: 210;
+    --primary-s: 70%;
+    --primary-l: 50%;
+    
+    --secondary-h: 180;
+    --secondary-s: 60%;
+    --secondary-l: 45%;
+
+    --bg-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    --bg-primary-dark: hsl(var(--primary-h), var(--primary-s), 40%);
+    --bg-light: hsl(210, 20%, 98%);
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.navbar {
+    background-color: var(--bg-primary) !important;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-primary {
+    background-color: var(--bg-primary);
+    border-color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--bg-primary-dark);
+    border-color: var(--bg-primary-dark);
+}
+
+/* DayPilot Styles */
+.calendar_default_main {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* AG Grid Styles */
+.ag-theme-alpine {
+    --ag-border-radius: 12px;
+    height: 600px;
+}

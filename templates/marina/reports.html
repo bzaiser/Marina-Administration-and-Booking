@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h6 class="text-muted">Occupancy Rate</h6>
+            <h3 class="mb-0">{{ occupancy_rate }}%</h3>
+            <div class="progress mt-2" style="height: 5px;">
+                <div class="progress-bar" role="progressbar" style="width: {{ occupancy_rate }}%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h6 class="text-muted">Avg Boat Length</h6>
+            <h3 class="mb-0">{{ avg_boat_length }}m</h3>
+            <p class="small text-muted mb-0">Across all registered boats</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6 class="text-muted">Quick Actions</h6>
+            <div class="d-flex gap-2">
+                <a href="{% url 'invoices_list' %}" class="btn btn-sm btn-outline-primary">View All Invoices</a>
+                <a href="{% url 'planning_grid' %}" class="btn btn-sm btn-outline-primary">Check Availability</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Revenue Overview</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Top Customers</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for customer in top_customers %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ customer.name }}
+                        <span class="badge bg-primary rounded-pill">€{{ customer.total_spent|default:"0" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const revenueData = {{ revenue_data|safe }};
+    const labels = revenueData.map(d => new Date(d.month).toLocaleDateString(undefined, {month: 'short', year: 'numeric'}));
+    const totals = revenueData.map(d => d.total);
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenue (€)',
+                data: totals,
+                backgroundColor: 'rgba(52, 152, 219, 0.5)',
+                borderColor: 'rgba(52, 152, 219, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

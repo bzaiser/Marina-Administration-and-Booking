@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Berths Management - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Berths Management</h5>
+    <div class="d-flex gap-2">
+        <input type="text" id="filter-text-box" class="form-control form-control-sm" placeholder="Global search..." oninput="onFilterTextBoxChanged()">
+    </div>
+</div>
+
+<div class="accordion" id="marinaAccordion">
+    {% for block in "ABCDE"|make_list %}
+    <div class="accordion-item mb-2 shadow-sm border-0 rounded">
+        <h2 class="accordion-header" id="heading{{ block }}">
+            <button class="accordion-button {% if block != 'A' %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ block }}">
+                <i class="bi bi-box me-2"></i> <strong>Block {{ block }}</strong>
+                <span class="badge bg-light text-dark ms-2 border" id="count-{{ block }}">15 Berths</span>
+            </button>
+        </h2>
+        <div id="collapse{{ block }}" class="accordion-collapse collapse {% if block == 'A' %}show{% endif %}" data-bs-parent="#marinaAccordion">
+            <div class="accordion-body p-0">
+                <div id="grid-{{ block }}" class="ag-theme-alpine w-100" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const gridApis = {};
+
+    const columnDefs = [
+        { field: "number", headerName: "Berth #", width: 100, sortable: true },
+        { field: "max_length", headerName: "Max Length (m)", width: 150 },
+        { field: "max_weight", headerName: "Max Weight (t)", width: 150 },
+        { field: "current_boat", headerName: "Current Boat", flex: 1 },
+        { field: "status", headerName: "Status", width: 150, cellRenderer: function(params) {
+            let color = 'success';
+            if (params.value === 'Occupied') color = 'danger';
+            if (params.value.includes('At Sea')) color = 'info';
+            return `<span class="badge bg-${color}">${params.value}</span>`;
+        }},
+        { headerName: "Actions", width: 120, cellRenderer: function(params) {
+            if (params.data && params.data.status !== 'Vacant') {
+                return `<button class="btn btn-xs btn-outline-primary py-0" style="font-size: 0.7rem;" onclick="checkout('${params.data.id}')">Checkout</button>`;
+            }
+            return '';
+        }}
+    ];
+
+    function createGrid(block) {
+        const gridDiv = document.querySelector(`#grid-${block}`);
+        const options = {
+            columnDefs: columnDefs,
+            defaultColDef: { resizable: true, sortable: true, filter: true },
+            rowData: [],
+            animateRows: true,
+            domLayout: 'autoHeight'
+        };
+        gridApis[block] = agGrid.createGrid(gridDiv, options);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        ['A', 'B', 'C', 'D', 'E'].forEach(block => createGrid(block));
+        loadData();
+    });
+
+    function loadData() {
+        fetch('/api/berths/')
+            .then(response => response.json())
+            .then(data => {
+                ['A', 'B', 'C', 'D', 'E'].forEach(block => {
+                    const blockData = data.filter(d => d.block === block);
+                    gridApis[block].setGridOption('rowData', blockData);
+                    
+                    const occupied = blockData.filter(d => d.status === 'Occupied').length;
+                    const atSea = blockData.filter(d => d.status.includes('At Sea')).length;
+                    document.getElementById(`count-${block}`).innerText = `${blockData.length} Berths (${occupied} Occ, ${atSea} Sea)`;
+                });
+            });
+    }
+
+    function onFilterTextBoxChanged() {
+        const val = document.getElementById('filter-text-box').value;
+        Object.values(gridApis).forEach(api => {
+            api.setGridOption('quickFilterText', val);
+        });
+    }
+
+    function checkout(berthId) {
+        const url = `/checkout/${berthId}/`;
+        const modalElement = document.getElementById('modals-here');
+        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        });
+    }
+</script>
+
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock %}
