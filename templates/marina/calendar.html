@@ -84,18 +84,24 @@
             onAdd: function(item, callback) {
                 let endDate = item.end || new Date(item.start.getTime() + 24 * 60 * 60 * 1000);
                 const url = `/booking/create/?start=${item.start.toISOString()}&end=${endDate.toISOString()}&resource=${item.group}`;
-                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-                    const modal = new bootstrap.Modal(document.getElementById('modals-here'));
+                const modalEl = document.getElementById('modals-here');
+                modalEl.addEventListener('htmx:afterSwap', function handler() {
+                    const modal = new bootstrap.Modal(modalEl);
                     modal.show();
+                    modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
+                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
                 callback(null);
             },
             onUpdate: function (item, callback) {
                 const url = `/booking/edit/${item.id}/`;
-                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-                    const modal = new bootstrap.Modal(document.getElementById('modals-here'));
+                const modalEl = document.getElementById('modals-here');
+                modalEl.addEventListener('htmx:afterSwap', function handler() {
+                    const modal = new bootstrap.Modal(modalEl);
                     modal.show();
+                    modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
+                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
                 callback(null);
             }
         };
@@ -105,10 +111,13 @@
         timeline.on('doubleClick', function (properties) {
             if (properties.item) {
                 const url = `/booking/edit/${properties.item}/`;
-                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-                    const modal = new bootstrap.Modal(document.getElementById('modals-here'));
+                const modalEl = document.getElementById('modals-here');
+                modalEl.addEventListener('htmx:afterSwap', function handler() {
+                    const modal = new bootstrap.Modal(modalEl);
                     modal.show();
+                    modalEl.removeEventListener('htmx:afterSwap', handler);
                 });
+                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
             }
         });
 
