@@ -1,97 +1,270 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Planning Grid - Marina Samos{% endblock %}
+{% block title %}Yearly Planning - Marina Samos{% endblock %}
+
+{% block extra_head %}
+<link href="{% static 'vendor/visjs/vis-timeline-graph2d.min.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/flag-icons/css/flag-icons.min.css' %}"/>
+<style>
+    #visualization {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+    }
+    .vis-item {
+        font-size: 12px;
+        border-radius: 4px;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        height: 30px !important;
+    }
+    .vis-item .vis-item-content { 
+        padding: 0 6px !important; 
+        height: 100% !important;
+        line-height: 30px !important;
+        display: block !important;
+    }
+    .vis-panel.vis-left { background-color: #f8f9fa; border-right: 1px solid #ddd; width: 60px !important; }
+    .vis-label { height: 34px !important; border-bottom: 1px solid #eee !important; font-size: 12px; cursor: pointer; }
+    .vis-label .vis-inner { padding: 4px 2px !important; display: block; height: 100%; line-height: 26px !important; text-align: center; }
+    .vis-label.vis-nested .vis-inner { padding-left: 2px !important; background-color: white !important; }
+    .vis-group-level-unknown-but-gte1 { border: 1px solid #ddd !important; background-color: #f5f5f5 !important; }
+    
+    /* Fixed size Bootstrap-style arrows */
+    .vis-label.vis-nesting-group:before {
+        font-family: 'bootstrap-icons' !important;
+        content: "\F285" !important; /* chevron-right */
+        display: inline-block;
+        transition: transform 0.2s;
+        width: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+    .vis-label.vis-nesting-group.expanded:before {
+        transform: rotate(90deg);
+        content: "\F285" !important;
+    }
+    
+    .planning-header { background: white; border-bottom: 2px solid #eee; }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="card">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="mb-0">Yearly Planning Grid</h5>
-        <div class="d-flex gap-2">
-            <select id="year-selector" class="form-select form-select-sm" style="width: 120px;" onchange="loadData()">
-                <option value="2026" selected>2026</option>
-                <option value="2027">2027</option>
-            </select>
-            <input type="text" id="filter-text-box" class="form-control form-control-sm" placeholder="Search..." oninput="onFilterTextBoxChanged()">
-            <button class="btn btn-sm btn-outline-primary" onclick="onBtnExport()">Export CSV</button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-calendar-range text-primary me-2"></i>Yearly Planning Matrix</h5>
+    <div class="d-flex gap-2">
+        <div class="input-group input-group-sm" style="width: 250px;">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" id="searchBoat" class="form-control border-start-0" placeholder="Search boat or owner..." oninput="filterByBoat()">
+        </div>
+        <select id="year-selector" class="form-select form-select-sm" style="width: 100px;" onchange="loadData()">
+            <option value="2026" selected>2026</option>
+            <option value="2027">2027</option>
+        </select>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-secondary" onclick="handleZoomIn()"><i class="bi bi-zoom-in"></i></button>
+            <button class="btn btn-outline-secondary" onclick="handleZoomOut()"><i class="bi bi-zoom-out"></i></button>
+            <button class="btn btn-outline-primary" onclick="loadData()"><i class="bi bi-arrow-clockwise"></i></button>
         </div>
     </div>
+</div>
+
+<div class="card shadow-sm border-0">
     <div class="card-body p-0">
-        <div id="planningGrid" class="ag-theme-alpine w-100" style="height: 700px;"></div>
+        <div id="visualization" style="height: 750px;"></div>
+    </div>
+</div>
+
+<!-- Modal for info -->
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'vendor/visjs/vis-timeline-graph2d.min.js' %}"></script>
 <script>
-    const columnDefs = [
-        { field: "block", rowGroup: true, hide: true, cellRenderer: function(params) {
-            return `<span style="border-left: 10px solid ${params.data.block_color}; padding-left: 5px;">${params.value}</span>`;
-        }},
-        { field: "berth", rowGroup: true, hide: true, headerName: "Berth #" },
-        { field: "date", headerName: "Date", sortable: true, filter: 'agDateColumnFilter', sort: 'asc' },
-        { field: "boat_name", headerName: "Boat Name", flex: 1 },
-        { field: "flag", headerName: "Flag", width: 80 },
-        { field: "status", headerName: "Status", cellRenderer: function(params) {
-            let color = 'secondary';
-            if (params.value === 'Occupied') color = 'danger';
-            if (params.value === 'At Sea') color = 'info';
-            if (params.value === 'Vacant') color = 'success';
-            return `<span class="badge bg-${color}">${params.value}</span>`;
-        }},
-        { field: "arrival", headerName: "Arrival" },
-        { field: "departure", headerName: "Departure" },
-        { field: "days", headerName: "Days", width: 80 }
-    ];
+    let timeline;
+    let items = new vis.DataSet();
+    let groups = new vis.DataSet();
+    let allGroups = [];
+    let allItems = [];
 
-    const gridOptions = {
-        columnDefs: columnDefs,
-        defaultColDef: {
-            resizable: true,
-            sortable: true,
-            filter: true,
-            floatingFilter: true,
-        },
-        autoGroupColumnDef: {
-            headerName: 'Block / Berth',
-            minWidth: 250,
-            cellRendererParams: {
-                suppressCount: false,
+    function getEmojiFlag(countryCode) {
+        if (!countryCode || countryCode === 'xx' || countryCode === '-') return '🏳️';
+        const codePoints = countryCode
+            .toUpperCase()
+            .split('')
+            .map(char => 127397 + char.charCodeAt());
+        return String.fromCodePoint(...codePoints);
+    }
+
+    function initTimeline() {
+        const container = document.getElementById('visualization');
+        const year = document.getElementById('year-selector').value;
+        
+        const fortyFiveDays = 1000 * 60 * 60 * 24 * 45;
+        const options = {
+            stack: true,
+            groupOrder: 'order',
+            horizontalScroll: true,
+            verticalScroll: true,
+            maxHeight: '750px',
+            zoomKey: 'ctrlKey',
+            orientation: 'top',
+            start: new Date(),
+            end: new Date(new Date().getTime() + fortyFiveDays),
+            zoomMin: 1000 * 60 * 60 * 24 * 7, // 7 days
+            zoomMax: 1000 * 60 * 60 * 24 * 365 * 2, // 2 years
+            editable: false,
+            margin: { item: 4, axis: 5 },
+            template: function(item) {
+                if (!item) return '';
+                const flagEmoji = getEmojiFlag(item.flag);
+                const popoverContent = `
+                    <div class="p-1 text-dark" style="min-width: 200px;">
+                        <img src="${item.boat_image}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
+                        <div class="mb-1 d-flex align-items-center">
+                            <span class="fw-bold">${item.owner}</span>
+                        </div>
+                        <div class="small text-muted">
+                            <i class="bi bi-ship"></i> ${item.boat_type}<br>
+                            <i class="bi bi-calendar-check"></i> In: ${item.arrival}<br>
+                            <i class="bi bi-calendar-x"></i> Out: ${item.departure}<br>
+                            <hr class="my-1">
+                            <i class="bi bi-telephone"></i> ${item.phone}<br>
+                            <i class="bi bi-gear"></i> ${item.engine}<br>
+                            <i class="bi bi-arrows-fullscreen"></i> ${item.specs} (${item.draft}m)<br>
+                            <i class="bi bi-fuel-pump"></i> ${item.diesel}L | <i class="bi bi-droplet"></i> ${item.water}L<br>
+                            <i class="bi bi-translate"></i> ${item.language} | <i class="bi bi-calendar3"></i> ${item.year}<br>
+                            <i class="bi bi-hash"></i> Ref: ${item.ref}
+                            ${item.notes ? `<div class="mt-2 p-1 bg-light border-start border-3 border-warning small">Note: ${item.notes}</div>` : ''}
+                        </div>
+                    </div>
+                `.replace(/"/g, '&quot;').replace(/\s+/g, ' ');
+
+                return `
+                    <div data-bs-toggle="popover" 
+                         data-bs-trigger="hover focus"
+                         data-bs-html="true" 
+                         data-bs-container="body"
+                         data-bs-title="<strong>${item.content}</strong>" 
+                         data-bs-content="${popoverContent}"
+                         style="height: 30px; line-height: 30px; display: block; overflow: hidden;">
+                        <span style="display: inline-block; vertical-align: middle; line-height: normal; margin-right: 4px; font-size: 16px;">${flagEmoji}</span>
+                        <span style="display: inline-block; vertical-align: middle; line-height: normal;">${item.content}</span>
+                    </div>
+                `;
             }
-        },
-        rowData: [],
-        groupDefaultExpanded: 1, // Expand blocks by default
-        animateRows: true,
-        pagination: true,
-        paginationPageSize: 100,
-    };
+        };
 
-    let gridApi;
+        timeline = new vis.Timeline(container, items, groups, options);
+
+        // Edit booking on click
+        timeline.on('click', function (properties) {
+            if (properties.item) {
+                editBooking(properties.item);
+            }
+        });
+    }
+
+    function editBooking(bookingId) {
+        if (!bookingId) return;
+        htmx.ajax('GET', `/booking/edit/${bookingId}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            new bootstrap.Modal(document.getElementById('modals-here')).show();
+        });
+    }
 
     function loadData() {
         const year = document.getElementById('year-selector').value;
-        if (gridApi) gridApi.showLoadingOverlay();
         fetch(`/api/planning-data/?year=${year}`)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                gridApi.setGridOption('rowData', data);
+                allGroups = data.groups;
+                allItems = data.items;
+                groups.clear();
+                groups.add(data.groups);
+                
+                items.clear();
+                items.add(data.items);
+                
+                // Initialize Popovers
+                setTimeout(() => {
+                    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                    popoverTriggerList.map(function (popoverTriggerEl) {
+                        return new bootstrap.Popover(popoverTriggerEl);
+                    });
+                }, 1000);
             });
     }
 
+    function filterByBoat() {
+        const search = document.getElementById('searchBoat').value.toLowerCase();
+        if (!search) {
+            groups.clear();
+            groups.add(allGroups);
+            return;
+        }
+        
+        // 1. Find matching group IDs based on boat or owner name
+        const matchingGroupIds = allItems
+            .filter(item => 
+                item.content.toLowerCase().includes(search) || 
+                (item.owner && item.owner.toLowerCase().includes(search))
+            )
+            .map(item => String(item.group));
+            
+        const uniqueMatchingGroupIds = [...new Set(matchingGroupIds)];
+        
+        const filtered = allGroups.filter(g => {
+            // Match berth
+            if (uniqueMatchingGroupIds.includes(String(g.id))) return true;
+            
+            // Match block that has matching berths
+            if (g.nestedGroups) {
+                return g.nestedGroups.some(childId => uniqueMatchingGroupIds.includes(String(childId)));
+            }
+            return false;
+        });
+        
+        groups.clear();
+        groups.add(filtered);
+    }
+
+    function moveWindow(percentage) {
+        if (!timeline) return;
+        const range = timeline.getWindow();
+        const interval = range.end - range.start;
+        timeline.setWindow({
+            start: range.start.valueOf() - interval * percentage,
+            end:   range.end.valueOf()   - interval * percentage
+        });
+    }
+
+    function handleZoomIn() {
+        if (timeline) timeline.zoomIn(0.5);
+    }
+    
+    function handleZoomOut() {
+        if (timeline) timeline.zoomOut(0.5);
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-        const gridDiv = document.querySelector('#planningGrid');
-        gridApi = agGrid.createGrid(gridDiv, gridOptions);
+        initTimeline();
         loadData();
+
+        // Keyboard navigation
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                moveWindow(0.1); // Move 10% back
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                moveWindow(-0.1); // Move 10% forward
+                e.preventDefault();
+            }
+        });
     });
-
-    function onFilterTextBoxChanged() {
-        gridApi.setGridOption(
-            'quickFilterText',
-            document.getElementById('filter-text-box').value
-        );
-    }
-
-    function onBtnExport() {
-        gridApi.exportDataAsCsv();
-    }
 </script>
 {% endblock %}

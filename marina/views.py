@@ -331,53 +331,76 @@ def api_planning_data(request):
     year = int(request.GET.get('year', datetime.date.today().year))
     
     start_date = datetime.date(year, 1, 1)
-    end_date = datetime.date(year + 1, 12, 31) # Current + Following year
+    end_date = datetime.date(year, 12, 31)
     
-    # Pre-fetch all bookings for the period
+    # 1. Groups: All Berths nested under Blocks
+    from .models import Block, Berth
+    blocks = Block.objects.all().order_by('name')
+    berths = Berth.objects.all().select_related('block').order_by('block__name', 'number')
+    
+    resources = []
+    for idx, block in enumerate(blocks):
+        # We collect the IDs as strings to be safe
+        berth_ids = [str(b.id) for b in block.berths.all()]
+        resources.append({
+            'id': f"block_{block.id}",
+            'content': f"Block {block.name}",
+            'nestedGroups': berth_ids,
+            'className': 'bg-light fw-bold',
+            'order': idx * 1000
+        })
+    
+    for berth in berths:
+        resources.append({
+            'id': str(berth.id),
+            'content': f"{berth.number}",
+            'order': int(berth.number) if str(berth.number).isdigit() else 999
+        })
+
+    # 2. Items: All Bookings for that year
     bookings = Booking.objects.filter(
         start_date__lte=end_date,
         end_date__gte=start_date
-    ).select_related('boat', 'berth')
+    ).select_related('boat', 'boat__owner', 'berth')
     
-    berths = Berth.objects.all()
-    data = []
-    
-    # Create a lookup dictionary for bookings: {(berth_id, date): booking}
-    booking_lookup = {}
+    items = []
     for b in bookings:
-        curr_b = b.start_date
-        while curr_b <= b.end_date:
-            booking_lookup[(b.berth_id, curr_b)] = b
-            curr_b += datetime.timedelta(days=1)
-    
-    berths = Berth.objects.all()
-    data = []
-    
-    # Iterate through each day and each berth
-    curr = start_date
-    while curr <= end_date:
-        for berth in berths:
-            booking = booking_lookup.get((berth.id, curr))
-            
-            row = {
-                'date': curr.isoformat(),
-                'block': berth.block.name,
-                'block_color': berth.block.color,
-                'berth': berth.number,
-                'boat_name': booking.boat.name if booking else '-',
-                'flag': booking.boat.flag if booking else '-',
-                'arrival': booking.start_date.isoformat() if booking else '-',
-                'departure': booking.end_date.isoformat() if booking else '-',
-                'days': booking.duration_days if booking else '-',
-                'status': 'Occupied' if booking else 'Vacant',
-            }
-            if booking and booking.is_at_sea:
-                row['status'] = 'At Sea'
-                
-            data.append(row)
-        curr += datetime.timedelta(days=1)
+        flag = (b.boat.flag or 'xx').lower()
+        # We convert to emoji flag for the bar to keep it simple and light
+        # But we can also use the renderer in JS
+        # Style for At Sea vs Normal
+        base_color = b.boat.color or '#3498db'
+        style = f"background-color: {base_color}; border-color: {base_color}; color: white;"
+        if b.is_at_sea:
+            # Classic fine dark stripes
+            style = f"background-image: linear-gradient(45deg, rgba(0,0,0,0.3) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3) 75%, transparent 75%, transparent); background-size: 8px 8px; background-color: {base_color}; border: 1px solid {base_color}; color: white;"
+
+        items.append({
+            'id': b.id,
+            'group': str(b.berth_id),
+            'start': b.start_date.isoformat(),
+            'end': (b.end_date + datetime.timedelta(days=1)).isoformat(),
+            'content': f"{b.boat.name} (SEA)" if b.is_at_sea else b.boat.name,
+            'flag': flag,
+            'style': style,
+            'owner': b.boat.owner.name if b.boat.owner else '',
+            'boat_type': b.boat.get_boat_type_display(),
+            'boat_image': b.boat.image.url if b.boat.image else '/static/img/default-boat.png',
+            'arrival': b.start_date.strftime('%d.%m.%Y'),
+            'departure': b.end_date.strftime('%d.%m.%Y'),
+            'phone': b.boat.owner.phone if (b.boat.owner) else '',
+            'engine': b.boat.engine,
+            'specs': f"{b.boat.length}m x {b.boat.width}m",
+            'draft': b.boat.draft,
+            'diesel': b.boat.diesel_tank,
+            'water': b.boat.water_tank,
+            'language': b.boat.owner.language if b.boat.owner else '',
+            'year': b.boat.year_built,
+            'notes': b.notes,
+            'ref': b.reference
+        })
         
-    return JsonResponse(data, safe=False)
+    return JsonResponse({'groups': resources, 'items': items}, safe=False)
 
 def api_resources(request):
     from .models import Block, Berth
