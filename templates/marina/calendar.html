@@ -88,14 +88,6 @@
                     modal.show();
                 });
                 callback(null);
-            },
-            onUpdate: function (item, callback) {
-                const url = `/booking/edit/${item.id}/`;
-                htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-                    const modal = new bootstrap.Modal(document.getElementById('modals-here'));
-                    modal.show();
-                });
-                callback(null);
             }
         };
 
@@ -185,20 +177,20 @@
                         </div>
                     `,
                     style: `background-color: ${e.color}22; border-color: ${e.color}; color: #222;`,
-                    className: `${e.type === 'LONG' ? 'long-term' : ''} ${e.is_at_sea ? 'at-sea' : ''}`
+                    className: `${e.type === 'LONG' ? 'long-term' : ''} ${e.is_at_sea ? 'at-sea' : ''}`,
+                    title: `${e.text} (${statusText}) - Owner: ${e.owner}`
                 };
             }));
+
+            // Initialize Popovers
+            setTimeout(() => {
+                const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                popoverTriggerList.map(el => new bootstrap.Popover(el, {
+                    container: 'body'
+                }));
+            }, 500);
         });
     }
-
-    // Global Event Delegation for Popovers
-    document.body.addEventListener('mouseover', function (e) {
-        const target = e.target.closest('[data-bs-toggle="popover"]');
-        if (target && !target.hasAttribute('data-popover-initialized')) {
-            new bootstrap.Popover(target, { container: 'body' }).show();
-            target.setAttribute('data-popover-initialized', 'true');
-        }
-    });
 
     function zoomIn() { timeline.zoomIn(0.2); }
     function zoomOut() { timeline.zoomOut(0.2); }
