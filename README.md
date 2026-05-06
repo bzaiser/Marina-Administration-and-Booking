@@ -61,6 +61,7 @@ If you just want to get started quickly without manual setup, use our automated 
    ```bash
    python manage.py migrate
    python manage.py seed_berths
+   python manage.py seed_countries
    python manage.py seed_demo  # Optional: Seed demo data
    ```
 
