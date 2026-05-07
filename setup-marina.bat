@@ -49,10 +49,10 @@ if exist "%PYTHON_DIR%\python.exe" (
     powershell -NoProfile -Command "Expand-Archive -Path '%WORKDIR%python_embed.zip' -DestinationPath '%PYTHON_DIR%' -Force"
     del "%WORKDIR%python_embed.zip"
 
-    powershell -NoProfile -Command "$f = Get-ChildItem '%PYTHON_DIR%' -Filter '*._pth' | Select-Object -First 1; (Get-Content $f.FullName) -replace '#import site','import site' | Set-Content $f.FullName"
+    powershell -NoProfile -Command "$f = Get-ChildItem '%PYTHON_DIR%' -Filter '*._pth' | Select-Object -First 1; (Get-Content $f.FullName) -replace '#import site','import site' | Set-Content $f.FullName; Add-Content -Path $f.FullName -Value '..'"
 
     powershell -NoProfile -Command "Invoke-WebRequest -Uri '%PIP_URL%' -OutFile '%INSTALL_DIR%\get-pip.py'"
-    "%PYTHON_DIR%\python.exe" "%INSTALL_DIR%\get-pip.py" --quiet
+    "%PYTHON_DIR%\python.exe" "%INSTALL_DIR%\get-pip.py" --quiet --no-warn-script-location
     del "%INSTALL_DIR%\get-pip.py"
     echo [OK] Portables Python eingerichtet.
 )
@@ -104,7 +104,7 @@ echo.
 :: 4. ABHAENGIGKEITEN + DATENBANK
 :: ------------------------------------------
 echo [4/5] Installiere Abhaengigkeiten...
-"%PYTHON_DIR%\python.exe" -m pip install -r "%INSTALL_DIR%\requirements.txt" --quiet
+"%PYTHON_DIR%\python.exe" -m pip install -r "%INSTALL_DIR%\requirements.txt" --quiet --no-warn-script-location
 if %ERRORLEVEL% neq 0 (
     echo [FEHLER] Installation fehlgeschlagen.
     pause
