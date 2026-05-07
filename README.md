@@ -21,90 +21,132 @@ A professional management and booking tool for a Marina on the Greek island of S
 - **Analytics**: Revenue charts, occupancy rates, and top customer statistics.
 - **Offline Ready**: No CDN dependencies, all libraries and flags are hosted locally.
 
-## ⚡ Quick Start (The Easy Way)
-
-If you just want to get started quickly without manual setup, use our automated scripts:
-
-### 🪟 Windows Users (Portable)
-1.  Download or copy the **`Beispiel-Mobil.bat`** file.
-2.  Double-click it.
-3.  The script will automatically download the code, create a local Python environment, and set everything up.
-4.  Follow the prompt to create **Desktop Icons** for easy access.
-
-### 🐧 Linux Users
-1.  Open your terminal in the project folder.
-2.  Run **`./start-marina.sh`** to start the application.
-3.  Run **`./update-marina.sh`** at any time to pull updates and refresh the system.
+## 🖥️ Installation & Betrieb
 
 ---
 
-## 🛠 Manual Installation & Setup
+### 🪟 Windows — Erstinstallation (setup-marina.bat)
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git
-   cd Marina-Administration-and-Booking
-   ```
+> **Voraussetzung:** [Python 3.10+](https://www.python.org/downloads/) installiert und „Add Python to PATH" aktiviert.
 
-2. **Create a virtual environment**:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+1. Repository herunterladen:
+   - Als ZIP von GitHub → entpacken, **oder**
+   - `git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git`
 
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. In den Projektordner wechseln und **`setup-marina.bat`** per Doppelklick starten.
 
-4. **Initialize Database**:
-   ```bash
-   python manage.py migrate
-   python manage.py seed_berths
-   python manage.py seed_countries
-   python manage.py seed_demo  # Optional: Seed demo data
-   ```
+Das Script erledigt automatisch:
+- ✅ Python-Prüfung
+- ✅ Virtuelle Umgebung (venv) erstellen
+- ✅ Alle Abhängigkeiten installieren (`pip install -r requirements.txt`)
+- ✅ Datenbank einrichten (`migrate`)
+- ✅ Lokale Bibliotheken laden (`update_vendor`)
+- ✅ Optional: Desktop-Verknüpfungen erstellen
+- ✅ Optional: App direkt starten
 
-5. **Create Admin**:
-   ```bash
-   python manage.py createsuperuser
-   ```
+---
 
-5. **Download Vendor Libraries (Offline Support)**:
-   ```bash
-   python manage.py update_vendor
-   ```
+### 🪟 Windows — App starten (start-marina.bat)
 
-6. **Run Server**:
-   ```bash
-   python manage.py runserver
-   ```
+Doppelklick auf **`start-marina.bat`** (oder Desktop-Verknüpfung).
 
-## 📶 Offline Support & Vendor Management
-The system is designed to be fully operational without an internet connection (e.g., in a harbor environment). All major libraries are hosted locally in `static/vendor/`.
+- Aktiviert die virtuelle Umgebung
+- Öffnet automatisch den Browser auf `http://127.0.0.1:8003`
+- Startet den Django-Server
 
-To update the local libraries from the internet, run:
+---
+
+### 🪟 Windows — Updates einspielen (update-marina.bat)
+
+Doppelklick auf **`update-marina.bat`** (oder Desktop-Verknüpfung).
+
+- Holt aktuelle Version von GitHub (`git pull`)
+- Aktualisiert Abhängigkeiten
+- Führt Datenbankmigrationen aus
+- Aktualisiert lokale Bibliotheken
+
+> **Hinweis:** [Git für Windows](https://git-scm.com/download/win) muss installiert sein, wenn das Repo per `git clone` bezogen wurde. Bei ZIP-Download stattdessen manuell neu herunterladen und `setup-marina.bat` erneut ausführen.
+
+---
+
+### 🐧 Linux — Erstinstallation
+
+```bash
+git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git
+cd Marina-Administration-and-Booking
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py update_vendor
+```
+
+---
+
+### 🐧 Linux — App starten (start-marina.sh)
+
+```bash
+./start-marina.sh
+```
+
+- Aktiviert die virtuelle Umgebung
+- Öffnet den Browser auf `http://127.0.0.1:8003`
+- Startet den Django-Server
+
+---
+
+### 🐧 Linux — Updates einspielen (update-marina.sh)
+
+```bash
+./update-marina.sh
+```
+
+- `git pull` → neueste Version
+- `pip install -r requirements.txt`
+- `python manage.py migrate`
+- `python manage.py update_vendor`
+
+---
+
+## 🔧 Skript-Übersicht
+
+| Datei | System | Funktion |
+|---|---|---|
+| `setup-marina.bat` | Windows | **Erstinstallation** — alles einmalig einrichten |
+| `start-marina.bat` | Windows | App starten |
+| `update-marina.bat` | Windows | Updates einspielen |
+| `start-marina.sh` | Linux | App starten |
+| `update-marina.sh` | Linux | Updates einspielen |
+
+---
+
+## 📶 Offline-Betrieb & Vendor-Bibliotheken
+
+Das System funktioniert vollständig ohne Internetverbindung (z. B. im Hafen). Alle Bibliotheken (Bootstrap, HTMX, Alpine.js, AG-Grid, Vis.js, Chart.js) und Landesflaggen werden lokal in `static/vendor/` gespeichert.
+
+Manuell aktualisieren:
 ```bash
 python manage.py update_vendor
 ```
-This command fetches the latest stable versions of Bootstrap, HTMX, Alpine.js, AG-Grid, Vis.js, and Chart.js.
 
-## 🚩 Country & Flag Management
-Flags are managed dynamically through the database.
+## 🚩 Länder & Flaggen
 
-1. **Add a new Country**: Go to the Django Admin -> Countries and add the ISO code (e.g., `be`) and Name (e.g., `Belgium`).
-2. **Download the Flag**: Run `python manage.py update_vendor`. The system will automatically detect new countries and download their SVG flags to the local storage.
-3. **Usage**: The new country will immediately appear as a choice in the Boat Edit/Create masks.
+1. Im Django-Admin → Countries → ISO-Code (z. B. `gr`) und Name (z. B. `Greece`) eintragen.
+2. `python manage.py update_vendor` ausführen → Flagge wird automatisch heruntergeladen.
+3. Das neue Land erscheint sofort in den Boot-Formularen.
 
-## 🔄 Automatic Updates
-- **Berths Grid**: Automatically refreshes its data every 30 seconds via HTMX to ensure the occupancy status is always up-to-date.
-- **Modals**: HTMX-driven modals allow updating boat and booking data without a full page reload.
+## 🔄 Automatische Aktualisierungen
 
-## 📂 Project Structure
-- `marina/`: Main application logic, models, and views.
-- `marina_project/`: Django project configuration.
-- `templates/`: HTML templates (Base, Dashboard, Calendar, Grids, Partials).
-- `static/`: Custom CSS (HSL-based design system) and JS.
+- **Liegeplatz-Grid**: Aktualisiert alle 30 Sekunden automatisch via HTMX.
+- **Modals**: HTMX-gesteuert — Daten bearbeiten ohne Seitenneuladen.
 
-## 📜 License
-Open Source - Managed by Bernd Zaiser.
+## 📂 Projektstruktur
+
+- `marina/` — Anwendungslogik, Models, Views
+- `marina_project/` — Django-Projektkonfiguration
+- `templates/` — HTML-Templates (Dashboard, Kalender, Grids)
+- `static/` — CSS (HSL Design-System), JS, Vendor-Bibliotheken
+
+## 📜 Lizenz
+
+Open Source — Verwaltet von Bernd Zaiser.
