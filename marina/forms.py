@@ -28,15 +28,18 @@ class CustomerForm(forms.ModelForm):
         }
 
 class BoatForm(forms.ModelForm):
-    flag = forms.ModelChoiceField(
-        queryset=Country.objects.all(),
+    flag = forms.ChoiceField(
+        choices=[],
         widget=forms.Select(attrs={'class': 'form-select'}),
-        empty_label="Select Flag..."
+        required=False
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['flag'].label_from_instance = lambda obj: f"{obj.iso_code.upper()} - {obj.name}"
+        choices = [("", "Select Flag...")]
+        for country in Country.objects.all().order_by('name'):
+            choices.append((country.iso_code.upper(), f"{country.iso_code.upper()} - {country.name}"))
+        self.fields['flag'].choices = choices
 
     class Meta:
         model = Boat

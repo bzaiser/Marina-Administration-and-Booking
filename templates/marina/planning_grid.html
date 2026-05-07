@@ -173,6 +173,37 @@
                 editBooking(properties.item);
             }
         });
+
+        // Create booking on double-click empty space
+        timeline.on('doubleClick', function (properties) {
+            if (!properties.item && properties.group && !String(properties.group).startsWith('block_')) {
+                // Determine the start and end dates based on click position
+                const startDate = new Date(properties.time);
+                // Assume a default duration of 7 days
+                const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                
+                const startStr = startDate.toISOString().split('T')[0];
+                const endStr = endDate.toISOString().split('T')[0];
+                const berthId = properties.group;
+                
+                createBooking(berthId, startStr, endStr);
+            }
+        });
+    }
+
+    function createBooking(berthId, startStr, endStr) {
+        if (!berthId) return;
+        let url = `/booking/create/?resource=${berthId}`;
+        if (startStr) url += `&start=${startStr}`;
+        if (endStr) url += `&end=${endStr}`;
+        
+        const modalEl = document.getElementById('modals-here');
+        modalEl.addEventListener('htmx:afterSwap', function handler() {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            modalEl.removeEventListener('htmx:afterSwap', handler);
+        });
+        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
     }
 
     function editBooking(bookingId) {

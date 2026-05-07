@@ -164,6 +164,11 @@
                     }
                 });
                 
+                // Apply global filter immediately if text exists
+                if (document.getElementById('filter-text-box').value) {
+                    onFilterTextBoxChanged();
+                }
+                
                 // Initialize Popovers after a short delay to ensure DOM is ready
                 setTimeout(() => {
                     const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
@@ -185,6 +190,41 @@
             console.log("Auto-refreshing berths data...");
             loadData();
         }, 30000);
+
+        // Handle URL parameters to highlight/open a specific berth
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetBlockName = urlParams.get('block');
+        const targetBerthNum = urlParams.get('berth');
+        
+        if (targetBlockName) {
+            const blockIdMap = {
+                {% for block in blocks %}
+                "{{ block.name }}": "{{ block.id }}",
+                {% endfor %}
+            };
+            const blockId = blockIdMap[targetBlockName];
+            if (blockId) {
+                // Open the correct accordion block
+                const collapseEl = document.getElementById('collapse' + blockId);
+                if (collapseEl) {
+                    // Hide all other accordions
+                    document.querySelectorAll('.accordion-collapse').forEach(el => el.classList.remove('show'));
+                    document.querySelectorAll('.accordion-button').forEach(el => el.classList.add('collapsed'));
+                    
+                    // Show target accordion
+                    collapseEl.classList.add('show');
+                    const targetBtn = document.querySelector(`[data-bs-target="#collapse${blockId}"]`);
+                    if (targetBtn) targetBtn.classList.remove('collapsed');
+                }
+                
+                // If berth number is provided, put it in the filter box
+                if (targetBerthNum) {
+                    const filterBox = document.getElementById('filter-text-box');
+                    filterBox.value = targetBerthNum;
+                    // It will be applied automatically when loadData() finishes fetching.
+                }
+            }
+        }
     });
 
     function onFilterTextBoxChanged() {

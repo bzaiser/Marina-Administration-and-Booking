@@ -177,40 +177,81 @@ def dashboard(request):
     
     # All Berths with Occupancy for Schematic Map
     all_berths = []
-    for berth in Berth.objects.all().select_related('block'):
-        booking = Booking.objects.filter(
-            berth=berth, 
-            start_date__lte=today, 
-            end_date__gte=today,
-            status='ACTIVE'
-        ).first()
+    # Organize berths by block, sorting numerically
+    import re
+    block_berths = {}
+    berths = list(Berth.objects.all().select_related('block'))
+    
+    def berth_sort_key(b):
+        m = re.search(r'(\d+)', b.number)
+        num = int(m.group(1)) if m else 0
+        return (b.block.name, num, b.number)
         
-        # Calculate Schematic Position (Docked to piers)
-        num = int(berth.number)
-        x, y = 0, 0
-        if berth.block.name == 'A':
-            x, y = 150 + (num * 30), 125
-        elif berth.block.name == 'B':
-            x, y = 100 + (num * 35), 295
-        elif berth.block.name == 'C':
-            x, y = 100 + (num * 35), 370
-        elif berth.block.name == 'D':
-            x, y = 50 + (num * 40), 595
-        elif berth.block.name == 'E':
-            x, y = 820, 150 + (num * 30)
+    berths.sort(key=berth_sort_key)
+    
+    for berth in berths:
+        if berth.block.name not in block_berths:
+            block_berths[berth.block.name] = []
+        block_berths[berth.block.name].append(berth)
+        
+    # Centerline start, end, rotation angle, and L_short (rectangle width) for each block's polygon
+    import math
+    segments = {
+        'A': ((236.4, 163.0), (661.7, 126.3), -4.9, 94.3),
+        'B': ((280.0, 356.3), (686.4, 218.5), -18.7, 92.2),
+        'C': ((325.1, 477.8), (729.1, 335.0), -19.4, 89.2),
+        'D': ((257.2, 738.0), (738.7, 577.4), -18.4, 100.0),
+        'E': ((949.1, 426.7), (947.6, 808.9), 90.0, 115.0)
+    }
+
+    for block_name, b_list in block_berths.items():
+        total_in_block = len(b_list)
+        for idx, berth in enumerate(b_list):
+            booking = Booking.objects.filter(
+                berth=berth, 
+                start_date__lte=today, 
+                end_date__gte=today,
+                status='ACTIVE'
+            ).first()
             
-        all_berths.append({
-            'obj': berth,
-            'booking': booking,
-            'x': x,
-            'y': y,
-            'boat_name': booking.boat.name if booking else '',
-            'owner': booking.boat.owner.name if booking else '',
-            'length': booking.boat.length if booking else '',
-            'start': booking.start_date.strftime('%d.%m.%Y') if booking else '',
-            'end': booking.end_date.strftime('%d.%m.%Y') if booking else '',
-            'flag': booking.boat.flag if booking else '',
-        })
+            # Interpolate position and calculate dimensions
+            x, y, rot = 0, 0, 0
+            w, h = 15, 55 # fallback defaults
+            if block_name in segments:
+                start, end, angle, l_short = segments[block_name]
+                l_long = math.hypot(end[0] - start[0], end[1] - start[1])
+                
+                w = l_long / total_in_block
+                h = l_short
+                
+                fraction = (idx + 0.5) / total_in_block
+                x = start[0] + fraction * (end[0] - start[0])
+                y = start[1] + fraction * (end[1] - start[1])
+                rot = angle
+                
+            boat_scale = min(w / 14.0, h / 40.0) * 0.85 if w > 0 else 1
+            
+            all_berths.append({
+                'obj': berth,
+                'booking': booking,
+                'x': x,
+                'y': y,
+                'rot': rot,
+                'w': w,
+                'h': h,
+                'half_w': w / 2.0,
+                'half_h': h / 2.0,
+                'boat_scale': boat_scale,
+                'font_size': 5.0 * boat_scale,
+                'empty_font_size': 7.0 * boat_scale,
+                'boat_name': booking.boat.name if booking else '',
+                'boat_color': booking.boat.color if booking and booking.boat.color else berth.block.color,
+                'owner': booking.boat.owner.name if booking else '',
+                'length': booking.boat.length if booking else '',
+                'start': booking.start_date.strftime('%d.%m.%Y') if booking else '',
+                'end': booking.end_date.strftime('%d.%m.%Y') if booking else '',
+                'flag': booking.boat.flag if booking else '',
+            })
     
     context = {
         'berths_count': berths_count,
