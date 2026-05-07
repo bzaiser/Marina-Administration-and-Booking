@@ -27,18 +27,17 @@ A professional management and booking tool for a Marina on the Greek island of S
 
 ### 🪟 Windows — Erstinstallation (setup-marina.bat)
 
-> **Voraussetzung:** [Python 3.10+](https://www.python.org/downloads/) installiert und „Add Python to PATH" aktiviert.
+> **Keine Voraussetzungen nötig** — kein Python installieren, kein Setup von Hand.
 
 1. Repository herunterladen:
    - Als ZIP von GitHub → entpacken, **oder**
    - `git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git`
 
-2. In den Projektordner wechseln und **`setup-marina.bat`** per Doppelklick starten.
+2. **`setup-marina.bat`** per Doppelklick starten — fertig.
 
 Das Script erledigt automatisch:
-- ✅ Python-Prüfung
-- ✅ Virtuelle Umgebung (venv) erstellen
-- ✅ Alle Abhängigkeiten installieren (`pip install -r requirements.txt`)
+- ✅ Portables Python 3.11 herunterladen (lokal im Projektordner, keine Installation)
+- ✅ Alle Abhängigkeiten installieren
 - ✅ Datenbank einrichten (`migrate`)
 - ✅ Lokale Bibliotheken laden (`update_vendor`)
 - ✅ Optional: Desktop-Verknüpfungen erstellen
