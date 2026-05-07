@@ -2,7 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+# Fügt das aktuelle Verzeichnis (wo die manage.py liegt) zum Suchpfad hinzu
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
     """Run administrative tasks."""
