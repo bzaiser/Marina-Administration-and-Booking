@@ -5,23 +5,35 @@ from .models import Berth, Booking, Customer, Invoice, Block, Boat
 from .forms import BookingForm, CustomerForm, BoatForm
 
 def quick_boat_create(request):
+    start = request.GET.get('start', '')
+    end = request.GET.get('end', '')
+    berth = request.GET.get('berth', '')
+    
     if request.method == 'POST':
-        c_form = CustomerForm(request.POST)
-        b_form = BoatForm(request.POST)
+        start = request.POST.get('orig_start', '')
+        end = request.POST.get('orig_end', '')
+        berth = request.POST.get('orig_berth', '')
+        c_form = CustomerForm(request.POST, request.FILES, prefix='c')
+        b_form = BoatForm(request.POST, request.FILES, prefix='b')
         if c_form.is_valid() and b_form.is_valid():
             customer = c_form.save()
             boat = b_form.save(commit=False)
             boat.owner = customer
             boat.save()
-            # Return just the ID so JS can select it
-            return HttpResponse(f'<script>selectNewBoat("{boat.id}", "{boat.name}");</script>')
+            from django.shortcuts import redirect
+            from django.urls import reverse
+            url = f"{reverse('booking_create')}?start={start}&end={end}&resource={berth}&boat={boat.id}"
+            return redirect(url)
     else:
-        c_form = CustomerForm()
-        b_form = BoatForm()
+        c_form = CustomerForm(prefix='c')
+        b_form = BoatForm(prefix='b')
     
     return render(request, 'marina/partials/quick_boat_form.html', {
         'c_form': c_form,
-        'b_form': b_form
+        'b_form': b_form,
+        'orig_start': start,
+        'orig_end': end,
+        'orig_berth': berth,
     })
 
 def booking_create(request):
@@ -37,6 +49,7 @@ def booking_create(request):
             'start_date': request.GET.get('start'),
             'end_date': request.GET.get('end'),
             'berth': request.GET.get('resource'),
+            'boat': request.GET.get('boat'),
         }
         form = BookingForm(initial=initial)
     

@@ -1,71 +1,100 @@
-<div class="bg-light p-4 rounded border mb-3 shadow-sm">
-    <h6 class="mb-3 fw-bold text-primary"><i class="bi bi-person-plus me-1"></i> New Customer & Boat Details</h6>
-    <div class="row g-3">
+<div class="modal-header">
+    <h5 class="modal-title"><i class="bi bi-person-plus me-1"></i> New Customer & Boat Details</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form hx-post="{% url 'quick_boat_create' %}" hx-target="#modals-here .modal-content" hx-encoding="multipart/form-data">
+    <div class="modal-body">
+        {% csrf_token %}
+        <input type="hidden" name="orig_start" value="{{ orig_start }}">
+        <input type="hidden" name="orig_end" value="{{ orig_end }}">
+        <input type="hidden" name="orig_berth" value="{{ orig_berth }}">
+
+        {% if c_form.errors or b_form.errors %}
+        <div class="alert alert-danger p-2 mb-3 small">
+            <strong>Please check the following fields:</strong><br>
+            {% for field in c_form %}
+                {% for error in field.errors %}
+                    Customer {{ field.label }}: {{ error }}<br>
+                {% endfor %}
+            {% endfor %}
+            {% for field in b_form %}
+                {% for error in field.errors %}
+                    Boat {{ field.label }}: {{ error }}<br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <!-- Customer Data -->
-        <div class="col-md-8">
-            <label class="small fw-bold text-muted">Customer Name</label>
-            {{ c_form.name }}
+        <h6 class="text-primary mt-0 mb-2 border-bottom pb-2"><i class="bi bi-person"></i> Customer Details</h6>
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label class="small fw-bold text-muted">Customer Name<span class="text-danger">*</span></label>
+                {{ c_form.name }}
+            </div>
+            <div class="col-md-6">
+                <label class="small fw-bold text-muted">Email</label>
+                {{ c_form.email }}
+            </div>
+            <div class="col-md-6">
+                <label class="small fw-bold text-muted">Phone</label>
+                {{ c_form.phone }}
+            </div>
+            <div class="col-md-6">
+                <label class="small fw-bold text-muted">Nationality<span class="text-danger">*</span></label>
+                {{ c_form.nationality }}
+            </div>
+            <div class="col-md-6">
+                <label class="small fw-bold text-muted">Language<span class="text-danger">*</span></label>
+                {{ c_form.language }}
+            </div>
         </div>
-        <div class="col-md-4">
-            <label class="small fw-bold text-muted">Boat Name</label>
-            {{ b_form.name }}
-        </div>
-        <div class="col-md-6">
-            <label class="small fw-bold text-muted">Email</label>
-            {{ c_form.email }}
-        </div>
-        <div class="col-md-6">
-            <label class="small fw-bold text-muted">Phone</label>
-            {{ c_form.phone }}
-        </div>
-        
-        <!-- Technical Data -->
-        <div class="col-md-3">
-            <label class="small fw-bold text-muted">Boat Type</label>
-            {{ b_form.boat_type }}
-        </div>
-        <div class="col-md-3">
-            <label class="small fw-bold text-muted">Length (m)</label>
-            {{ b_form.length }}
-        </div>
-        <div class="col-md-3">
-            <label class="small fw-bold text-muted">Weight (t)</label>
-            {{ b_form.weight }}
-        </div>
-        <div class="col-md-3">
-            <label class="small fw-bold text-muted">Flag (ISO)</label>
-            {{ b_form.flag }}
-        </div>
-        <div class="col-md-4">
-            <label class="small fw-bold text-muted">Diesel Tank (L)</label>
-            {{ b_form.diesel_tank }}
-        </div>
-        <div class="col-md-4">
-            <label class="small fw-bold text-muted">Water Tank (L)</label>
-            {{ b_form.water_tank }}
-        </div>
-        <div class="col-md-4">
-            <label class="small fw-bold text-muted">Year Built</label>
-            {{ b_form.year_built }}
+
+        <!-- Boat Data -->
+        <h6 class="text-primary mt-4 mb-2 border-bottom pb-2"><i class="bi bi-water"></i> Boat Details</h6>
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label class="small fw-bold text-muted">Boat Name<span class="text-danger">*</span></label>
+                {{ b_form.name }}
+            </div>
+            <div class="col-md-4">
+                <label class="small fw-bold text-muted">Boat Type<span class="text-danger">*</span></label>
+                {{ b_form.boat_type }}
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">Length (m)<span class="text-danger">*</span></label>
+                {{ b_form.length }}
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">Weight (t)<span class="text-danger">*</span></label>
+                {{ b_form.weight }}
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">Flag (ISO)</label>
+                {{ b_form.flag }}
+            </div>
+            <div class="col-md-3">
+                <label class="small fw-bold text-muted">Boat Color<span class="text-danger">*</span></label>
+                {{ b_form.color }}
+            </div>
+            <div class="col-md-4">
+                <label class="small fw-bold text-muted">Diesel Tank (L)<span class="text-danger">*</span></label>
+                {{ b_form.diesel_tank }}
+            </div>
+            <div class="col-md-4">
+                <label class="small fw-bold text-muted">Water Tank (L)<span class="text-danger">*</span></label>
+                {{ b_form.water_tank }}
+            </div>
+            <div class="col-md-4">
+                <label class="small fw-bold text-muted">Year Built</label>
+                {{ b_form.year_built }}
+            </div>
         </div>
     </div>
-        <button type="button" class="btn btn-secondary" onclick="document.getElementById('quick-boat-area').innerHTML = '';">Cancel</button>
-        <button type="button" class="btn btn-success" hx-post="{% url 'quick_boat_create' %}" hx-target="#quick-boat-area" hx-include="closest .bg-light" hx-encoding="multipart/form-data">
-            <i class="bi bi-check-circle me-1"></i> Create & Register
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" hx-get="{% url 'booking_create' %}?start={{ orig_start }}&end={{ orig_end }}&resource={{ orig_berth }}" hx-target="#modals-here .modal-content">Cancel & Back</button>
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle me-1"></i> Create
         </button>
     </div>
-</div>
-
-<script>
-    function selectNewBoat(id, name) {
-        // Find the boat select in the parent form and add the new option
-        const select = document.querySelector('select[name="boat"]');
-        if (select) {
-            const option = new Option(name, id, true, true);
-            select.add(option);
-            select.value = id;
-            // Just close the quick add area
-            document.getElementById('quick-boat-area').innerHTML = '';
-        }
-    }
-</script>
+</form>

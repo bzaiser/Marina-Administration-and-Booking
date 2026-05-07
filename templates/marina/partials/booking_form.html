@@ -10,11 +10,10 @@
                 <label class="form-label">Customer/Boat</label>
                 <div class="input-group">
                     {{ form.boat }}
-                    <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'quick_boat_create' %}" hx-target="#quick-boat-area" title="Add New Customer/Boat">
+                    <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'quick_boat_create' %}?start={{ form.start_date.value|default_if_none:'' }}&end={{ form.end_date.value|default_if_none:'' }}&berth={{ form.berth.value|default_if_none:'' }}" hx-target="#modals-here .modal-content" title="Add New Customer/Boat">
                         <i class="bi bi-plus-circle"></i>
                     </button>
                 </div>
-                <div id="quick-boat-area" class="mt-2"></div>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Berth</label>

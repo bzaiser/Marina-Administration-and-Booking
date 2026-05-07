@@ -57,7 +57,7 @@ class Boat(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} ({self.get_boat_type_display()})"
+        return f"{self.owner.name} - {self.name} ({self.get_boat_type_display()})"
 
     class Meta:
         verbose_name = _("Boat")
