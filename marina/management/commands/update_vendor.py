@@ -80,6 +80,10 @@ class Command(BaseCommand):
                 dest_path = os.path.join(lib_dir, filename)
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
                 
+                if os.path.exists(dest_path) and os.path.getsize(dest_path) > 0:
+                    self.stdout.write(f'  Skipping {filename} (already exists)')
+                    continue
+                
                 try:
                     response = requests.get(url, timeout=10)
                     response.raise_for_status()
