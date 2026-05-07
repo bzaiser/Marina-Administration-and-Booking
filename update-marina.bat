@@ -1,49 +1,61 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
+chcp 65001 >nul
 
-echo ==========================================
-echo   MARINA SAMOS - UPDATE (Windows Portable)
-echo ==========================================
+echo ===========================================
+echo   MARINA SAMOS - UPDATE
+echo ===========================================
 echo.
 
-:: Wechsle zum Verzeichnis des Skripts
 cd /d "%~dp0"
 
-:: Git pruefen
-where git >nul 2>nul
-if %ERRORLEVEL% neq 0 (
-    echo [FEHLER] Git nicht gefunden. Bitte Git installieren: https://git-scm.com
+set "PYTHON_DIR=%~dp0python_portable"
+set "REPO_ZIP_URL=https://github.com/bzaiser/Marina-Administration-and-Booking/archive/refs/heads/main.zip"
+
+if not exist "%PYTHON_DIR%\python.exe" (
+    echo [FEHLER] Installation nicht gefunden.
+    echo Bitte zuerst setup-marina.bat ausfuehren.
     pause
     exit /b 1
 )
 
-:: Git Pull
-echo [+] Hole Updates von GitHub...
-git pull
+:: Download neue Version
+echo [1/3] Lade aktuelle Version von GitHub herunter...
+powershell -NoProfile -Command "Invoke-WebRequest -Uri '%REPO_ZIP_URL%' -OutFile '%~dp0update_temp.zip'"
 if %ERRORLEVEL% neq 0 (
-    echo [FEHLER] Git Pull fehlgeschlagen. Bitte Internetverbindung pruefen.
+    echo [FEHLER] Download fehlgeschlagen. Bitte Internetverbindung pruefen.
     pause
     exit /b 1
 )
 
-:: Updates mit portablem Python ausfuehren
-if exist "python_portable\python.exe" (
-    echo [+] Installiere Requirements...
-    "python_portable\python.exe" -m pip install -r requirements.txt
-    
-    echo [+] Fuehre Migrationen aus...
-    "python_portable\python.exe" manage.py migrate
-    
-    echo [+] Aktualisiere lokale Bibliotheken (Flaggen etc.)...
-    "python_portable\python.exe" manage.py update_vendor
-) else (
-    echo [FEHLER] Portables Python nicht gefunden. Bitte setup-marina.bat ausfuehren.
+echo [+] Entpacke Update...
+powershell -NoProfile -Command "Expand-Archive -Path '%~dp0update_temp.zip' -DestinationPath '%~dp0update_temp' -Force"
+
+:: Dateien kopieren - Datenbank, Medien und Python bleiben erhalten
+echo [+] Aktualisiere Anwendungsdateien...
+for /d %%D in ("%~dp0update_temp\*") do (
+    powershell -NoProfile -Command ^
+        "Copy-Item -Path '%%D\*' -Destination '%~dp0' -Recurse -Force" ^
+        " -Exclude @('db.sqlite3','python_portable','media')"
 )
+
+rd /s /q "%~dp0update_temp"
+del "%~dp0update_temp.zip"
+echo [OK] Dateien aktualisiert.
+echo.
+
+:: Python-Pakete und Datenbank aktualisieren
+echo [2/3] Aktualisiere Abhaengigkeiten...
+"%PYTHON_DIR%\python.exe" -m pip install -r requirements.txt --quiet
+
+echo [3/3] Fuehre Migrationen und Vendor-Update aus...
+"%PYTHON_DIR%\python.exe" manage.py migrate
+"%PYTHON_DIR%\python.exe" manage.py update_vendor
 
 echo.
-echo ==========================================
+echo ===========================================
 echo   UPDATE ABGESCHLOSSEN!
-echo ==========================================
+echo ===========================================
 pause
 
 endlocal
