@@ -1,14 +1,16 @@
 @echo off
 setlocal
 
-echo ===========================================
+set "WORKDIR=%~dp0"
+set "PYTHON_DIR=%WORKDIR%python_portable"
+
+echo.
+echo ==========================================
 echo   MARINA SAMOS - START
-echo ===========================================
+echo ==========================================
 echo.
 
-cd /d "%~dp0"
-
-if not exist "python_portable\python.exe" (
+if not exist "%PYTHON_DIR%\python.exe" (
     echo [FEHLER] Installation nicht gefunden.
     echo Bitte zuerst setup-marina.bat ausfuehren.
     pause
@@ -17,6 +19,6 @@ if not exist "python_portable\python.exe" (
 
 echo [+] Starte Server auf Port 8003...
 start http://127.0.0.1:8003
-"python_portable\python.exe" manage.py runserver 8003
+"%PYTHON_DIR%\python.exe" "%WORKDIR%manage.py" runserver 8003
 
 endlocal
