@@ -5,7 +5,7 @@ chcp 65001 >nul
 echo.
 echo ╔══════════════════════════════════════════════╗
 echo ║     MARINA SAMOS - SETUP (Windows)           ║
-echo ║     Erstinstallation / Einrichtung            ║
+echo ║     Komplett portable Installation            ║
 echo ╚══════════════════════════════════════════════╝
 echo.
 
@@ -13,51 +13,42 @@ echo.
 cd /d "%~dp0"
 
 :: ──────────────────────────────────────────────────
-:: 1. PYTHON PRÜFEN
+:: 1. PORTABLES PYTHON HERUNTERLADEN
 :: ──────────────────────────────────────────────────
-echo [1/5] Pruefe Python...
-where python >nul 2>nul
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo [FEHLER] Python wurde nicht gefunden!
-    echo.
-    echo Bitte Python 3.10 oder neuer installieren:
-    echo https://www.python.org/downloads/
-    echo.
-    echo WICHTIG: Bei der Installation "Add Python to PATH" aktivieren!
-    echo.
-    pause
-    exit /b 1
-)
+set "PYTHON_DIR=%~dp0python_portable"
+set "PYTHON_URL=https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip"
+set "PIP_URL=https://bootstrap.pypa.io/get-pip.py"
 
-for /f "tokens=*" %%V in ('python --version 2^>^&1') do set PY_VERSION=%%V
-echo [OK] %PY_VERSION% gefunden.
-echo.
-
-:: ──────────────────────────────────────────────────
-:: 2. VENV ERSTELLEN
-:: ──────────────────────────────────────────────────
-echo [2/5] Erstelle virtuelle Python-Umgebung (venv)...
-if exist "venv\Scripts\activate.bat" (
-    echo [OK] venv bereits vorhanden - wird wiederverwendet.
+echo [1/5] Richte lokales, portables Python ein...
+if exist "%PYTHON_DIR%\python.exe" (
+    echo [OK] Portables Python bereits vorhanden.
 ) else (
-    python -m venv venv
-    if %ERRORLEVEL% neq 0 (
-        echo [FEHLER] venv konnte nicht erstellt werden.
-        pause
-        exit /b 1
-    )
-    echo [OK] venv erstellt.
+    echo [+] Lade Python 3.11 Embedded herunter...
+    powershell -Command "Invoke-WebRequest -Uri '%PYTHON_URL%' -OutFile 'python-embed.zip'"
+    
+    echo [+] Entpacke Python...
+    powershell -Command "Expand-Archive -Path 'python-embed.zip' -DestinationPath '%PYTHON_DIR%' -Force"
+    del "python-embed.zip"
+    
+    :: pip aktivieren im Embedded Python (import site einkommentieren)
+    echo [+] Aktiviere Pip-Unterstuetzung...
+    powershell -Command "(Get-Content '%PYTHON_DIR%\python311._pth') -replace '#import site', 'import site' | Set-Content '%PYTHON_DIR%\python311._pth'"
+    
+    echo [+] Installiere Pip...
+    powershell -Command "Invoke-WebRequest -Uri '%PIP_URL%' -OutFile 'get-pip.py'"
+    "%PYTHON_DIR%\python.exe" get-pip.py
+    del "get-pip.py"
+    
+    echo [OK] Lokales Python erfolgreich eingerichtet.
 )
 echo.
 
 :: ──────────────────────────────────────────────────
-:: 3. ABHÄNGIGKEITEN INSTALLIEREN
+:: 2. ABHÄNGIGKEITEN INSTALLIEREN
 :: ──────────────────────────────────────────────────
-echo [3/5] Installiere Abhaengigkeiten...
-call venv\Scripts\activate.bat
-python -m pip install --upgrade pip --quiet
-pip install -r requirements.txt
+echo [2/5] Installiere Abhaengigkeiten...
+"%PYTHON_DIR%\python.exe" -m pip install --upgrade pip --quiet
+"%PYTHON_DIR%\python.exe" -m pip install -r requirements.txt
 if %ERRORLEVEL% neq 0 (
     echo [FEHLER] Installation der Abhaengigkeiten fehlgeschlagen.
     pause
@@ -67,10 +58,10 @@ echo [OK] Abhaengigkeiten installiert.
 echo.
 
 :: ──────────────────────────────────────────────────
-:: 4. DATENBANK EINRICHTEN
+:: 3. DATENBANK EINRICHTEN
 :: ──────────────────────────────────────────────────
-echo [4/5] Richte Datenbank ein...
-python manage.py migrate
+echo [3/5] Richte Datenbank ein...
+"%PYTHON_DIR%\python.exe" manage.py migrate
 if %ERRORLEVEL% neq 0 (
     echo [FEHLER] Datenbankmigrationen fehlgeschlagen.
     pause
@@ -80,10 +71,10 @@ echo [OK] Datenbank eingerichtet.
 echo.
 
 :: ──────────────────────────────────────────────────
-:: 5. LOKALE BIBLIOTHEKEN (FLAGS ETC.)
+:: 4. LOKALE BIBLIOTHEKEN (FLAGS ETC.)
 :: ──────────────────────────────────────────────────
-echo [5/5] Lade lokale Bibliotheken (Flaggen, Icons etc.)...
-python manage.py update_vendor
+echo [4/5] Lade lokale Bibliotheken (Flaggen, Icons etc.)...
+"%PYTHON_DIR%\python.exe" manage.py update_vendor
 if %ERRORLEVEL% neq 0 (
     echo [WARNUNG] update_vendor fehlgeschlagen - App laeuft trotzdem.
 )
@@ -91,7 +82,7 @@ echo [OK] Bibliotheken geladen.
 echo.
 
 :: ──────────────────────────────────────────────────
-:: DESKTOP-VERKNÜPFUNGEN (OPTIONAL)
+:: 5. DESKTOP-VERKNÜPFUNGEN (OPTIONAL)
 :: ──────────────────────────────────────────────────
 echo ══════════════════════════════════════════════
 set /p ICON_CHOICE="Desktop-Verknuepfungen erstellen? (J/N): "
@@ -129,7 +120,7 @@ set /p START_CHOICE="App jetzt direkt starten? (J/N): "
 if /i "!START_CHOICE!"=="J" (
     echo [+] Starte Marina Administration...
     start http://127.0.0.1:8003
-    python manage.py runserver 8003
+    "%PYTHON_DIR%\python.exe" manage.py runserver 8003
 ) else (
     echo Tschuess! Starte die App jederzeit mit start-marina.bat
     pause

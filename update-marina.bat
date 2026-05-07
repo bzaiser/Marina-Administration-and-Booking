@@ -2,7 +2,7 @@
 setlocal
 
 echo ==========================================
-echo   MARINA SAMOS - UPDATE (Windows)
+echo   MARINA SAMOS - UPDATE (Windows Portable)
 echo ==========================================
 echo.
 
@@ -26,17 +26,18 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
-:: Venv und Python-Updates
-if exist "venv\Scripts\activate.bat" (
-    call venv\Scripts\activate.bat
+:: Updates mit portablem Python ausfuehren
+if exist "python_portable\python.exe" (
     echo [+] Installiere Requirements...
-    pip install -r requirements.txt
+    "python_portable\python.exe" -m pip install -r requirements.txt
+    
     echo [+] Fuehre Migrationen aus...
-    python manage.py migrate
+    "python_portable\python.exe" manage.py migrate
+    
     echo [+] Aktualisiere lokale Bibliotheken (Flaggen etc.)...
-    python manage.py update_vendor
+    "python_portable\python.exe" manage.py update_vendor
 ) else (
-    echo [WARNUNG] venv nicht gefunden.
+    echo [FEHLER] Portables Python nicht gefunden. Bitte setup-marina.bat ausfuehren.
 )
 
 echo.
