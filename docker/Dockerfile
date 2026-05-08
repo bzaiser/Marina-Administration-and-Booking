@@ -20,8 +20,11 @@ RUN pip install --upgrade pip && \
 # Copy project
 COPY . /app/
 
+# Make entrypoint executable
+RUN chmod +x /app/docker/entrypoint.sh
+
 # Expose port
 EXPOSE 8000
 
-# Start Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "marina_project.wsgi:application"]
+# Set entrypoint
+ENTRYPOINT ["/app/docker/entrypoint.sh"]
