@@ -38,6 +38,18 @@
 </style>
 {% endblock %}
 
+{% block extra_head %}
+<link href="{% static 'vendor/visjs/vis-timeline-graph2d.min.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{% static 'vendor/flag-icons/css/flag-icons.min.css' %}"/>
+<style>
+    .vis-item { border-radius: 6px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+    .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; margin-left: 8px; text-transform: uppercase; }
+    .badge-guest { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .badge-permanent { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+    .badge-at-sea { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-2">
@@ -93,6 +105,24 @@
                 });
                 htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
                 callback(null);
+            },
+            template: function(item) {
+                if (!item) return '';
+                return `
+                    <div style="display: flex; align-items: center; padding: 2px 5px;">
+                        <span class="text-primary me-2" 
+                              style="font-weight: bold; cursor: pointer;"
+                              data-bs-toggle="popover" 
+                              data-bs-trigger="hover focus"
+                              data-bs-placement="bottom"
+                              data-bs-html="true" 
+                              data-bs-title="<strong>${item.boat_name}</strong>" 
+                              data-bs-content="${item.popover_content}">ⓘ</span>
+                        <span class="fi fi-${item.flag} fis me-2" style="flex-shrink:0; border-radius: 2px;"></span>
+                        <span style="font-weight: 600;">${item.boat_name}</span>
+                        ${item.status_label}
+                    </div>
+                `;
             },
             onUpdate: function (item, callback) {
                 const url = `/booking/edit/${item.id}/`;
@@ -168,7 +198,6 @@
                 }
                 
                 statusLabel = `<span class="status-badge ${badgeClass}">${statusText}</span>`;
-                const flagEmoji = getEmojiFlag(e.flag);
 
                 const popoverContent = `
                     <div class="p-1">
@@ -193,21 +222,10 @@
                     group: e.resource,
                     start: e.start,
                     end: e.end,
-                    content: `
-                        <div style="display: flex; align-items: center; padding: 2px 5px;">
-                            <span class="text-primary me-2" 
-                                  style="font-weight: bold; cursor: pointer;"
-                                  data-bs-toggle="popover" 
-                                  data-bs-trigger="hover focus"
-                                  data-bs-placement="bottom"
-                                  data-bs-html="true" 
-                                  data-bs-title="<strong>${e.text}</strong>" 
-                                  data-bs-content="${popoverContent}">ⓘ</span>
-                            <span style="margin-right: 8px; font-size: 1.2em;">${flagEmoji}</span>
-                            <span style="font-weight: 600;">${e.text}</span>
-                            ${statusLabel}
-                        </div>
-                    `,
+                    boat_name: e.text,
+                    flag: e.flag || 'xx',
+                    status_label: statusLabel,
+                    popover_content: popoverContent,
                     style: `background-color: ${e.color}22; border-color: ${e.color}; color: #222;`,
                     className: `${e.type === 'LONG' ? 'long-term' : ''} ${e.is_at_sea ? 'at-sea' : ''}`
                 };

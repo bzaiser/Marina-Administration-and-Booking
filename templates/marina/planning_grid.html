@@ -123,11 +123,11 @@
             margin: { item: 4, axis: 5 },
             template: function(item) {
                 if (!item) return '';
-                const flagEmoji = getEmojiFlag(item.flag);
                 const popoverContent = `
                     <div class="p-1 text-dark" style="min-width: 200px;">
                         <img src="${item.boat_image}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
                         <div class="mb-1 d-flex align-items-center">
+                            <span class="fi fi-${item.flag} fis me-2"></span>
                             <span class="fw-bold">${item.owner}</span>
                         </div>
                         <div class="small text-muted">
@@ -157,7 +157,7 @@
                               data-bs-content="${popoverContent}"
                               style="cursor: help;">
                             <span class="text-primary me-1" style="font-weight: bold; vertical-align: middle;">ⓘ</span>
-                            <span style="display: inline-block; vertical-align: middle; line-height: normal; margin-right: 4px; font-size: 16px;">${flagEmoji}</span>
+                            <span class="fi fi-${item.flag} fis me-1" style="display: inline-block; vertical-align: middle; line-height: normal; border-radius: 2px;"></span>
                             <span style="display: inline-block; vertical-align: middle; line-height: normal;">${item.content}</span>
                         </span>
                     </div>
