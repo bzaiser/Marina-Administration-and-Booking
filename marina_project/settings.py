@@ -181,6 +181,9 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # WhiteNoise static files storage
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
