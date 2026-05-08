@@ -581,30 +581,66 @@ def planning_grid(request):
 def reports_view(request):
     from django.db.models import Sum, Count, Avg
     from django.db.models.functions import TruncMonth
+    from django.utils import timezone
+    from datetime import timedelta
     
-    # Revenue by Month
+    today = timezone.now().date()
+    first_of_month = today.replace(day=1)
+    
+    # 1. Revenue Analytics
     revenue_data = Invoice.objects.filter(status='PAID').annotate(
         month=TruncMonth('date')
     ).values('month').annotate(total=Sum('total_amount')).order_by('month')
     
-    # Occupancy by Block
+    this_month_revenue = Invoice.objects.filter(
+        status='PAID', 
+        date__gte=first_of_month
+    ).aggregate(Sum('total_amount'))['total_amount__sum'] or 0
+    
+    # 2. Occupancy & Capacity
     berths_total = Berth.objects.count()
     active_bookings = Booking.objects.filter(status='ACTIVE').count()
+    planned_bookings = Booking.objects.filter(status='PLANNED', start_date__gte=today).count()
     occupancy_rate = (active_bookings / berths_total * 100) if berths_total > 0 else 0
     
-    # Top Customers
+    # 3. Customer & Boat Analytics
     top_customers = Customer.objects.annotate(
         total_spent=Sum('invoices__total_amount')
     ).order_by('-total_spent')[:5]
     
-    # Average Boat Size
-    avg_boat_length = Boat.objects.aggregate(Avg('length'))['length__avg']
+    boat_types = Boat.objects.values('boat_type').annotate(count=Count('id')).order_by('-count')
+    # Map choices
+    boat_type_labels = dict(Boat.BOAT_TYPES)
+    boat_types_data = [
+        {'label': boat_type_labels.get(bt['boat_type'], bt['boat_type']), 'count': bt['count']} 
+        for bt in boat_types
+    ]
     
+    nationalities = Boat.objects.values('flag').annotate(count=Count('id')).order_by('-count')[:8]
+    
+    # 4. Service Revenue
+    service_revenue = InvoiceItem.objects.filter(
+        invoice__status='PAID',
+        description__icontains='Service:'
+    ).values('description').annotate(total=Sum('unit_price')).order_by('-total')[:5]
+
     context = {
-        'revenue_data': list(revenue_data),
+        'revenue_data': [
+            {'month': d['month'].strftime('%Y-%m-%d') if d['month'] else None, 'total': float(d['total'])} 
+            for d in revenue_data
+        ],
+        'this_month_revenue': float(this_month_revenue),
         'occupancy_rate': round(occupancy_rate, 1),
+        'active_bookings': active_bookings,
+        'planned_bookings': planned_bookings,
         'top_customers': top_customers,
-        'avg_boat_length': round(avg_boat_length, 1) if avg_boat_length else 0,
+        'avg_boat_length': round(Boat.objects.aggregate(Avg('length'))['length__avg'] or 0, 1),
+        'boat_types_json': list(boat_types_data),
+        'nationalities_json': list(nationalities),
+        'service_revenue': [
+            {'description': s['description'], 'total': float(s['total'])} 
+            for s in service_revenue
+        ],
     }
     return render(request, 'marina/reports.html', context)
 

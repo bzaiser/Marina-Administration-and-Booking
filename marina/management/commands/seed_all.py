@@ -138,23 +138,45 @@ class Command(BaseCommand):
                 )
         self.stdout.write("- Customers, Boats and Bookings seeded.")
 
-        # 6. Sample Invoices
-        active_bookings = Booking.objects.filter(status='ACTIVE')[:3]
-        for b in active_bookings:
-            inv = Invoice.objects.create(
-                customer=b.boat.owner,
-                status=random.choice(['PAID', 'OPEN']),
-                total_amount=0,
-                payment_method='CASH'
-            )
-            InvoiceItem.objects.create(
-                invoice=inv,
-                description=f"Berth Fee for {b.boat.name}",
-                quantity=1,
-                unit_price=random.randint(100, 500)
-            )
-            from decimal import Decimal
-            inv.total_amount = sum(Decimal(str(item.unit_price)) * Decimal(str(item.quantity)) for item in inv.items.all())
-            inv.save()
-        
-        self.stdout.write(self.style.SUCCESS('Successfully seeded all marina data.'))
+        # 6. Historical Data (Last 6 Months)
+        self.stdout.write("Generating historical data...")
+        for m in range(1, 7):
+            past_date = today - timedelta(days=30*m)
+            # Create 2-3 historical bookings per month
+            for _ in range(random.randint(2, 3)):
+                h_cust = random.choice(Customer.objects.filter(boats__isnull=False))
+                h_boat = random.choice(h_cust.boats.all())
+                h_berth = random.choice(Berth.objects.all())
+                
+                h_booking = Booking.objects.create(
+                    boat=h_boat,
+                    berth=h_berth,
+                    start_date=past_date - timedelta(days=random.randint(5, 10)),
+                    end_date=past_date - timedelta(days=random.randint(1, 4)),
+                    status='COMPLETED',
+                    booking_type='SHORT'
+                )
+                
+                # Create corresponding PAID invoice
+                h_inv = Invoice.objects.create(
+                    customer=h_cust,
+                    booking=h_booking,
+                    status='PAID',
+                    total_amount=random.randint(150, 600),
+                    date=past_date,
+                    payment_method=random.choice(['CASH', 'CARD', 'TRANSFER'])
+                )
+                # Add a service item to some historical invoices
+                if random.random() > 0.3:
+                    h_service = random.choice(Service.objects.all())
+                    qty = random.randint(1, 5)
+                    InvoiceItem.objects.create(
+                        invoice=h_inv,
+                        description=f"Service: {h_service.name}",
+                        quantity=qty,
+                        unit_price=h_service.price_per_unit
+                    )
+                    h_inv.total_amount += h_service.price_per_unit * qty
+                    h_inv.save()
+
+        self.stdout.write(self.style.SUCCESS('Successfully seeded all marina data including history and services.'))

@@ -50,13 +50,16 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-primary text-white overflow-hidden" style="height: 42px;">
-                <div class="d-flex align-items-center h-100 px-3 justify-content-between w-100">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-people me-2 small"></i>
-                        <span class="xx-small fw-bold text-white-50 text-uppercase">Guests</span>
+            <div class="card shadow-sm border-0 bg-white overflow-hidden" style="height: 42px;">
+                <div class="d-flex align-items-center h-100">
+                    <div class="bg-info h-100 d-flex align-items-center justify-content-center" style="width: 4px;"></div>
+                    <div class="px-3 d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-people text-info me-2 small"></i>
+                            <span class="xx-small fw-bold text-muted text-uppercase">Guests</span>
+                        </div>
+                        <div class="fw-bold text-dark h5 mb-0">{{ customers_count }}</div>
                     </div>
-                    <div class="fw-bold text-white h5 mb-0">{{ customers_count }}</div>
                 </div>
             </div>
         </div>

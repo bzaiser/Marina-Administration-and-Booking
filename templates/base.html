@@ -71,10 +71,10 @@
                         <a class="nav-link {% if request.resolver_match.url_name == 'planning_grid' %}active{% endif %}" href="{% url 'planning_grid' %}"><i class="bi bi-list-check me-1"></i> Planning Grid</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}" href="{% url 'reports' %}"><i class="bi bi-graph-up me-1"></i> Reports</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'invoices_list' %}active{% endif %}" href="{% url 'invoices_list' %}"><i class="bi bi-receipt me-1"></i> Invoices</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'invoices_list' %}active{% endif %}" href="{% url 'invoices_list' %}"><i class="bi bi-receipt me-1"></i> Invoices</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}" href="{% url 'reports' %}"><i class="bi bi-graph-up me-1"></i> Reports</a>
                     </li>
                 </ul>
                 <div class="d-flex">
@@ -87,6 +87,48 @@
     <main class="container-fluid pb-5">
         {% block content %}{% endblock %}
     </main>
+
+    <footer class="footer mt-auto py-3 bg-white border-top">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+            <span class="text-muted small">© 2026 Marina Samos Administration</span>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="text-decoration-none text-muted small" data-bs-toggle="modal" data-bs-target="#aboutModal">About System</a>
+                <span class="text-muted small">v1.2.0-stable</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-body p-5 text-center">
+                    <div class="bg-primary-subtle text-primary rounded-circle p-3 d-inline-block mb-4">
+                        <i class="bi bi-info-circle fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">Marina Management Samos</h4>
+                    <p class="text-muted mb-4">Professional Berth Administration & Booking System</p>
+                    
+                    <div class="text-start bg-light p-3 rounded-3 mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Developer:</span>
+                            <span class="fw-bold small">Bernd Zaiser</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small">Version:</span>
+                            <span class="fw-bold small">1.2.0</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Environment:</span>
+                            <span class="badge bg-success-subtle text-success">Production Ready</span>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary w-100 py-2 rounded-3" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>

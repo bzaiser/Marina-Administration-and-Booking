@@ -4,148 +4,50 @@ A professional management and booking tool for a Marina on the Greek island of S
 
 ## 🚀 Tech Stack
 - **Backend**: Python / Django 4.2
-- **Database**: SQLite
+- **Database**: SQLite (Locally stored or network path)
 - **Frontend**: Bootstrap 5, HTMX, Alpine.js
 - **Specialized Components**: 
   - **DayPilot Lite**: For visual scheduling and booking calendar.
   - **AG Grid Community**: For high-performance data management.
   - **xhtml2pdf**: For professional PDF invoice generation.
   - **Chart.js**: For analytics and reporting.
+  - **svg-pan-zoom**: For the interactive Marina Live View.
 
 ## ✨ Key Features
-- **Berth Management**: 75 berths organized in Blocks A-E. Interactive status overview (Occupied, Vacant, At Sea).
+- **Berth Management**: 75 berths organized in Blocks A-E. Interactive status overview.
+- **Marina Live View**: Interactive SVG map with real-time occupancy tracking and boat info tooltips.
 - **Booking Calendar**: Visual timeline for planning arrivals and departures.
-- **Sub-Leasing Logic**: Track long-term tenants "at sea" and temporarily reassign berths.
 - **Invoicing**: Automatic price calculation based on boat length and duration. Export to PDF.
-- **Planning Grid**: Massive denormalized view for daily occupancy tracking across the entire year.
-- **Analytics**: Revenue charts, occupancy rates, and top customer statistics.
-- **Offline Ready**: No CDN dependencies, all libraries and flags are hosted locally.
+- **Business Analytics**: Comprehensive reports on revenue trends, boat types, and nationalities.
+- **Offline Ready**: No CDN dependencies, all libraries and assets (flags, icons) are hosted locally.
 
-## 🖥️ Installation & Betrieb
+## 🖥️ Installation & Operation
 
----
+### 🪟 Windows (Batch Scripts)
+1. **`setup-marina.bat`**: First-time installation. Downloads portable Python, sets up VENV, and initializes the DB.
+2. **`start-marina.bat`**: Launches the application and opens your browser.
+3. **`update-marina.bat`**: Fetches the latest changes from Git and updates dependencies.
 
-### 🪟 Windows — Erstinstallation (setup-marina.bat)
+### 🍎 macOS / 🐧 Linux (Shell Scripts)
+1. **`setup-marina.sh`**: Initializes the environment and installs requirements.
+2. **`run.sh`**: Activates the environment and starts the server.
+3. **`update-marina.sh`**: Pulls updates and migrates the database.
 
-> **Keine Voraussetzungen nötig** — kein Python installieren, kein Setup von Hand.
-
-1. Repository herunterladen:
-   - Als ZIP von GitHub → entpacken, **oder**
-   - `git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git`
-
-2. **`setup-marina.bat`** per Doppelklick starten — fertig.
-
-Das Script erledigt automatisch:
-- ✅ Portables Python 3.11 herunterladen (lokal im Projektordner, keine Installation)
-- ✅ Alle Abhängigkeiten installieren
-- ✅ Datenbank einrichten (`migrate`)
-- ✅ Lokale Bibliotheken laden (`update_vendor`)
-- ✅ Optional: Desktop-Verknüpfungen erstellen
-- ✅ Optional: App direkt starten
-
----
-
-### 🪟 Windows — App starten (start-marina.bat)
-
-Doppelklick auf **`start-marina.bat`** (oder Desktop-Verknüpfung).
-
-- Aktiviert die virtuelle Umgebung
-- Öffnet automatisch den Browser auf `http://127.0.0.1:8003`
-- Startet den Django-Server
-
----
-
-### 🪟 Windows — Updates einspielen (update-marina.bat)
-
-Doppelklick auf **`update-marina.bat`** (oder Desktop-Verknüpfung).
-
-- Holt aktuelle Version von GitHub (`git pull`)
-- Aktualisiert Abhängigkeiten
-- Führt Datenbankmigrationen aus
-- Aktualisiert lokale Bibliotheken
-
-> **Hinweis:** [Git für Windows](https://git-scm.com/download/win) muss installiert sein, wenn das Repo per `git clone` bezogen wurde. Bei ZIP-Download stattdessen manuell neu herunterladen und `setup-marina.bat` erneut ausführen.
-
----
-
-### 🐧 Linux — Erstinstallation
-
+### 🧪 Initial Seed Data
+To populate the system with 75 berths, sample customers, boats, and historical reports data:
 ```bash
-git clone https://github.com/bzaiser/Marina-Administration-and-Booking.git
-cd Marina-Administration-and-Booking
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py update_vendor
+python manage.py seed_all
 ```
-
----
-
-### 🐧 Linux — App starten (start-marina.sh)
-
-```bash
-./start-marina.sh
-```
-
-- Aktiviert die virtuelle Umgebung
-- Öffnet den Browser auf `http://127.0.0.1:8003`
-- Startet den Django-Server
-
----
-
-### 🐧 Linux — Updates einspielen (update-marina.sh)
-
-```bash
-./update-marina.sh
-```
-
-- `git pull` → neueste Version
-- `pip install -r requirements.txt`
-- `python manage.py migrate`
-- `python manage.py update_vendor`
-
----
-
-## 🔧 Skript-Übersicht
-
-| Datei | System | Funktion |
-|---|---|---|
-| `setup-marina.bat` | Windows | **Erstinstallation** — alles einmalig einrichten |
-| `start-marina.bat` | Windows | App starten |
-| `update-marina.bat` | Windows | Updates einspielen |
-| `start-marina.sh` | Linux | App starten |
-| `update-marina.sh` | Linux | Updates einspielen |
-
----
 
 ## 📶 Offline-Betrieb & Vendor-Bibliotheken
-
-Das System funktioniert vollständig ohne Internetverbindung (z. B. im Hafen). Alle Bibliotheken (Bootstrap, HTMX, Alpine.js, AG-Grid, Vis.js, Chart.js) und Landesflaggen werden lokal in `static/vendor/` gespeichert.
-
-Manuell aktualisieren:
-```bash
-python manage.py update_vendor
-```
-
-## 🚩 Länder & Flaggen
-
-1. Im Django-Admin → Countries → ISO-Code (z. B. `gr`) und Name (z. B. `Greece`) eintragen.
-2. `python manage.py update_vendor` ausführen → Flagge wird automatisch heruntergeladen.
-3. Das neue Land erscheint sofort in den Boot-Formularen.
-
-## 🔄 Automatische Aktualisierungen
-
-- **Liegeplatz-Grid**: Aktualisiert alle 30 Sekunden automatisch via HTMX.
-- **Modals**: HTMX-gesteuert — Daten bearbeiten ohne Seitenneuladen.
+Das System funktioniert vollständig ohne Internetverbindung. Alle Bibliotheken (Bootstrap, HTMX, Alpine.js, AG-Grid, Chart.js) sind lokal in `static/vendor/` gespeichert.
 
 ## 📂 Projektstruktur
-
 - `marina/` — Anwendungslogik, Models, Views
 - `marina_project/` — Django-Projektkonfiguration
 - `templates/` — HTML-Templates (Dashboard, Kalender, Grids)
 - `static/` — CSS (HSL Design-System), JS, Vendor-Bibliotheken
+- `media/` — Boat photos, Logo, and dynamic assets
 
-## 📜 Lizenz
-
-Open Source — Verwaltet von Bernd Zaiser.
+## 📜 About
+Created and managed by Bernd Zaiser. Professional Marina Management Solution for Samos.
