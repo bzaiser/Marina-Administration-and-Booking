@@ -1,5 +1,5 @@
 <div class="modal-header border-0 pb-0">
-    <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle text-primary me-2"></i>Add Service</h5>
+    <h5 class="modal-title fw-bold"><i class="bi bi-gear-wide-connected text-primary me-2"></i>Add Service Line Item</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 {% if request.htmx %}
@@ -8,39 +8,104 @@
 <form method="POST" action="{% url 'add_service' booking.id %}">
 {% endif %}
     <div class="modal-body pt-3">
-        <div class="alert alert-light border-0 rounded-3 mb-4 d-flex align-items-center">
-            <i class="bi bi-info-circle text-primary me-3 fs-4"></i>
+        <div class="alert alert-primary border-0 rounded-3 mb-4 d-flex align-items-center">
+            <i class="bi bi-ship text-primary me-3 fs-4"></i>
             <div>
-                <small class="text-muted d-block small fw-bold text-uppercase">Adding service to</small>
-                <span class="fw-bold text-dark">{{ booking.boat.name }}</span> 
-                <span class="text-muted small ms-1">({{ booking.berth.block.name }}{{ booking.berth.number }})</span>
+                <small class="text-uppercase fw-bold text-muted" style="font-size: 0.65rem; letter-spacing: 0.5px;">Booking for Boat</small>
+                <div class="fw-bold fs-5 text-dark">{{ booking.boat.name }}</div>
+                <div class="text-muted small"><i class="bi bi-geo-alt me-1"></i>Berth {{ booking.berth.block.name }}{{ booking.berth.number }}</div>
             </div>
         </div>
 
         {% csrf_token %}
         <div class="mb-3">
-            <label class="form-label fw-bold small text-uppercase">Select Service Category</label>
-            <select name="service" class="form-select form-select-lg shadow-sm border-0 bg-light" required>
-                <option value="" disabled selected>Choose a service...</option>
+            <label class="form-label fw-bold small text-uppercase text-muted">Service Selection</label>
+            <div class="input-group input-group-lg shadow-sm border-0 rounded-3 overflow-hidden">
+                <span class="input-group-text border-0 bg-light"><i class="bi bi-search"></i></span>
+                <input list="serviceOptions" name="service_search" id="serviceSearch" class="form-control border-0 bg-light" placeholder="Search or select service..." autocomplete="off">
+                <input type="hidden" name="service" id="serviceId">
+            </div>
+            <datalist id="serviceOptions">
                 {% for s in services %}
-                <option value="{{ s.id }}">{{ s.name }} — €{{ s.price_per_unit|floatformat:2 }} / {{ s.get_unit_display }}</option>
+                <option data-id="{{ s.id }}" data-price="{{ s.price_per_unit }}" data-unit-label="{{ s.get_unit_display }}" value="{{ s.name }} (€{{ s.price_per_unit|floatformat:2 }}/{{ s.get_unit_display }})"></option>
                 {% endfor %}
-            </select>
+            </datalist>
+            <div id="serviceDetails" class="mt-2 text-primary small d-none fw-bold"></div>
         </div>
-        <div class="mb-3">
-            <label class="form-label fw-bold small text-uppercase">Quantity / Units</label>
-            <div class="input-group input-group-lg shadow-sm">
-                <input type="number" name="quantity" class="form-control border-0 bg-light" value="1" step="0.1" required>
-                <span class="input-group-text border-0 bg-light text-muted"><i class="bi bi-hash"></i></span>
+
+        <div class="row">
+            <div class="col-md-5 mb-3">
+                <label class="form-label fw-bold small text-uppercase text-muted">Quantity</label>
+                <div class="input-group input-group-lg shadow-sm border-0 rounded-3 overflow-hidden">
+                    <input type="number" name="quantity" id="quantity" class="form-control border-0 bg-light" value="1" step="0.01" required>
+                    <span class="input-group-text border-0 bg-light text-muted fw-bold" id="unitDisplay">Units</span>
+                </div>
+            </div>
+            <div class="col-md-5 mb-3">
+                <label class="form-label fw-bold small text-uppercase text-muted">Unit Price (€)</label>
+                <div class="input-group input-group-lg shadow-sm border-0 rounded-3 overflow-hidden">
+                    <input type="number" name="price_per_unit" id="unitPrice" class="form-control border-0 bg-light" step="0.01" placeholder="0.00">
+                    <span class="input-group-text border-0 bg-light"><i class="bi bi-currency-euro"></i></span>
+                </div>
+            </div>
+            <div class="col-md-2 mb-3 text-center">
+                <label class="form-label fw-bold small text-uppercase text-muted">Total</label>
+                <div id="totalPreview" class="fw-bold text-primary fs-5 mt-1">€0.00</div>
             </div>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-muted">Internal Notes</label>
+            <textarea name="notes" class="form-control border-0 bg-light shadow-sm" rows="2" placeholder="Notes for provider or office..."></textarea>
+        </div>
     </div>
-    <div class="modal-footer border-0 pt-0 pb-4 justify-content-center">
+    <div class="modal-footer border-0 pt-0 pb-4">
         <div class="d-grid gap-2 w-100 px-3">
-            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
-                <i class="bi bi-cart-plus me-2"></i>Add to Booking Invoice
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm" id="submitBtn" disabled>
+                <i class="bi bi-cart-plus me-2"></i>Add to Invoice
             </button>
-            <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Discard</button>
         </div>
     </div>
 </form>
+
+<script>
+    function updateAddServiceTotal() {
+        const qty = parseFloat(document.getElementById('quantity').value) || 0;
+        const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+        const total = qty * price;
+        document.getElementById('totalPreview').innerText = '€' + total.toFixed(2);
+    }
+
+    document.getElementById('serviceSearch').addEventListener('input', function(e) {
+        const val = this.value;
+        const options = document.getElementById('serviceOptions').childNodes;
+        let found = false;
+        
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value === val) {
+                const serviceId = options[i].getAttribute('data-id');
+                const price = options[i].getAttribute('data-price');
+                const unit = options[i].getAttribute('data-unit-label');
+                document.getElementById('serviceId').value = serviceId;
+                document.getElementById('unitPrice').value = price;
+                document.getElementById('unitDisplay').innerText = unit || "Units";
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('serviceDetails').innerText = "Selected: " + val;
+                document.getElementById('serviceDetails').classList.remove('d-none');
+                found = true;
+                updateAddServiceTotal();
+                break;
+            }
+        }
+        
+        if (!found) {
+            document.getElementById('serviceId').value = "";
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('serviceDetails').classList.add('d-none');
+        }
+    });
+
+    document.getElementById('quantity').addEventListener('input', updateAddServiceTotal);
+    document.getElementById('unitPrice').addEventListener('input', updateAddServiceTotal);
+</script>
