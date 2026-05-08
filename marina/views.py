@@ -192,6 +192,7 @@ def add_service(request, booking_id):
 
 def invoice_pdf(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
+    invoice.recalculate_total() # Ensure total is correct
     context = {
         'invoice': invoice,
         'block_color': invoice.booking.berth.block.color if invoice.booking else '#3498db'
@@ -341,6 +342,8 @@ def invoice_create(request):
         if form.is_valid():
             invoice = form.save()
             return redirect('invoice_edit', pk=invoice.pk)
+        else:
+            print(f"DEBUG: InvoiceForm invalid: {form.errors}")
     else:
         form = InvoiceForm()
     

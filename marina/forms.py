@@ -2,6 +2,12 @@ from django import forms
 from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider
 
 class InvoiceForm(forms.ModelForm):
+    discount = forms.DecimalField(required=False, initial=0, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}))
+    payment_method = forms.ChoiceField(choices=Invoice.PAYMENT_METHOD, required=False, initial='CASH', widget=forms.Select(attrs={'class': 'form-select'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Invoice
         fields = ['customer', 'status', 'payment_method', 'discount']
