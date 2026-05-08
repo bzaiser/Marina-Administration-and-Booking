@@ -39,14 +39,14 @@ To populate the system with 75 berths, sample customers, boats, and historical r
 python manage.py seed_all
 ```
 
-## 📶 Offline-Betrieb & Vendor-Bibliotheken
-Das System funktioniert vollständig ohne Internetverbindung. Alle Bibliotheken (Bootstrap, HTMX, Alpine.js, AG-Grid, Chart.js) sind lokal in `static/vendor/` gespeichert.
+## 📶 Offline Operation & Vendor Libraries
+The system works completely without an internet connection. All libraries (Bootstrap, HTMX, Alpine.js, AG-Grid, Chart.js) are stored locally in `static/vendor/`.
 
-## 📂 Projektstruktur
-- `marina/` — Anwendungslogik, Models, Views
-- `marina_project/` — Django-Projektkonfiguration
-- `templates/` — HTML-Templates (Dashboard, Kalender, Grids)
-- `static/` — CSS (HSL Design-System), JS, Vendor-Bibliotheken
+## 📂 Project Structure
+- `marina/` — Application logic, Models, Views
+- `marina_project/` — Django project configuration
+- `templates/` — HTML templates (Dashboard, Calendar, Grids)
+- `static/` — CSS (HSL Design System), JS, Vendor libraries
 - `media/` — Boat photos, Logo, and dynamic assets
 
 ## 📜 About
