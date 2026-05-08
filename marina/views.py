@@ -1,10 +1,12 @@
 from django.db import models
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
 from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider
 from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm
 
+@login_required
 def quick_boat_create(request):
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
@@ -43,6 +45,7 @@ def quick_boat_create(request):
         'title': 'New Boat Registration'
     })
 
+@login_required
 def booking_create(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -70,6 +73,7 @@ def booking_create(request):
         'title': 'Create Booking'
     })
 
+@login_required
 def checkout_view(request, berth_id):
     from django.utils import timezone
     berth = get_object_or_404(Berth, id=berth_id)
@@ -136,6 +140,7 @@ def checkout_view(request, berth_id):
         'booked_services': booked_services
     })
 
+@login_required
 def booking_edit(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     if request.method == 'POST':
@@ -156,6 +161,7 @@ def booking_edit(request, booking_id):
         'title': f'Edit Booking #{booking.id}'
     })
 
+@login_required
 def booking_delete(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     if request.method == 'POST':
@@ -191,6 +197,7 @@ def add_service(request, booking_id):
         'title': 'Add Service'
     })
 
+@login_required
 def invoice_pdf(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
     invoice.recalculate_total() # Ensure total is correct
@@ -200,6 +207,7 @@ def invoice_pdf(request, invoice_id):
     }
     return render_to_pdf('marina/invoice_pdf.html', context)
 
+@login_required
 def dashboard(request):
     from django.utils import timezone
     today = timezone.now().date()
@@ -370,17 +378,21 @@ def dashboard(request):
     }
     return render(request, 'marina/dashboard.html', context)
 
+@login_required
 def calendar_view(request):
     return render(request, 'marina/calendar.html')
 
+@login_required
 def berths_grid(request):
     blocks = Block.objects.all().order_by('name')
     return render(request, 'marina/berths_grid.html', {'blocks': blocks})
 
+@login_required
 def invoices_list(request):
     invoices = Invoice.objects.all().prefetch_related('items', 'customer').order_by('-date')
     return render(request, 'marina/invoices_list.html', {'invoices': invoices})
 
+@login_required
 def bookings_list(request):
     bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').order_by('-start_date')
     return render(request, 'marina/bookings_list.html', {'bookings': bookings})
@@ -470,6 +482,7 @@ def invoice_remove_item(request, pk):
     invoice.recalculate_total()
     return redirect('invoice_edit', pk=invoice_pk)
 
+@login_required
 def customers_list(request):
     customers = Customer.objects.all().prefetch_related('boats').order_by('name')
     return render(request, 'marina/customers_list.html', {'customers': customers})
@@ -534,6 +547,7 @@ def provider_delete(request, pk):
         return redirect('providers_list')
     return render(request, 'marina/partials/provider_delete_confirm.html', {'provider': provider})
 
+@login_required
 def customer_edit(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
@@ -545,6 +559,7 @@ def customer_edit(request, pk):
         form = CustomerForm(instance=customer)
     return render(request, 'marina/partials/customer_form_modal.html', {'form': form, 'customer': customer})
 
+@login_required
 def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
@@ -552,6 +567,7 @@ def customer_delete(request, pk):
         return redirect('customers_list')
     return render(request, 'marina/partials/customer_delete_confirm.html', {'customer': customer})
 
+@login_required
 def boat_edit(request, pk):
     boat = get_object_or_404(Boat, pk=pk)
     if request.method == 'POST':
@@ -568,6 +584,7 @@ def boat_edit(request, pk):
         form = BoatForm(instance=boat)
     return render(request, 'marina/partials/boat_form_modal.html', {'form': form, 'boat': boat})
 
+@login_required
 def boat_delete(request, pk):
     boat = get_object_or_404(Boat, pk=pk)
     if request.method == 'POST':
@@ -575,9 +592,11 @@ def boat_delete(request, pk):
         return redirect('customers_list')
     return render(request, 'marina/partials/boat_delete_confirm.html', {'boat': boat})
 
+@login_required
 def planning_grid(request):
     return render(request, 'marina/planning_grid.html')
 
+@login_required
 def reports_view(request):
     from django.db.models import Sum, Count, Avg
     from django.db.models.functions import TruncMonth
@@ -644,6 +663,7 @@ def reports_view(request):
     }
     return render(request, 'marina/reports.html', context)
 
+@login_required
 def api_planning_data(request):
     import datetime
     year = int(request.GET.get('year', datetime.date.today().year))
@@ -722,6 +742,7 @@ def api_planning_data(request):
         
     return JsonResponse({'groups': resources, 'items': items}, safe=False)
 
+@login_required
 def api_resources(request):
     from .models import Block, Berth
     blocks = Block.objects.all().order_by('name')
@@ -753,6 +774,7 @@ def api_resources(request):
         
     return JsonResponse(resources, safe=False)
 
+@login_required
 def api_events(request):
     start = request.GET.get('start')
     end = request.GET.get('end')

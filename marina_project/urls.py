@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from marina import views
@@ -35,6 +35,9 @@ urlpatterns = [
     path('invoice/remove-item/<int:pk>/', views.invoice_remove_item, name='invoice_remove_item'),
     path('invoice/mark-paid/<int:pk>/', views.invoice_mark_paid, name='invoice_mark_paid'),
     path('invoice/delete/<int:pk>/', views.invoice_delete, name='invoice_delete'),
+    
+    # Auth
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 if settings.DEBUG:
