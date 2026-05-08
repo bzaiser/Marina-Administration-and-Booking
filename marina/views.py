@@ -1,7 +1,8 @@
+from django.db import models
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider
 from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm
 
 def quick_boat_create(request):
@@ -203,7 +204,11 @@ def dashboard(request):
     from django.utils import timezone
     today = timezone.now().date()
     berths_count = Berth.objects.count()
-    active_bookings = Booking.objects.filter(status='ACTIVE').count()
+    active_bookings = Booking.objects.filter(
+        status='ACTIVE',
+        start_date__lte=today,
+        end_date__gte=today
+    ).count()
     customers_count = Customer.objects.count()
     # Block Stats for Visual Layout
     blocks = Block.objects.all().order_by('name')
@@ -212,9 +217,16 @@ def dashboard(request):
     block_stats = []
     block_occupancy = []
     
+    total_percent = int((active_bookings / berths_count * 100)) if berths_count > 0 else 0
+    
     for b in blocks:
         total = b.berths.count()
-        occupied = Booking.objects.filter(berth__block=b, status='ACTIVE').count()
+        occupied = Booking.objects.filter(
+            berth__block=b, 
+            status='ACTIVE',
+            start_date__lte=today,
+            end_date__gte=today
+        ).count()
         block_stats.append({
             'name': b.name,
             'color': b.color,
@@ -279,7 +291,26 @@ def dashboard(request):
                 y = start[1] + fraction * (end[1] - start[1])
                 rot = angle
                 
-            boat_scale = min(w / 14.0, h / 40.0) * 0.85 if w > 0 else 1
+            # Proportional boat scaling based on length
+            if booking and booking.boat and berth.max_length > 0:
+                # We map the berth's visual height (h) to its maximum allowed boat length
+                # Added a 10% margin for visual padding
+                pixels_per_meter = h / (berth.max_length * 1.1)
+                target_pixel_height = booking.boat.length * pixels_per_meter
+                # The SVG boat icon height is 51 units (from y=2 to y=53)
+                boat_scale = target_pixel_height / 51.0
+            else:
+                # Fallback to standard fitting
+                boat_scale = min(w / 14.0, h / 40.0) * 0.85 if w > 0 else 1
+            
+            # Cap the scale to avoid UI glitches with extreme data
+            boat_scale = max(min(boat_scale, 2.0), 0.2)
+            
+            # Rotation adjustment: Stern to sea.
+            # B, D and E need 0 while A and C need 180 for correct orientation.
+            boat_rot_base = 180
+            if berth.block.name in ['B', 'D', 'E']:
+                boat_rot_base = 0
             
             all_berths.append({
                 'obj': berth,
@@ -292,8 +323,10 @@ def dashboard(request):
                 'half_w': w / 2.0,
                 'half_h': h / 2.0,
                 'boat_scale': boat_scale,
+                'boat_rotation': boat_rot_base,
                 'font_size': 5.0 * boat_scale,
                 'empty_font_size': 7.0 * boat_scale,
+                'half_empty_font_size': (7.0 * boat_scale) / 2.0,
                 'boat_name': booking.boat.name if booking else '',
                 'boat_color': booking.boat.color if booking and booking.boat.color else berth.block.color,
                 'owner': booking.boat.owner.name if booking else '',
@@ -303,6 +336,22 @@ def dashboard(request):
                 'flag': booking.boat.flag if booking else '',
             })
     
+    # Extra Dashboard Data for Quick Actions and Overview
+    upcoming_arrivals = Booking.objects.filter(
+        start_date__gte=today
+    ).exclude(
+        status__in=['COMPLETED', 'CANCELLED']
+    ).select_related('boat', 'boat__owner').order_by('start_date')[:5]
+    
+    upcoming_departures = Booking.objects.filter(
+        end_date__gte=today,
+        status='ACTIVE'
+    ).select_related('boat', 'boat__owner').order_by('end_date')[:5]
+    
+    pending_invoices = Invoice.objects.filter(status='OPEN').order_by('-date')[:5]
+    unpaid_count = Invoice.objects.filter(status='OPEN').count()
+    unpaid_total = Invoice.objects.filter(status='OPEN').aggregate(total=models.Sum('total_amount'))['total'] or 0
+
     context = {
         'berths_count': berths_count,
         'active_bookings': active_bookings,
@@ -312,6 +361,12 @@ def dashboard(request):
         'block_occupancy': block_occupancy,
         'block_stats': block_stats,
         'all_berths': all_berths,
+        'upcoming_arrivals': upcoming_arrivals,
+        'upcoming_departures': upcoming_departures,
+        'pending_invoices': pending_invoices,
+        'unpaid_count': unpaid_count,
+        'unpaid_total': unpaid_total,
+        'total_percent': total_percent,
     }
     return render(request, 'marina/dashboard.html', context)
 

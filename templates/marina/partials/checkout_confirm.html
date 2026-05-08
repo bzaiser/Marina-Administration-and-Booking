@@ -70,7 +70,7 @@
             {% if request.htmx %}
             <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Go Back</button>
             {% else %}
-            <a href="{% url 'dashboard' %}" class="btn btn-link text-muted text-decoration-none">Go Back</a>
+            <a href="javascript:history.back()" class="btn btn-link text-muted text-decoration-none">Go Back</a>
             {% endif %}
         </div>
     </form>

@@ -1,29 +1,36 @@
 #!/bin/bash
 
+# MARINA SAMOS - UPDATE FOR macOS / LINUX
+# This script uses Git to fetch the latest changes.
+
 echo "=========================================="
-echo "   MARINA SAMOS - UPDATE (Linux)"
+echo "   MARINA SAMOS - UPDATE (Mac/Linux)"
 echo "=========================================="
+echo ""
 
-# Verzeichnis wechseln
-cd "$(dirname "$0")"
-
-# Git Pull
-echo "[+] Hole Updates von GitHub..."
-git pull
-
-# Venv Updates
-if [ -d "venv" ]; then
-    source venv/bin/activate
-    echo "[+] Installiere Requirements..."
-    pip install -r requirements.txt
-    echo "[+] Führe Migrationen aus..."
-    python manage.py migrate
-    echo "[+] Aktualisiere lokale Bibliotheken (Flaggen etc.)..."
-    python manage.py update_vendor
-else
-    echo "[WARNUNG] venv nicht gefunden."
+# Check for Git
+if ! command -v git &> /dev/null; then
+    echo "[ERROR] Git is not installed. Cannot update via Git."
+    exit 1
 fi
 
+echo "[1/3] Fetching latest version from GitHub..."
+git pull
+
+echo "[2/3] Updating dependencies..."
+if [ -d "venv" ]; then
+    ./venv/bin/pip install -r requirements.txt
+else
+    echo "[WARNING] venv not found. Please run setup-marina.sh first."
+    exit 1
+fi
+
+echo "[3/3] Running migrations..."
+./venv/bin/python manage.py migrate
+./venv/bin/python manage.py update_vendor
+
+echo ""
 echo "=========================================="
-echo "   UPDATE ABGESCHLOSSEN!"
+echo "   UPDATE COMPLETE!"
 echo "=========================================="
+echo ""

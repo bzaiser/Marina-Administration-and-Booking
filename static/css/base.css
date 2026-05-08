@@ -113,3 +113,114 @@ body {
 .block-overlay:hover .overlay-label {
     opacity: 1;
 }
+
+/* Quick Action Grid */
+.quick-action-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px -10px rgba(0,0,0,0.15);
+    background: linear-gradient(145deg, #ffffff, #f8f9fa);
+}
+
+.quick-action-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+}
+
+/* Glassmorphism */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#boat-tooltip {
+    color: #212529;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+}
+
+#boat-tooltip .text-muted {
+    color: #6c757d !important;
+}
+
+/* Select2 in Input Group Fix */
+.input-group > .select2-container--bootstrap-5 {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1% !important;
+}
+
+.input-group > .select2-container--bootstrap-5 .select2-selection {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Hide original select during/after Select2 initialization to prevent "doubles" */
+.select2-search {
+    display: none;
+}
+
+.select2-hidden-accessible {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Typography */
+.metric-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(45deg, var(--bg-primary), var(--bg-primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6c757d;
+    letter-spacing: 0.5px;
+}
+
+/* List Groups */
+.dashboard-list-item {
+    border: none;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-list-item:hover {
+    background-color: rgba(0,0,0,0.02);
+    border-left-color: var(--bg-primary);
+}
+
+.xx-small {
+    font-size: 0.65rem !important;
+}
+
+.xxx-small {
+    font-size: 0.55rem !important;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}

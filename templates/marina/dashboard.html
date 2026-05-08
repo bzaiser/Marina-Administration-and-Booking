@@ -3,185 +3,352 @@
 {% block title %}Dashboard - Marina Samos{% endblock %}
 
 {% block content %}
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card p-3">
-            <div class="d-flex align-items-center">
-                <div class="flex-shrink-0 bg-primary text-white rounded p-3 me-3">
-                    <i class="bi bi-grid-3x3-gap fs-3"></i>
-                </div>
-                <div>
-                    <h6 class="text-muted mb-0">Total Berths</h6>
-                    <h3 class="mb-0">{{ berths_count }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3">
-            <div class="d-flex align-items-center">
-                <div class="flex-shrink-0 bg-success text-white rounded p-3 me-3">
-                    <i class="bi bi-check-circle fs-3"></i>
-                </div>
-                <div>
-                    <h6 class="text-muted mb-0">Active Bookings</h6>
-                    <h3 class="mb-0">{{ active_bookings }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3">
-            <div class="d-flex align-items-center">
-                <div class="flex-shrink-0 bg-info text-white rounded p-3 me-3">
-                    <i class="bi bi-people fs-3"></i>
-                </div>
-                <div>
-                    <h6 class="text-muted mb-0">Customers</h6>
-                    <h3 class="mb-0">{{ customers_count }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card mb-4 overflow-hidden">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-map-fill me-2"></i> Schematic Marina Plan</h5>
-                <div class="small text-muted">Click on a berth to manage</div>
-            </div>
-            <div class="card-body p-0 bg-light-subtle position-relative overflow-hidden" style="height: 800px;">
-                <!-- Hover Tooltip -->
-                <div id="boat-tooltip" class="position-absolute shadow-lg border rounded p-3 bg-white" 
-                     style="display: none; z-index: 1000; width: 220px; pointer-events: none; backdrop-filter: blur(5px); background: rgba(255,255,255,0.95) !important;">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="bi bi-ship-wheel text-primary me-2 fs-5"></i>
-                        <h6 class="mb-0 text-primary" id="tt-boat-name"></h6>
-                    </div>
-                    <div class="small">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Owner:</span>
-                            <span class="fw-bold" id="tt-owner"></span>
+<div class="py-2">
+    <!-- Hero Metrics -->
+    <!-- Compact & Premium Hero Metrics -->
+    <div class="row g-2 mb-3">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-white overflow-hidden" style="height: 42px;">
+                <div class="d-flex align-items-center h-100">
+                    <div class="bg-primary h-100 d-flex align-items-center justify-content-center" style="width: 4px;"></div>
+                    <div class="px-3 d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar-check text-primary me-2 small"></i>
+                            <span class="xx-small fw-bold text-muted text-uppercase">Active</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Length:</span>
-                            <span class="fw-bold" id="tt-length"></span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Arrival:</span>
-                            <span class="fw-bold" id="tt-start"></span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Departure:</span>
-                            <span class="fw-bold" id="tt-end"></span>
-                        </div>
+                        <div class="fw-bold text-dark h5 mb-0">{{ active_bookings }}</div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-white overflow-hidden" style="height: 42px;">
+                <div class="d-flex align-items-center h-100">
+                    <div class="bg-success h-100 d-flex align-items-center justify-content-center" style="width: 4px;"></div>
+                    <div class="px-3 d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-anchor text-success me-2 small"></i>
+                            <span class="xx-small fw-bold text-muted text-uppercase">Berths</span>
+                        </div>
+                        <div class="fw-bold text-dark h5 mb-0">{{ berths_count }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-white overflow-hidden" style="height: 42px;">
+                <div class="d-flex align-items-center h-100">
+                    <div class="bg-danger h-100 d-flex align-items-center justify-content-center" style="width: 4px;"></div>
+                    <div class="px-3 d-flex align-items-center justify-content-between w-100">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-circle text-danger me-2 small"></i>
+                            <span class="xx-small fw-bold text-muted text-uppercase">Unpaid</span>
+                        </div>
+                        <div class="fw-bold text-danger h5 mb-0">{{ unpaid_count }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-primary text-white overflow-hidden" style="height: 42px;">
+                <div class="d-flex align-items-center h-100 px-3 justify-content-between w-100">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-people me-2 small"></i>
+                        <span class="xx-small fw-bold text-white-50 text-uppercase">Guests</span>
+                    </div>
+                    <div class="fw-bold text-white h5 mb-0">{{ customers_count }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- Schematic SVG Map -->
-                <svg id="marina-svg" viewBox="0 0 961 880" class="w-100 h-100 shadow-inner" style="background-color: #e3f2fd; cursor: grab;"
-                   version="1.1"
-                   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-                   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-                   xmlns="http://www.w3.org/2000/svg"
-                   xmlns:svg="http://www.w3.org/2000/svg">
-                   <defs id="defs8">
-                     <inkscape:path-effect effect="fillet_chamfer" id="path-effect8" is_visible="true" lpeversion="1" nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1" radius="0" unit="px" method="auto" mode="F" chamfer_steps="1" flexible="false" use_knot_distance="true" apply_no_radius="true" apply_with_radius="true" only_selected="false" hide_knots="false" />
-                   </defs>
-                   <sodipodi:namedview id="namedview8" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" showborder="true" />
-                   <!-- Water background -->
-                   <path style="display:inline;fill:#000080" d="M 751.44334,245.97763 754.24723,69.332364 231.32118,116.99855 2.8038931,407.20148 V 774.51147 L 1.4019465,889.47108 1011.5044,884.56427 l -5.6077,-615.45453 -156.3171,31.5438 -39.25451,235.52702 22.43115,9.81362 -22.43115,128.97908 -473.85792,164.02775 -8.41168,-33.64672 -38.90402,15.7719 -13.66898,-34.69818 463.34333,-153.51314 14.01947,-262.164 -32.24477,-81.3129 -413.57423,135.98881 -12.61752,-22.43114 z" id="path11" inkscape:label="Water" sodipodi:nodetypes="cccccccccccccccccccccc" />
-                   <g inkscape:groupmode="layer" id="layer3" inkscape:label="Environment" style="display:inline" sodipodi:insensitive="true">
-                     <path style="fill:#decd87;stroke-width:1.01786" d="m 867.8049,199.82706 135.1209,-52.68666 1.5688,121.90619 -157.01793,35.81279 z" id="path6" inkscape:label="Beach2" sodipodi:nodetypes="ccccc" />
-                     <path style="display:inline;fill:#abc837;stroke-width:1.0113" d="m 1003.0928,146.47129 -135.2879,58.84989 8.41168,-48.7495 -26.63698,1.4338 9.81362,-101.800434 138.79271,-10.036662 v -61.653785 l 4.20587,4.237702 z" id="path9" inkscape:label="Trees" sodipodi:nodetypes="ccccccccc" />
-                     <path style="display:inline;fill:#decd87;stroke-width:1.03416" d="M 238.05568,111.39076 72.787787,126.09036 -4.2405358,297.21887 -2.1942404,421.66075 Z" id="path7" inkscape:label="Strand2" sodipodi:nodetypes="ccccc" />
-                     <path style="display:inline;fill:#de8787;stroke-width:1.03219" d="M -4.2058396,131.4766 79.910952,124.00827 0,283.83018 Z" id="path10" inkscape:label="Houses1" />
-                     <path style="fill:#de8787;stroke-width:0.984736" d="M -4.1862113,139.42969 1001.3403,48.082489 999.57564,-0.764963 -7.0097326,0.117745 Z" id="path8" inkscape:label="Town" sodipodi:nodetypes="ccccc" />
-                     <path style="display:inline;fill:#c8b7b7" d="m 324.55062,806.75624 6.30876,35.74964 478.06377,-161.22386 25.93601,-141.5966 -25.93601,-5.60778 -23.83309,127.57713 z" id="path5" inkscape:label="Wall" sodipodi:nodetypes="ccccccc" />
-                   </g>
-                   <g inkscape:groupmode="layer" id="layer4" inkscape:label="Buildings" style="display:inline" sodipodi:insensitive="true">
-                     <g id="g13" inkscape:label="Shape" style="display:inline" transform="translate(0,-26)">
-                       <path id="path4" style="display:inline;fill:#ececec" inkscape:label="Kai" d="m 785.13011,685.0062 90.79136,-501.80163 -25.36385,-4.83636 8.92193,-108.975397 H 751.42503 l -1.98265,209.169767 -38.66171,38.66171 37.67038,82.28005 -12.88723,256.7534 41.63568,27.75713 z m 0,0.99132 L 288.47584,847.58364 273.60595,810.90458 736.55514,653.28377 Z M 232.96159,142.75093 755.39033,97.149938 759.35564,69.392813 228.00496,77.32342 Z m 518.99433,133.65891 -458.52345,153.8256 12.88723,26.7658 408.13592,-138.83545 z" sodipodi:nodetypes="cccccccccccccccccccccccccc" />
-                     </g>
-                     <path style="fill:#aa0000;stroke-width:1.31052" d="m 789.31067,171.83393 48.89061,9.90132 -2.49522,19.76178 -24.02214,-4.57973 -5.75313,28.38382 -24.29096,-5.28072 z" id="path13" inkscape:label="Office" sodipodi:nodetypes="ccccccc" />
-                     <path style="fill:#918a6f" d="m 843.27083,149.94429 34.3477,8.41167 -19.62725,104.44503 -35.04867,-11.21558 z" id="path12" inkscape:label="Facilities" sodipodi:nodetypes="ccccc" />
-                   </g>
-                   <g inkscape:groupmode="layer" id="layer5" inkscape:label="Berthes" style="stroke:#00ffff;stroke-width:2;stroke-dasharray:none">
-                     <path style="fill:none;stroke:#ff0000;stroke-width:3;stroke-dasharray:none" d="m 891.20199,427.26147 115.98511,-0.99133 1.9827,382.6518 -122.92444,-10e-6 z" id="path18" sodipodi:nodetypes="ccccc" inkscape:label="Berth E" />
-                     <path style="fill:none;stroke:#ff6600;stroke-width:3;stroke-dasharray:none" d="m 710.78067,294.42379 36.67906,81.28873 -1.98265,1.98265 -401.48698,148.69888 -37.6704,-97.14994 z" id="path16" inkscape:label="Berth C " sodipodi:nodetypes="cccccc" />
-                     <path style="fill:none;stroke:#89a02c;stroke-width:3;stroke-dasharray:none" d="M 737.05081,628.00495 274.59727,785.13011 239.90086,690.95416 740.52044,526.88972 Z" id="path17" sodipodi:nodetypes="ccccc" inkscape:label="Berth D" />
-                     <path style="fill:none;stroke:#ff00ff;stroke-width:3;stroke-dasharray:none" d="m 293.43247,400.49566 406.44361,-137.7943 -26.76579,-88.228 -406.44362,137.79431 z" id="path15" inkscape:label="Berth B" sodipodi:nodetypes="ccccc" />
-                     <path style="display:inline;fill:none;stroke:#00ffff;stroke-width:3;stroke-dasharray:none" d="m 233.95291,115.98513 4.95664,94.17597 426.27012,-37.67039 -6.93927,-92.193312 z" id="path14" inkscape:label="Berth A" sodipodi:nodetypes="ccccc" />
+    <div class="row g-3">
+        <!-- Main Content (Left) -->
+        <div class="col-lg-9">
+            <!-- Quick Actions Grid -->
+            <div class="row g-2 mb-3">
+                <div class="col-md-3">
+                    <a href="{% url 'quick_boat_create' %}" class="text-decoration-none h-100 d-block">
+                        <div class="card quick-action-card h-100 p-2">
+                            <div class="d-flex align-items-center">
+                                <div class="quick-action-icon bg-primary-subtle text-primary me-2">
+                                    <i class="bi bi-person-plus"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold small">Check-In</h6>
+                                    <p class="xx-small text-muted mb-0">New Boat</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'calendar' %}" class="text-decoration-none h-100 d-block">
+                        <div class="card quick-action-card h-100 p-2">
+                            <div class="d-flex align-items-center">
+                                <div class="quick-action-icon bg-success-subtle text-success me-2">
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold small">Planning</h6>
+                                    <p class="xx-small text-muted mb-0">Calendar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'invoice_create' %}" class="text-decoration-none h-100 d-block">
+                        <div class="card quick-action-card h-100 p-2">
+                            <div class="d-flex align-items-center">
+                                <div class="quick-action-icon bg-info-subtle text-info me-2">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold small">Billing</h6>
+                                    <p class="xx-small text-muted mb-0">Invoice</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="{% url 'berths_grid' %}" class="text-decoration-none h-100 d-block">
+                        <div class="card quick-action-card h-100 p-2">
+                            <div class="d-flex align-items-center">
+                                <div class="quick-action-icon bg-warning-subtle text-warning me-2">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-dark fw-bold small">Check-Out</h6>
+                                    <p class="xx-small text-muted mb-0">Depart</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
 
-                     <!-- RENDER BERTHS -->
-                     {% for item in all_berths %}
-                         <g transform="translate({{ item.x|stringformat:'.2f' }}, {{ item.y|stringformat:'.2f' }}) rotate({{ item.rot|stringformat:'.2f' }})" 
-                            cursor="pointer" onclick="window.location='/berths/?block={{ item.obj.block.name }}&berth={{ item.obj.number }}'"
-                            onmouseenter="showBoatInfo(event, '{{ item.boat_name|escapejs }}', '{{ item.owner|escapejs }}', '{{ item.length }}', '{{ item.start }}', '{{ item.end }}')"
-                            onmouseleave="hideBoatInfo()">
-                             
-                             <!-- Dynamic scaling and centering -->
-                             <g transform="translate(-{{ item.half_w|stringformat:'.2f' }}, -{{ item.half_h|stringformat:'.2f' }})">
-                                 <!-- Berth Box Outline (Subtle) -->
-                                 <rect width="{{ item.w|stringformat:'.2f' }}" height="{{ item.h|stringformat:'.2f' }}" 
-                                       fill="transparent" 
-                                       stroke="{{ item.obj.block.color }}" 
-                                       stroke-opacity="0.3"
-                                       stroke-width="1" />
-                                 
-                                 {% if item.booking %}
-                                     <!-- Boat Icon Scaled (Clean shape) -->
-                                     <g transform="translate({{ item.half_w|stringformat:'.2f' }}, {{ item.half_h|stringformat:'.2f' }}) scale({{ item.boat_scale|stringformat:'.2f' }})">
-                                         <path d="M7.5,2 C12,5 14,15 14,25 L14,48 C14,52 12,53 7.5,53 C3,53 1,52 1,48 L1,25 C1,15 3,5 7.5,2 Z" fill="{{ item.boat_color }}" stroke="{{ item.obj.block.color }}" stroke-width="0.5" transform="translate(-7.5, -27.5)" />
-                                     </g>
-                                 {% else %}
-                                     <text x="{{ item.half_w|stringformat:'.2f' }}" y="{{ item.half_h|stringformat:'.2f' }}" font-size="{{ item.empty_font_size|stringformat:'.2f' }}" text-anchor="middle" fill="{{ item.obj.block.color }}" opacity="0.6" transform="translate(0, {{ item.empty_font_size|stringformat:'.2f' }})">
-                                         {{ item.obj.number }}
-                                     </text>
-                                 {% endif %}
-                             </g>
+            <!-- Marina Plan -->
+            <div class="card overflow-hidden shadow-sm">
+                <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-geo-alt-fill text-primary me-2"></i> Marina Live View</h6>
+                    <div class="badge bg-light text-primary border px-2 py-1 small">
+                        <span class="status-indicator bg-primary" style="width: 6px; height: 6px;"></span> Live
+                    </div>
+                </div>
+                <div class="card-body p-0 bg-light-subtle position-relative" style="height: 600px;">
+                    <!-- Tooltip -->
+                    <div id="boat-tooltip" class="position-absolute shadow-lg border rounded p-3 glass-panel" 
+                         style="display: none; z-index: 1000; width: 240px; pointer-events: none;">
+                        <div class="d-flex align-items-center mb-2 pb-2 border-bottom">
+                            <i class="bi bi-ship-wheel text-primary me-2 fs-5"></i>
+                            <h6 class="mb-0 text-primary fw-bold" id="tt-boat-name"></h6>
+                        </div>
+                        <div class="small">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Owner:</span>
+                                <span class="fw-bold" id="tt-owner"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Length:</span>
+                                <span class="fw-bold" id="tt-length"></span>
+                            </div>
+                            <div class="row g-1 mt-2 pt-2 border-top">
+                                <div class="col-6">
+                                    <div class="text-muted xx-small">Arrival</div>
+                                    <div class="fw-bold" id="tt-start"></div>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <div class="text-muted xx-small">Departure</div>
+                                    <div class="fw-bold" id="tt-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SVG Map -->
+                    <svg id="marina-svg" viewBox="0 0 961 880" class="w-100 h-100" style="background-color: #f0f7ff; cursor: grab;"
+                       xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                       xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                       xmlns="http://www.w3.org/2000/svg"
+                       xmlns:svg="http://www.w3.org/2000/svg">
+                       <defs id="defs8">
+                         <inkscape:path-effect effect="fillet_chamfer" id="path-effect8" is_visible="true" lpeversion="1" nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1" radius="0" unit="px" method="auto" mode="F" chamfer_steps="1" flexible="false" use_knot_distance="true" apply_no_radius="true" apply_with_radius="true" only_selected="false" hide_knots="false" />
+                       </defs>
+                       <sodipodi:namedview id="namedview8" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" showborder="true" />
+                       
+                       <!-- Water background -->
+                       <path style="display:inline;fill:#003c80" d="M 751.44334,245.97763 754.24723,69.332364 231.32118,116.99855 2.8038931,407.20148 V 774.51147 L 1.4019465,889.47108 1011.5044,884.56427 l -5.6077,-615.45453 -156.3171,31.5438 -39.25451,235.52702 22.43115,9.81362 -22.43115,128.97908 -473.85792,164.02775 -8.41168,-33.64672 -38.90402,15.7719 -13.66898,-34.69818 463.34333,-153.51314 14.01947,-262.164 -32.24477,-81.3129 -413.57423,135.98881 -12.61752,-22.43114 z" id="path11" inkscape:label="Water" />
+                       
+                       <g inkscape:groupmode="layer" id="layer3" inkscape:label="Environment" style="display:inline" sodipodi:insensitive="true">
+                         <path style="fill:#decd87;stroke-width:1.01786" d="m 867.8049,199.82706 135.1209,-52.68666 1.5688,121.90619 -157.01793,35.81279 z" id="path6" inkscape:label="Beach2" />
+                         <path style="display:inline;fill:#abc837;stroke-width:1.0113" d="m 1003.0928,146.47129 -135.2879,58.84989 8.41168,-48.7495 -26.63698,1.4338 9.81362,-101.800434 138.79271,-10.036662 v -61.653785 l 4.20587,4.237702 z" id="path9" inkscape:label="Trees" />
+                         <path style="display:inline;fill:#decd87;stroke-width:1.03416" d="M 238.05568,111.39076 72.787787,126.09036 -4.2405358,297.21887 -2.1942404,421.66075 Z" id="path7" inkscape:label="Strand2" />
+                         <path style="display:inline;fill:#de8787;stroke-width:1.03219" d="M -4.2058396,131.4766 79.910952,124.00827 0,283.83018 Z" id="path10" inkscape:label="Houses1" />
+                         <path style="fill:#de8787;stroke-width:0.984736" d="M -4.1862113,139.42969 1001.3403,48.082489 999.57564,-0.764963 -7.0097326,0.117745 Z" id="path8" inkscape:label="Town" />
+                         <path style="display:inline;fill:#c8b7b7" d="m 324.55062,806.75624 6.30876,35.74964 478.06377,-161.22386 25.93601,-141.5966 -25.93601,-5.60778 -23.83309,127.57713 z" id="path5" inkscape:label="Wall" />
+                       </g>
+                       <g inkscape:groupmode="layer" id="layer4" inkscape:label="Buildings" style="display:inline" sodipodi:insensitive="true">
+                         <g id="g13" inkscape:label="Shape" style="display:inline" transform="translate(0,-26)">
+                           <path id="path4" style="display:inline;fill:#ececec" inkscape:label="Kai" d="m 785.13011,685.0062 90.79136,-501.80163 -25.36385,-4.83636 8.92193,-108.975397 H 751.42503 l -1.98265,209.169767 -38.66171,38.66171 37.67038,82.28005 -12.88723,256.7534 41.63568,27.75713 z m 0,0.99132 L 288.47584,847.58364 273.60595,810.90458 736.55514,653.28377 Z M 232.96159,142.75093 755.39033,97.149938 759.35564,69.392813 228.00496,77.32342 Z m 518.99433,133.65891 -458.52345,153.8256 12.88723,26.7658 408.13592,-138.83545 z" />
                          </g>
-                     {% endfor %}
-                   </g>
-                </svg>
-            </div>
+                         <path style="fill:#aa0000;stroke-width:1.31052" d="m 789.31067,171.83393 48.89061,9.90132 -2.49522,19.76178 -24.02214,-4.57973 -5.75313,28.38382 -24.29096,-5.28072 z" id="path13" inkscape:label="Office" />
+                         <path style="fill:#918a6f" d="m 843.27083,149.94429 34.3477,8.41167 -19.62725,104.44503 -35.04867,-11.21558 z" id="path12" inkscape:label="Facilities" />
+                       </g>
+                       
+                       <g inkscape:groupmode="layer" id="layer5" inkscape:label="Berthes" style="stroke:#00ffff;stroke-width:2;stroke-dasharray:none">
+                         <path style="fill:none;stroke:#ff0000;stroke-width:3;stroke-dasharray:none" d="m 891.20199,427.26147 115.98511,-0.99133 1.9827,382.6518 -122.92444,-10e-6 z" id="path18" inkscape:label="Berth E" />
+                         <path style="fill:none;stroke:#ff6600;stroke-width:3;stroke-dasharray:none" d="m 710.78067,294.42379 36.67906,81.28873 -1.98265,1.98265 -401.48698,148.69888 -37.6704,-97.14994 z" id="path16" inkscape:label="Berth C " />
+                         <path style="fill:none;stroke:#89a02c;stroke-width:3;stroke-dasharray:none" d="M 737.05081,628.00495 274.59727,785.13011 239.90086,690.95416 740.52044,526.88972 Z" id="path17" inkscape:label="Berth D" />
+                         <path style="fill:none;stroke:#ff00ff;stroke-width:3;stroke-dasharray:none" d="m 293.43247,400.49566 406.44361,-137.7943 -26.76579,-88.228 -406.44362,137.79431 z" id="path15" inkscape:label="Berth B" />
+                         <path style="display:inline;fill:none;stroke:#00ffff;stroke-width:3;stroke-dasharray:none" d="m 233.95291,115.98513 4.95664,94.17597 426.27012,-37.67039 -6.93927,-92.193312 z" id="path14" inkscape:label="Berth A" />
+                       </g>
+
+                       <g id="berths-layer">
+                         {% for item in all_berths %}
+                             <g transform="translate({{ item.x }}, {{ item.y }}) rotate({{ item.rot }})" 
+                                cursor="pointer" onclick="window.location='/berths/?block={{ item.obj.block.name }}&berth={{ item.obj.number }}'"
+                                onmouseenter="showBoatInfo(event, '{{ item.boat_name|escapejs }}', '{{ item.owner|escapejs }}', '{{ item.length }}', '{{ item.start }}', '{{ item.end }}')"
+                                onmouseleave="hideBoatInfo()">
+                                 
+                                 <g transform="translate(-{{ item.half_w }}, -{{ item.half_h }})">
+                                     <rect width="{{ item.w }}" height="{{ item.h }}" 
+                                           fill="{% if item.booking %}rgba(255,255,255,0.1){% else %}transparent{% endif %}" 
+                                           stroke="{{ item.obj.block.color }}" 
+                                           stroke-opacity="0.4"
+                                           stroke-width="1" />
+                                     
+                                     {% if item.booking %}
+                                         <g transform="translate({{ item.half_w }}, {{ item.half_h }}) scale({{ item.boat_scale }})">
+                                             <path d="M7.5,2 C12,5 14,15 14,25 L14,48 C14,52 12,53 7.5,53 C3,53 1,52 1,48 L1,25 C1,15 3,5 7.5,2 Z" 
+                                                   fill="{{ item.boat_color }}" 
+                                                   stroke="white" 
+                                                   stroke-width="1.5" 
+                                                   transform="translate(-7.5, -27.5) rotate({{ item.boat_rotation }}, 7.5, 27.5)" />
+                                         </g>
+                                     {% else %}
+                                         <text x="{{ item.half_w }}" y="{{ item.half_h }}" 
+                                               font-size="{{ item.empty_font_size }}" 
+                                               text-anchor="middle" 
+                                               fill="{{ item.obj.block.color }}" 
+                                               opacity="0.8" 
+                                               transform="translate(0, {{ item.half_empty_font_size }})">
+                                             {{ item.obj.number }}
+                                         </text>
+                                     {% endif %}
+                                 </g>
+                             </g>
+                         {% endfor %}
+                       </g>
+                    </svg>
+                </div>
             </div>
         </div>
-        
-        <!-- Schematic Cards below for details -->
-        <div class="row g-3 mb-4">
-            {% for block in block_stats %}
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100" style="border-left: 4px solid {{ block.color }} !important;">
-                    <div class="card-body p-2 px-3">
-                        <div class="d-flex justify-content-between small align-items-center">
-                            <span class="fw-bold">Block {{ block.name }}</span>
-                            <span class="text-muted">{{ block.occupied }}/{{ block.total }}</span>
+
+        <!-- Sidebar (Right) -->
+        <div class="col-lg-3">
+            <!-- Occupancy Chart Card -->
+            <div class="card mb-3">
+                <div class="card-header bg-white py-1 px-3 border-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold small">Occupancy</h6>
+                    <div class="small text-muted" style="font-size: 0.7rem;">By Block</div>
+                </div>
+                <div class="card-body py-1 text-center position-relative">
+                    <div style="height: 120px;">
+                        <canvas id="occupancyChart"></canvas>
+                    </div>
+                    <!-- Central Text Overlay -->
+                    <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events: none;">
+                        <div class="fw-bold text-dark" style="font-size: 1.1rem; line-height: 1;">{{ total_percent }}%</div>
+                        <div class="xx-small text-muted">Full</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0 pb-2">
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        {% for block in block_stats %}
+                        <div class="d-flex align-items-center">
+                            <span class="rounded-circle me-1" style="width: 8px; height: 8px; background-color: {{ block.color }};"></span>
+                            <span class="xx-small fw-bold">{{ block.name }}</span>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card mb-4">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0">Occupancy by Block</h5>
+
+            <!-- Upcoming Arrivals -->
+            <div class="card mb-3">
+                <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold small">Upcoming Arrivals</h6>
+                    <span class="badge bg-primary-subtle text-primary py-1 px-2" style="font-size: 0.65rem;">{{ upcoming_arrivals|length }}</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for arrival in upcoming_arrivals %}
+                    <div class="list-group-item py-1 px-3 dashboard-list-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-dark small">{{ arrival.boat.name }}</div>
+                                <div class="xx-small text-muted">{{ arrival.boat.owner.name }}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="badge bg-success-subtle text-success py-1 px-2" style="font-size: 0.6rem;">{{ arrival.start_date|date:"d.m." }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-2 text-center text-muted small">No arrivals</div>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="occupancyChart" style="height: 200px;"></canvas>
+
+            <!-- Upcoming Departures -->
+            <div class="card mb-3 border-warning border-opacity-25">
+                <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold small">Check-Outs</h6>
+                    <span class="badge bg-warning-subtle text-warning py-1 px-2" style="font-size: 0.65rem;">{{ upcoming_departures|length }}</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for departure in upcoming_departures %}
+                    <div class="list-group-item py-1 px-3 dashboard-list-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-dark small">{{ departure.boat.name }}</div>
+                                <div class="xx-small text-muted">{{ departure.boat.owner.name }}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="badge bg-warning-subtle text-warning py-1 px-2" style="font-size: 0.6rem;">{{ departure.end_date|date:"d.m." }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-2 text-center text-muted small">No checkouts</div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0">Quick Actions</h5>
-            </div>
-            <div class="card-body">
-                <a href="/calendar/" class="btn btn-primary w-100 mb-2">New Booking</a>
-                <a href="/berths/" class="btn btn-outline-primary w-100">Quick Checkout</a>
+
+            <!-- Pending Invoices -->
+            <div class="card">
+                <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-bold small">Open Invoices</h6>
+                    <a href="{% url 'invoices_list' %}" class="xx-small text-decoration-none">View All</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for inv in pending_invoices %}
+                    <div class="list-group-item py-1 px-3 dashboard-list-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-dark small">#{{ inv.id }} - {{ inv.customer.name }}</div>
+                                <div class="xx-small text-muted">{{ inv.date|date:"d.m.Y" }}</div>
+                            </div>
+                            <div class="text-end fw-bold text-danger small">
+                                €{{ inv.total_amount|floatformat:2 }}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-2 text-center text-muted small">All paid! 🎉</div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -199,6 +366,33 @@
             center: true,
             minZoom: 0.5,
             maxZoom: 10
+        });
+
+        // Occupancy Chart
+        const ctx = document.getElementById('occupancyChart').getContext('2d');
+        const occupancyData = {{ block_occupancy|safe }};
+        const hasData = occupancyData.some(v => v > 0);
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: hasData ? {{ block_labels|safe }} : ['Empty'],
+                datasets: [{
+                    data: hasData ? occupancyData : [1],
+                    backgroundColor: hasData ? {{ block_colors|safe }} : ['#f0f0f0'],
+                    borderWidth: 0,
+                    hoverOffset: hasData ? 10 : 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: hasData }
+                }
+            }
         });
     });
 
@@ -220,8 +414,12 @@
         let left = event.clientX - containerRect.left + 15;
         let top = event.clientY - containerRect.top + 15;
         
-        // Keep inside container
-        if (left + 220 > containerRect.width) left -= 240;
+        // Horizontal flip
+        if (left + 240 > containerRect.width) left -= 260;
+        
+        // Vertical flip
+        const tooltipHeight = tt.offsetHeight || 160; // Fallback if not rendered yet
+        if (top + tooltipHeight > containerRect.height) top -= (tooltipHeight + 30);
         
         tt.style.left = left + 'px';
         tt.style.top = top + 'px';
@@ -230,24 +428,14 @@
     function hideBoatInfo() {
         document.getElementById('boat-tooltip').style.display = 'none';
     }
-
-    const ctx = document.getElementById('occupancyChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: {{ block_labels|safe }},
-            datasets: [{
-                data: {{ block_occupancy|safe }},
-                backgroundColor: {{ block_colors|safe }}
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
 </script>
+
+<style>
+    .xx-small { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    #marina-svg { border-radius: 0 0 12px 12px; }
+    .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); }
+    .bg-success-subtle { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-info-subtle { background-color: rgba(13, 202, 240, 0.1); }
+    .bg-warning-subtle { background-color: rgba(255, 193, 7, 0.1); }
+</style>
 {% endblock %}

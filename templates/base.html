@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'vendor/flag-icons/css/flag-icons.min.css' %}"/>
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=1">
     
     <!-- Alpine.js -->
     <script defer src="{% static 'vendor/alpinejs/alpine.min.js' %}"></script>
@@ -24,6 +24,8 @@
     
     <!-- DayPilot Lite (Locally Hosted) -->
     <script src="{% static 'js/daypilot-all.min.js' %}"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- AG Grid -->
     <script src="{% static 'vendor/ag-grid/ag-grid-community.min.js' %}"></script>
@@ -74,9 +76,6 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'invoices_list' %}active{% endif %}" href="{% url 'invoices_list' %}"><i class="bi bi-receipt me-1"></i> Invoices</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'providers_list' %}active{% endif %}" href="{% url 'providers_list' %}"><i class="bi bi-truck me-1"></i> Providers</a>
-                    </li>
                 </ul>
                 <div class="d-flex">
                     <a href="/admin/" class="btn btn-outline-light btn-sm"><i class="bi bi-gear me-1"></i> Admin</a>
@@ -99,6 +98,7 @@
                 
                 $(this).select2({
                     theme: 'bootstrap-5',
+                    width: '100%',
                     placeholder: $(this).attr('placeholder') || 'Start typing...',
                     allowClear: true,
                     dropdownParent: $(this).closest('.modal-body').length ? $(this).closest('.modal-body') : $(this).parent()
