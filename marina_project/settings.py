@@ -176,6 +176,6 @@ SILENCED_SYSTEM_CHECKS = ['security.W019']
 # WhiteNoise static files storage
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
