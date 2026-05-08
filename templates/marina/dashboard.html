@@ -64,7 +64,7 @@
 
     <div class="row g-3">
         <!-- Main Content (Left) -->
-        <div class="col-lg-9">
+        <div class="col-lg-7">
             <!-- Quick Actions Grid -->
             <div class="row g-2 mb-3">
                 <div class="col-md-3">
@@ -167,6 +167,19 @@
                         </div>
                     </div>
 
+                    <!-- Custom Map Navigation -->
+                    <div class="position-absolute bottom-0 start-0 m-3 d-flex flex-column gap-2" style="z-index: 10;">
+                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.zoomIn()">
+                            <i class="bi bi-plus-lg text-primary"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.zoomOut()">
+                            <i class="bi bi-dash-lg text-primary"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.reset()">
+                            <i class="bi bi-arrow-counterclockwise text-muted"></i>
+                        </button>
+                    </div>
+
                     <!-- SVG Map -->
                     <svg id="marina-svg" viewBox="0 0 961 880" class="w-100 h-100" style="background-color: #f0f7ff; cursor: grab;"
                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -247,7 +260,7 @@
         </div>
 
         <!-- Sidebar (Right) -->
-        <div class="col-lg-3">
+        <div class="col-lg-5">
             <!-- Occupancy Chart Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white py-1 px-3 border-0 d-flex justify-content-between align-items-center">
@@ -359,11 +372,11 @@
 <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const panZoom = svgPanZoom('#marina-svg', {
+        window.marinaPanZoom = svgPanZoom('#marina-svg', {
             zoomEnabled: true,
-            controlIconsEnabled: true,
+            controlIconsEnabled: false,
             fit: true,
-            center: true,
+            center: false,
             minZoom: 0.5,
             maxZoom: 10
         });
