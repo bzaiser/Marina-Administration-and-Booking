@@ -8,3 +8,4 @@ python-dotenv
 pytest-django
 xhtml2pdf
 gunicorn
+whitenoise
