@@ -26,5 +26,5 @@ RUN chmod +x /app/docker/entrypoint.sh
 # Expose port
 EXPOSE 8000
 
-# Set entrypoint
-ENTRYPOINT ["/app/docker/entrypoint.sh"]
+# Set entrypoint (using bash to avoid permission issues on volumes)
+ENTRYPOINT ["/bin/bash", "/app/docker/entrypoint.sh"]
