@@ -1,5 +1,37 @@
 from django import forms
-from .models import Booking, Boat, Customer, Berth, Country
+from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider
+
+class InvoiceForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = ['customer', 'status', 'payment_method', 'discount']
+        widgets = {
+            'customer': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'payment_method': forms.Select(attrs={'class': 'form-select'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+
+class InvoiceItemForm(forms.ModelForm):
+    class Meta:
+        model = InvoiceItem
+        fields = ['description', 'quantity', 'unit', 'unit_price']
+        widgets = {
+            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item description...'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+            'unit': forms.Select(attrs={'class': 'form-select'}),
+            'unit_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+
+class ServiceProviderForm(forms.ModelForm):
+    class Meta:
+        model = ServiceProvider
+        fields = ['name', 'phone', 'email']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company or Person Name'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}),
+        }
 
 class BookingForm(forms.ModelForm):
     class Meta:
@@ -8,8 +40,8 @@ class BookingForm(forms.ModelForm):
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'boat': forms.Select(attrs={'class': 'form-select'}),
-            'berth': forms.Select(attrs={'class': 'form-select'}),
+            'boat': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'berth': forms.Select(attrs={'class': 'form-select select2-search'}),
             'booking_type': forms.Select(attrs={'class': 'form-select'}),
             'reference': forms.Select(attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
@@ -30,7 +62,7 @@ class CustomerForm(forms.ModelForm):
 class BoatForm(forms.ModelForm):
     flag = forms.ChoiceField(
         choices=[],
-        widget=forms.Select(attrs={'class': 'form-select'}),
+        widget=forms.Select(attrs={'class': 'form-select select2-search'}),
         required=False
     )
 

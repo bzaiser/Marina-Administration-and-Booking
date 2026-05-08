@@ -29,6 +29,7 @@ class Customer(models.Model):
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("Customers")
+        ordering = ['name']
 
 class Boat(models.Model):
     BOAT_TYPES = [
@@ -62,6 +63,7 @@ class Boat(models.Model):
     class Meta:
         verbose_name = _("Boat")
         verbose_name_plural = _("Boats")
+        ordering = ['name']
 
 class Block(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -88,13 +90,17 @@ class Berth(models.Model):
         ordering = ['block', 'number']
 
 class PriceRate(models.Model):
-    price_per_meter_day = models.DecimalField(_("Price per Meter/Day"), max_digits=10, decimal_places=2)
-    effective_from = models.DateField(_("Effective From"))
+    from_meters = models.DecimalField(_("From Meters"), max_digits=5, decimal_places=2, default=0.0)
+    to_meters = models.DecimalField(_("To Meters"), max_digits=5, decimal_places=2, default=0.0)
+    price = models.DecimalField(_("Price per Day"), max_digits=8, decimal_places=2, default=0.0)
+
+    def __str__(self):
+        return f"{self.from_meters}m - {self.to_meters}m: €{self.price}/d"
 
     class Meta:
         verbose_name = _("Price Rate")
         verbose_name_plural = _("Price Rates")
-        ordering = ['-effective_from']
+        ordering = ['from_meters']
 
 class Booking(models.Model):
     TYPE_CHOICES = [
@@ -135,39 +141,111 @@ class Booking(models.Model):
         return max(delta.days, 1) # Minimum 1 day
 
     def calculate_price(self):
-        """Calculates the price based on boat length, days and the latest PriceRate."""
-        rate = PriceRate.objects.filter(effective_from__lte=self.start_date).first()
-        if not rate:
-            rate = PriceRate.objects.first()
+        """Calculates the price based on boat length and the PriceRate table."""
+        rate = PriceRate.objects.filter(
+            from_meters__lte=self.boat.length,
+            to_meters__gte=self.boat.length
+        ).first()
         
         if rate:
-            return float(rate.price_per_meter_day) * self.boat.length * self.duration_days
+            return float(rate.price) * self.duration_days
         return 0.0
 
     class Meta:
         verbose_name = _("Booking")
         verbose_name_plural = _("Bookings")
 
-class Service(models.Model):
-    name = models.CharField(_("Service Name"), max_length=255)
-    description = models.TextField(_("Description"), blank=True, null=True)
-    price = models.DecimalField(_("Price"), max_digits=10, decimal_places=2)
-
+class ServiceProvider(models.Model):
+    name = models.CharField(_("Provider Name"), max_length=255)
+    phone = models.CharField(_("Phone"), max_length=50, blank=True, null=True)
+    email = models.EmailField(_("Email"), blank=True, null=True)
+    
     def __str__(self):
         return self.name
 
-class BookingService(models.Model):
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='services')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    quantity = models.FloatField(default=1.0)
-    date = models.DateField(auto_now_add=True)
+    class Meta:
+        verbose_name = _("Service Provider")
+        verbose_name_plural = _("Service Providers")
+
+class Service(models.Model):
+    UNIT_CHOICES = [
+        ('LITER', 'Liter'),
+        ('KG', 'Kilogram'),
+        ('KWH', 'kWh'),
+        ('HOUR', 'Hour'),
+        ('DAY', 'Day(s)'),
+        ('PIECE', 'Piece / Unit'),
+    ]
+    TYPE_CHOICES = [
+        ('SUPPLY', 'Supply (Water, Electricity, etc.)'),
+        ('MAINTENANCE', 'Maintenance & Repair'),
+        ('CLEANING', 'Cleaning'),
+        ('ADMINISTRATIVE', 'Administrative'),
+        ('OTHER', 'Other'),
+    ]
+
+    name = models.CharField(_("Service Name"), max_length=255)
+    description = models.TextField(_("Description"), blank=True, null=True)
+    service_type = models.CharField(_("Service Type"), max_length=20, choices=TYPE_CHOICES, default='OTHER')
+    unit = models.CharField(_("Unit"), max_length=10, choices=UNIT_CHOICES, default='PIECE')
+    price_per_unit = models.DecimalField(_("Price per Unit"), max_digits=10, decimal_places=2, default=0.0)
+    tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, default=19.00)
+    image = models.ImageField(_("Image"), upload_to='services/', blank=True, null=True)
+    color = ColorField(_("Color"), default='#3498db')
+    provider = models.ForeignKey(ServiceProvider, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Provider / Supplier"))
 
     def __str__(self):
-        return f"{self.service.name} for {self.booking}"
+        return f"{self.name} ({self.get_service_type_display()})"
+
+class BookingService(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed'),
+        ('CANCELLED', 'Cancelled'),
+    ]
+
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='services', null=True, blank=True)
+    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
+    boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
+    
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    quantity = models.FloatField(_("Quantity / Units"), default=1.0)
+    
+    price_per_unit = models.DecimalField(_("Price per Unit (At Booking)"), max_digits=10, decimal_places=2, blank=True, null=True)
+    tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, blank=True, null=True)
+    
+    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    notes = models.TextField(_("Notes for Provider"), blank=True, null=True)
+    date = models.DateTimeField(_("Date Added"), auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.price_per_unit and self.service_id:
+            self.price_per_unit = self.service.price_per_unit
+        if not self.tax_rate and self.service_id:
+            self.tax_rate = self.service.tax_rate
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        try:
+            unit_display = self.service.get_unit_display()
+        except Exception:
+            unit_display = "Units"
+            
+        target = "Walk-in"
+        if self.booking:
+            target = f"Booking {self.booking.id}"
+        elif self.boat:
+            target = f"Boat {self.boat.name}"
+        elif self.customer:
+            target = f"Customer {self.customer.name}"
+            
+        return f"{self.quantity} {unit_display} of {self.service.name} for {target}"
 
     @property
     def total_price(self):
-        return self.quantity * self.service.price
+        price = self.price_per_unit if self.price_per_unit is not None else self.service.price_per_unit
+        return self.quantity * float(price)
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [
@@ -191,12 +269,21 @@ class Invoice(models.Model):
     def __str__(self):
         return f"Invoice {self.id} - {self.customer.name}"
 
+    def recalculate_total(self):
+        item_total = sum(item.subtotal for item in self.items.all())
+        self.total_amount = float(item_total) - float(self.discount)
+        self.save()
+
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="items")
     description = models.CharField(max_length=255)
     quantity = models.FloatField(default=1.0)
+    unit = models.CharField(max_length=10, choices=Service.UNIT_CHOICES, default='PIECE')
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     
     @property
     def subtotal(self):
-        return float(self.unit_price) * self.quantity
+        return float(self.quantity) * float(self.unit_price)
+
+    def __str__(self):
+        return f"{self.description} ({self.quantity} {self.get_unit_display()})"

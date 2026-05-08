@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, BookingService, Country
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, BookingService, Country, ServiceProvider
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -8,8 +8,14 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(BookingService)
 class BookingServiceAdmin(admin.ModelAdmin):
-    list_display = ('booking', 'service', 'quantity', 'date')
-    list_filter = ('service', 'date')
+    list_display = ('id', 'service', 'quantity', 'status', 'total_price', 'booking', 'customer', 'boat', 'date')
+    list_filter = ('status', 'service', 'date')
+    search_fields = ('notes', 'booking__boat__name', 'customer__name', 'boat__name')
+
+@admin.register(ServiceProvider)
+class ServiceProviderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'phone', 'email')
+    search_fields = ('name',)
 
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
@@ -34,7 +40,7 @@ class BerthAdmin(admin.ModelAdmin):
 
 @admin.register(PriceRate)
 class PriceRateAdmin(admin.ModelAdmin):
-    list_display = ('price_per_meter_day', 'effective_from')
+    list_display = ('from_meters', 'to_meters', 'price')
 
 class BookingSubLeaseInline(admin.TabularInline):
     model = Booking
@@ -50,7 +56,8 @@ class BookingAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price')
+    list_display = ('name', 'service_type', 'unit', 'price_per_unit', 'tax_rate', 'provider')
+    list_filter = ('service_type', 'provider', 'unit')
 
 class InvoiceItemInline(admin.TabularInline):
     model = InvoiceItem

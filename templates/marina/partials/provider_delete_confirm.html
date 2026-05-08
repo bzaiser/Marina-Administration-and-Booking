@@ -1,0 +1,15 @@
+<div class="modal-header border-0 pb-0">
+    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body text-center py-4">
+    <p>Are you sure you want to delete the provider <strong>{{ provider.name }}</strong>?</p>
+    <p class="text-muted small">This action cannot be undone. Any services linked to this provider will have their provider field cleared.</p>
+</div>
+<div class="modal-footer border-0 pt-0 pb-4 justify-content-center">
+    <form hx-post="{% url 'provider_delete' provider.id %}" class="d-grid gap-2 w-100 px-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold">Delete Provider</button>
+        <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancel</button>
+    </form>
+</div>

@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat
-from .forms import BookingForm, CustomerForm, BoatForm
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service
+from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm
 
 def quick_boat_create(request):
     start = request.GET.get('start', '')
@@ -28,12 +28,18 @@ def quick_boat_create(request):
         c_form = CustomerForm(prefix='c')
         b_form = BoatForm(prefix='b')
     
-    return render(request, 'marina/partials/quick_boat_form.html', {
+    template = 'marina/partials/quick_boat_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+    
+    return render(request, template, {
         'c_form': c_form,
         'b_form': b_form,
         'orig_start': start,
         'orig_end': end,
         'orig_berth': berth,
+        'partial_template': 'marina/partials/quick_boat_form.html',
+        'title': 'New Boat Registration'
     })
 
 def booking_create(request):
@@ -53,7 +59,15 @@ def booking_create(request):
         }
         form = BookingForm(initial=initial)
     
-    return render(request, 'marina/partials/booking_form.html', {'form': form})
+    template = 'marina/partials/booking_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+
+    return render(request, template, {
+        'form': form,
+        'partial_template': 'marina/partials/booking_form.html',
+        'title': 'Create Booking'
+    })
 
 def checkout_view(request, berth_id):
     from django.utils import timezone
@@ -101,12 +115,19 @@ def checkout_view(request, berth_id):
                 invoice=invoice,
                 description=f"Service: {bs.service.name}",
                 quantity=bs.quantity,
-                unit_price=bs.service.price
+                unit_price=bs.service.price_per_unit
             )
         
-        return render(request, 'marina/partials/checkout_success.html', {'invoice': invoice})
+        template = 'marina/partials/checkout_success.html'
+        if not request.htmx:
+            template = 'marina/checkout_success_full.html'
+        return render(request, template, {'invoice': invoice})
 
-    return render(request, 'marina/partials/checkout_confirm.html', {
+    template = 'marina/partials/checkout_confirm.html'
+    if not request.htmx:
+        template = 'marina/checkout_confirm_full.html'
+
+    return render(request, template, {
         'booking': booking,
         'total_price': total_price,
         'berth_fee': berth_fee,
@@ -123,7 +144,16 @@ def booking_edit(request, booking_id):
             return HttpResponse('<script>window.location.reload();</script>')
     else:
         form = BookingForm(instance=booking)
-    return render(request, 'marina/partials/booking_form.html', {'form': form, 'editing': True})
+    template = 'marina/partials/booking_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+
+    return render(request, template, {
+        'form': form, 
+        'editing': True,
+        'partial_template': 'marina/partials/booking_form.html',
+        'title': f'Edit Booking #{booking.id}'
+    })
 
 def booking_delete(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
@@ -149,9 +179,15 @@ def add_service(request, booking_id):
         )
         return HttpResponse('<script>window.location.reload();</script>')
         
-    return render(request, 'marina/partials/add_service_form.html', {
+    template = 'marina/partials/add_service_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+
+    return render(request, template, {
         'booking': booking,
-        'services': services
+        'services': services,
+        'partial_template': 'marina/partials/add_service_form.html',
+        'title': 'Add Service'
     })
 
 def invoice_pdf(request, invoice_id):
@@ -289,11 +325,34 @@ def invoices_list(request):
     invoices = Invoice.objects.all().prefetch_related('items', 'customer').order_by('-date')
     return render(request, 'marina/invoices_list.html', {'invoices': invoices})
 
+def bookings_list(request):
+    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').order_by('-start_date')
+    return render(request, 'marina/bookings_list.html', {'bookings': bookings})
+
 def invoice_mark_paid(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     invoice.status = 'PAID'
     invoice.save()
     return redirect('invoices_list')
+
+def invoice_create(request):
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST)
+        if form.is_valid():
+            invoice = form.save()
+            return redirect('invoice_edit', pk=invoice.pk)
+    else:
+        form = InvoiceForm()
+    
+    template = 'marina/partials/invoice_create_modal.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+        
+    return render(request, template, {
+        'form': form,
+        'partial_template': 'marina/partials/invoice_create_modal.html',
+        'title': 'Create New Invoice'
+    })
 
 def invoice_delete(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
@@ -302,9 +361,120 @@ def invoice_delete(request, pk):
         return redirect('invoices_list')
     return render(request, 'marina/partials/invoice_delete_confirm.html', {'invoice': invoice})
 
+def invoice_edit(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST, instance=invoice)
+        if form.is_valid():
+            form.save()
+            invoice.recalculate_total()
+            if request.htmx:
+                response = HttpResponse()
+                response['HX-Refresh'] = 'true'
+                return response
+            return redirect('invoices_list')
+    else:
+        form = InvoiceForm(instance=invoice)
+    
+    # These should be available for both GET and invalid POST
+    item_form = InvoiceItemForm()
+    services = Service.objects.all().order_by('name')
+    
+    template = 'marina/partials/invoice_edit_modal.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+        
+    return render(request, template, {
+        'invoice': invoice,
+        'form': form,
+        'item_form': item_form,
+        'services': services,
+        'partial_template': 'marina/partials/invoice_edit_modal.html',
+        'title': f'Edit Invoice #{invoice.id}'
+    })
+
+def invoice_add_item(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    if request.method == 'POST':
+        form = InvoiceItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.invoice = invoice
+            item.save()
+            invoice.recalculate_total()
+    return redirect('invoice_edit', pk=pk)
+
+def invoice_remove_item(request, pk):
+    item = get_object_or_404(InvoiceItem, pk=pk)
+    invoice_pk = item.invoice.pk
+    invoice = item.invoice
+    item.delete()
+    invoice.recalculate_total()
+    return redirect('invoice_edit', pk=invoice_pk)
+
 def customers_list(request):
     customers = Customer.objects.all().prefetch_related('boats').order_by('name')
     return render(request, 'marina/customers_list.html', {'customers': customers})
+
+def providers_list(request):
+    providers = ServiceProvider.objects.all().order_by('name')
+    return render(request, 'marina/providers_list.html', {'providers': providers})
+
+def provider_create(request):
+    from .forms import ServiceProviderForm
+    if request.method == 'POST':
+        form = ServiceProviderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                response = HttpResponse()
+                response['HX-Refresh'] = 'true'
+                return response
+            return redirect('providers_list')
+    else:
+        form = ServiceProviderForm()
+    
+    template = 'marina/partials/provider_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+    
+    return render(request, template, {
+        'form': form,
+        'partial_template': 'marina/partials/provider_form.html',
+        'title': 'New Service Provider'
+    })
+
+def provider_edit(request, pk):
+    from .forms import ServiceProviderForm
+    provider = get_object_or_404(ServiceProvider, pk=pk)
+    if request.method == 'POST':
+        form = ServiceProviderForm(request.POST, instance=provider)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                response = HttpResponse()
+                response['HX-Refresh'] = 'true'
+                return response
+            return redirect('providers_list')
+    else:
+        form = ServiceProviderForm(instance=provider)
+    
+    template = 'marina/partials/provider_form.html'
+    if not request.htmx:
+        template = 'marina/full_page_modal.html'
+    
+    return render(request, template, {
+        'form': form,
+        'partial_template': 'marina/partials/provider_form.html',
+        'title': f'Edit Provider: {provider.name}'
+    })
+
+def provider_delete(request, pk):
+    provider = get_object_or_404(ServiceProvider, pk=pk)
+    if request.method == 'POST':
+        provider.delete()
+        return redirect('providers_list')
+    return render(request, 'marina/partials/provider_delete_confirm.html', {'provider': provider})
 
 def customer_edit(request, pk):
     customer = get_object_or_404(Customer, pk=pk)

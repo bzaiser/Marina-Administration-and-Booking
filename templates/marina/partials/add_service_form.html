@@ -1,25 +1,46 @@
-<div class="modal-header">
-    <h5 class="modal-title">Add Service for {{ booking.boat.name }}</h5>
+<div class="modal-header border-0 pb-0">
+    <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle text-primary me-2"></i>Add Service</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
+{% if request.htmx %}
 <form hx-post="{% url 'add_service' booking.id %}" hx-target="#modals-here .modal-content">
-    <div class="modal-body">
+{% else %}
+<form method="POST" action="{% url 'add_service' booking.id %}">
+{% endif %}
+    <div class="modal-body pt-3">
+        <div class="alert alert-light border-0 rounded-3 mb-4 d-flex align-items-center">
+            <i class="bi bi-info-circle text-primary me-3 fs-4"></i>
+            <div>
+                <small class="text-muted d-block small fw-bold text-uppercase">Adding service to</small>
+                <span class="fw-bold text-dark">{{ booking.boat.name }}</span> 
+                <span class="text-muted small ms-1">({{ booking.berth.block.name }}{{ booking.berth.number }})</span>
+            </div>
+        </div>
+
         {% csrf_token %}
         <div class="mb-3">
-            <label class="form-label">Service</label>
-            <select name="service" class="form-select" required>
+            <label class="form-label fw-bold small text-uppercase">Select Service Category</label>
+            <select name="service" class="form-select form-select-lg shadow-sm border-0 bg-light" required>
+                <option value="" disabled selected>Choose a service...</option>
                 {% for s in services %}
-                <option value="{{ s.id }}">{{ s.name }} (€{{ s.price|stringformat:".2f" }})</option>
+                <option value="{{ s.id }}">{{ s.name }} — €{{ s.price_per_unit|floatformat:2 }} / {{ s.get_unit_display }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Quantity</label>
-            <input type="number" name="quantity" class="form-control" value="1" step="0.1" required>
+            <label class="form-label fw-bold small text-uppercase">Quantity / Units</label>
+            <div class="input-group input-group-lg shadow-sm">
+                <input type="number" name="quantity" class="form-control border-0 bg-light" value="1" step="0.1" required>
+                <span class="input-group-text border-0 bg-light text-muted"><i class="bi bi-hash"></i></span>
+            </div>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Add to Invoice</button>
+    <div class="modal-footer border-0 pt-0 pb-4 justify-content-center">
+        <div class="d-grid gap-2 w-100 px-3">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
+                <i class="bi bi-cart-plus me-2"></i>Add to Booking Invoice
+            </button>
+            <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancel</button>
+        </div>
     </div>
 </form>

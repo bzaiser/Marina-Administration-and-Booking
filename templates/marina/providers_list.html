@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Service Providers - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div>
+            <h5 class="mb-0"><i class="bi bi-truck text-primary me-2"></i>Service Providers</h5>
+            <div class="small text-muted">Manage your external partners, mechanics, and suppliers</div>
+        </div>
+        <button class="btn btn-primary btn-sm rounded-pill px-3" hx-get="{% url 'provider_create' %}" hx-target="#modals-here .modal-content">
+            <i class="bi bi-plus-lg me-1"></i>New Provider
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Provider Name</th>
+                        <th>Contact Phone</th>
+                        <th>Email</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for provider in providers %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ provider.name }}</div>
+                        </td>
+                        <td>{{ provider.phone|default:"-" }}</td>
+                        <td>{{ provider.email|default:"-" }}</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" hx-get="{% url 'provider_edit' provider.id %}" hx-target="#modals-here .modal-content">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger" hx-get="{% url 'provider_delete' provider.id %}" hx-target="#modals-here .modal-content">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-info-circle fs-1 d-block mb-2"></i>
+                            No service providers defined yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Container -->
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (e) => {
+        if (e.detail.target.closest('#modals-here')) {
+            const modalElement = document.getElementById('modals-here');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modal.show();
+        }
+    });
+    
+    // Refresh page on modal close to show updated data
+    document.getElementById('modals-here').addEventListener('hidden.bs.modal', function () {
+        window.location.reload();
+    });
+</script>
+{% endblock %}

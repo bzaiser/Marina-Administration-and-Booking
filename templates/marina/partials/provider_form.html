@@ -1,0 +1,39 @@
+<div class="modal-header border-0 pb-0">
+    <h5 class="modal-title fw-bold">
+        <i class="bi bi-truck text-primary me-2"></i>
+        {% if form.instance.pk %}Edit Provider{% else %}New Provider{% endif %}
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+{% if request.htmx %}
+<form hx-post="{% if form.instance.pk %}{% url 'provider_edit' form.instance.pk %}{% else %}{% url 'provider_create' %}{% endif %}" hx-target="#modals-here .modal-content">
+{% else %}
+<form method="POST" action="{% if form.instance.pk %}{% url 'provider_edit' form.instance.pk %}{% else %}{% url 'provider_create' %}{% endif %}">
+{% endif %}
+    <div class="modal-body pt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label fw-bold small text-muted text-uppercase">Provider / Company Name</label>
+            {{ form.name }}
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Phone</label>
+                {{ form.phone }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-muted text-uppercase">Email</label>
+                {{ form.email }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer border-0 pt-0 pb-4 justify-content-center">
+        <div class="d-grid gap-2 w-100 px-3">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
+                <i class="bi bi-check-circle me-2"></i>Save Provider
+            </button>
+            <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</form>

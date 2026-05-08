@@ -36,7 +36,7 @@ class Command(BaseCommand):
         # 3. Services
         services = ["Water Supply", "Electricity 16A", "WiFi Premium", "Waste Disposal"]
         for s_name in services:
-            Service.objects.get_or_create(name=s_name, defaults={'price': random.choice([5.0, 10.0, 15.0])})
+            Service.objects.get_or_create(name=s_name, defaults={'price_per_unit': random.choice([5.0, 10.0, 15.0])})
 
         # 4. Bookings
         berths = list(Berth.objects.all())

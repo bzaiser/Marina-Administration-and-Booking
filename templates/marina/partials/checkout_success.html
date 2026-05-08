@@ -1,17 +1,38 @@
-<div class="modal-header">
-    <h5 class="modal-title">Checkout Successful</h5>
+<div class="modal-header border-0 pb-0">
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.reload()"></button>
 </div>
-<div class="modal-body text-center py-4">
-    <i class="bi bi-check-circle text-success fs-1 mb-3"></i>
-    <p>The boat has been checked out and the invoice has been generated.</p>
-    <div class="d-grid gap-2 col-8 mx-auto">
-        <a href="{% url 'invoice_pdf' invoice.id %}" target="_blank" class="btn btn-danger">
-            <i class="bi bi-file-pdf"></i> Download Invoice PDF
+<div class="modal-body text-center pt-0 pb-5">
+    <div class="mb-4">
+        <div class="d-inline-block p-4 rounded-circle bg-success-subtle mb-3">
+            <i class="bi bi-check-lg fs-1 text-success"></i>
+        </div>
+        <h3 class="fw-bold">Checkout Complete</h3>
+        <p class="text-muted">The boat has been checked out successfully and the invoice has been generated.</p>
+    </div>
+
+    <div class="card bg-light border-0 rounded-4 mb-4 mx-3">
+        <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-start">
+                    <small class="text-muted d-block small fw-bold text-uppercase">Invoice Amount</small>
+                    <span class="h5 mb-0 fw-bold">€{{ invoice.total_amount|floatformat:2 }}</span>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-white text-primary border px-2 py-1">Invoice #{{ invoice.id }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-grid gap-3 col-10 mx-auto">
+        <a href="{% url 'invoice_pdf' invoice.id %}" target="_blank" class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm">
+            <i class="bi bi-file-earmark-pdf me-2"></i>Download PDF Invoice
         </a>
-        <a href="{% url 'invoices_list' %}" class="btn btn-outline-primary">View All Invoices</a>
+        <a href="{% url 'invoices_list' %}" class="btn btn-outline-primary btn-lg rounded-pill fw-bold">
+            <i class="bi bi-receipt me-2"></i>View Billing History
+        </a>
     </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.reload()">Close</button>
+<div class="modal-footer border-0 pt-0 justify-content-center">
+    <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal" onclick="window.location.reload()">Return to Dashboard</button>
 </div>

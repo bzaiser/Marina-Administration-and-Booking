@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div>
+            <h5 class="mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>Booking Management</h5>
+            <div class="small text-muted">A comprehensive list of all past, present, and future bookings</div>
+        </div>
+        <a href="{% url 'planning_grid' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+            <i class="bi bi-grid-3x3-gap me-1"></i>Planning Grid
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="bookingTable">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 40px;"></th>
+                        <th>ID</th>
+                        <th>Boat / Owner</th>
+                        <th>Berth</th>
+                        <th>Period</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr class="align-middle">
+                        <td>
+                            <button class="btn btn-sm btn-link text-decoration-none p-0" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#services-{{ booking.id }}">
+                                <i class="bi bi-chevron-right toggle-icon"></i>
+                            </button>
+                        </td>
+                        <td><span class="text-muted">#{{ booking.id }}</span></td>
+                        <td>
+                            <div class="fw-bold">{{ booking.boat.name }}</div>
+                            <small class="text-muted"><i class="bi bi-person me-1"></i>{{ booking.boat.owner.name }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                <i class="bi bi-geo-alt-fill me-1" style="color: {{ booking.berth.block.color }};"></i>
+                                {{ booking.berth.block.name }}{{ booking.berth.number }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="small fw-bold">{{ booking.start_date|date:"d.m.Y" }} - {{ booking.end_date|date:"d.m.Y" }}</div>
+                            <div class="small text-muted text-uppercase" style="font-size: 0.7rem;">{{ booking.duration_days }} Days</div>
+                        </td>
+                        <td>
+                            {% if booking.status == 'ACTIVE' %}
+                                <span class="badge bg-success-subtle text-success px-2 border border-success-subtle">Active</span>
+                            {% elif booking.status == 'PLANNED' %}
+                                <span class="badge bg-primary-subtle text-primary px-2 border border-primary-subtle">Planned</span>
+                            {% elif booking.status == 'COMPLETED' %}
+                                <span class="badge bg-secondary-subtle text-secondary px-2 border border-secondary-subtle">Completed</span>
+                            {% elif booking.status == 'CANCELLED' %}
+                                <span class="badge bg-danger-subtle text-danger px-2 border border-danger-subtle">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ booking.get_booking_type_display }}</small>
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" hx-get="{% url 'booking_edit' booking.id %}" hx-target="#modals-here .modal-content" title="Edit Booking">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-info" hx-get="{% url 'add_service' booking.id %}" hx-target="#modals-here .modal-content" title="Add Service">
+                                    <i class="bi bi-plus-circle"></i>
+                                </button>
+                                {% if booking.status == 'ACTIVE' %}
+                                <a href="{% url 'checkout' booking.berth.id %}" class="btn btn-outline-success" title="Checkout">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                </a>
+                                {% endif %}
+                                <button class="btn btn-outline-danger" hx-get="{% url 'booking_delete' booking.id %}" hx-target="#modals-here .modal-content" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Expandable Services Row -->
+                    <tr class="collapse-row">
+                        <td colspan="8" class="p-0 border-0">
+                            <div class="collapse bg-light" id="services-{{ booking.id }}">
+                                <div class="px-5 py-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 small text-uppercase fw-bold text-muted">Booked Services</h6>
+                                        <div class="small">
+                                            Estimated Berth Fee: <span class="fw-bold text-primary">€{{ booking.calculate_price|floatformat:2 }}</span>
+                                        </div>
+                                    </div>
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <thead class="border-bottom">
+                                            <tr class="small text-muted">
+                                                <th>Service</th>
+                                                <th>Category</th>
+                                                <th class="text-end">Qty</th>
+                                                <th class="text-end">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for bs in booking.services.all %}
+                                            <tr class="small">
+                                                <td>{{ bs.service.name }}</td>
+                                                <td><small class="text-muted">{{ bs.service.get_service_type_display }}</small></td>
+                                                <td class="text-end">{{ bs.quantity }} {{ bs.service.get_unit_display }}</td>
+                                                <td class="text-end fw-bold">€{{ bs.total_price|floatformat:2 }}</td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr class="small">
+                                                <td colspan="4" class="text-center text-muted py-2">No additional services recorded.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            No bookings found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Container -->
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<style>
+    .toggle-icon { transition: transform 0.3s; }
+    [aria-expanded="true"] .toggle-icon { transform: rotate(90deg); }
+    .collapse-row td { background-color: #f8f9fa; }
+    .badge { font-weight: 500; }
+</style>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (e) => {
+        if (e.detail.target.closest('#modals-here')) {
+            const modalElement = document.getElementById('modals-here');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modal.show();
+        }
+    });
+    
+    // Refresh page on modal close to show updated data
+    document.getElementById('modals-here').addEventListener('hidden.bs.modal', function () {
+        window.location.reload();
+    });
+</script>
+{% endblock %}
