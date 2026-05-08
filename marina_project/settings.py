@@ -100,6 +100,10 @@ _db_engine = os.getenv('DB_ENGINE', 'django.db.backends.sqlite3')
 
 if _db_engine == 'django.db.backends.sqlite3':
     _db_path = os.getenv('DB_PATH', '')
+    # Auto-detect Docker: if /app/data exists and DB_PATH is not set or relative, use /app/data/db.sqlite3
+    if os.path.exists('/app/data') and (not _db_path or not _db_path.startswith('/')):
+        _db_path = '/app/data/db.sqlite3'
+    
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
