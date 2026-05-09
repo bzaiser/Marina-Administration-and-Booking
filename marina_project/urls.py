@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from marina import views
 
 urlpatterns = [
@@ -38,6 +39,10 @@ urlpatterns = [
     
     # Auth
     path('accounts/', include('django.contrib.auth.urls')),
+    
+    # PWA
+    path('sw.js', TemplateView.as_view(template_name="sw.js", content_type='application/javascript'), name='sw.js'),
+    path('offline/', TemplateView.as_view(template_name="marina/offline.html"), name='offline'),
 ]
 
 if settings.DEBUG:

@@ -170,20 +170,41 @@ def booking_delete(request, booking_id):
     return render(request, 'marina/partials/booking_delete_confirm.html', {'booking': booking})
 
 def add_service(request, booking_id):
-    from .models import BookingService, Service
+    from .models import BookingService, Service, Invoice, InvoiceItem
     booking = get_object_or_404(Booking, id=booking_id)
-    services = Service.objects.all()
+    services = Service.objects.all().order_by('name')
     
     if request.method == 'POST':
         service_id = request.POST.get('service')
         quantity = float(request.POST.get('quantity', 1))
-        service = get_object_or_404(Service, id=service_id)
+        price_override = request.POST.get('price_per_unit')
+        notes = request.POST.get('notes', '')
         
-        BookingService.objects.create(
+        service = get_object_or_404(Service, id=service_id)
+        final_price = float(price_override) if price_override else service.price_per_unit
+        
+        # Create BookingService entry
+        bs = BookingService.objects.create(
             booking=booking,
             service=service,
-            quantity=quantity
+            quantity=quantity,
+            price_per_unit=final_price,
+            notes=notes
         )
+        
+        # If the booking has an existing invoice, add the item to it and reset status to OPEN
+        invoice = Invoice.objects.filter(booking=booking).first()
+        if invoice:
+            InvoiceItem.objects.create(
+                invoice=invoice,
+                description=f"Service: {service.name}",
+                quantity=quantity,
+                unit=service.unit,
+                unit_price=final_price
+            )
+            invoice.status = 'OPEN'
+            invoice.recalculate_total()
+            
         return HttpResponse('<script>window.location.reload();</script>')
         
     template = 'marina/partials/add_service_form.html'
