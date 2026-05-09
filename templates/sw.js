@@ -4,7 +4,8 @@ const ASSETS_TO_CACHE = [
     '/static/vendor/bootstrap/bootstrap.min.css',
     '/static/vendor/bootstrap-icons/bootstrap-icons.css',
     '/static/css/base.css',
-    '/media/logo.jpg'
+    '/static/logo-192.png',
+    '/static/logo-512.png'
 ];
 
 self.addEventListener('install', (event) => {
