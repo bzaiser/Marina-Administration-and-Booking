@@ -61,6 +61,17 @@ class Boat(models.Model):
     def __str__(self):
         return f"{self.owner.name} - {self.name} ({self.get_boat_type_display()})"
 
+    def get_flag_code(self):
+        """Returns the correct ISO code for flag-icons library."""
+        if not self.flag:
+            return "xx"
+        code = self.flag.lower().strip()
+        mapping = {
+            'uk': 'gb',
+            'el': 'gr',
+        }
+        return mapping.get(code, code)
+
     class Meta:
         verbose_name = _("Boat")
         verbose_name_plural = _("Boats")

@@ -75,7 +75,7 @@
                                                 <div class="p-1">
                                                     <img src="{% if berth.current_booking.boat.image %}{{ berth.current_booking.boat.image.url }}{% else %}/static/img/no-boat.png{% endif %}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
                                                     <div class="mb-1 d-flex align-items-center">
-                                                        <span class="fi fi-{% if berth.current_booking.boat.flag|lower == 'uk' %}gb{% else %}{{ berth.current_booking.boat.flag|lower|default:"xx" }}{% endif %} fis me-2"></span>
+                                                        <span class="fi fi-{{ berth.current_booking.boat.get_flag_code }} fis me-2"></span>
                                                         <strong>{{ berth.current_booking.boat.owner.name }}</strong>
                                                     </div>
                                                     <div class="small text-muted">
@@ -91,7 +91,7 @@
                                                     </div>
                                                 </div>
                                            '></i>
-                                        <span class="fi fi-{% if berth.current_booking.boat.flag|lower == 'uk' %}gb{% else %}{{ berth.current_booking.boat.flag|lower|default:"xx" }}{% endif %} fis me-2"></span>
+                                        <span class="fi fi-{{ berth.current_booking.boat.get_flag_code }} fis me-2"></span>
                                         <a href="javascript:void(0)" onclick="editBoat('{{ berth.current_booking.boat.id }}')" class="boat-link">
                                             {{ berth.current_booking.boat.name }}
                                         </a>
