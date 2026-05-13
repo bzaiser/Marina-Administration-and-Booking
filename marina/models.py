@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.db.models.functions import Length
 from colorfield.fields import ColorField
 
 class Country(models.Model):
@@ -87,7 +88,6 @@ class Berth(models.Model):
         unique_together = ('block', 'number')
         verbose_name = _("Berth")
         verbose_name_plural = _("Berths")
-        from django.db.models.functions import Length
         ordering = ['block', Length('number').asc(), 'number']
 
 class PriceRate(models.Model):
