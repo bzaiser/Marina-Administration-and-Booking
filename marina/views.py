@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Sum, Count, Q, Avg
+from django.db.models.functions import Length
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -424,7 +426,32 @@ def calendar_view(request):
 
 @login_required
 def berths_grid(request):
-    blocks = Block.objects.all().order_by('name')
+    from django.utils import timezone
+    today = timezone.now().date()
+    blocks = Block.objects.all().order_by('name').prefetch_related('berths')
+    
+    # Pre-calculate status for each berth to avoid N+1 queries in template
+    for block in blocks:
+        block.berth_list = []
+        for berth in block.berths.all().order_by(Length('number').asc(), 'number'):
+            current_booking = Booking.objects.filter(
+                berth=berth, 
+                start_date__lte=today, 
+                end_date__gte=today,
+                status='ACTIVE'
+            ).select_related('boat', 'boat__owner').first()
+            
+            status = 'Vacant'
+            if current_booking:
+                if current_booking.is_at_sea:
+                    status = 'At Sea (Sub-lease Available)'
+                else:
+                    status = 'Occupied'
+            
+            berth.current_status = status
+            berth.current_booking = current_booking
+            block.berth_list.append(berth)
+            
     return render(request, 'marina/berths_grid.html', {'blocks': blocks})
 
 @login_required
