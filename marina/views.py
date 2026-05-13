@@ -595,10 +595,82 @@ def invoice_remove_item(request, pk):
 
 @login_required
 def customers_list(request):
-    customers = Customer.objects.all().prefetch_related('boats').order_by('name')
-    return render(request, 'marina/customers_list.html', {'customers': customers})
+        # Helper to map flags
+        def get_flag_code(code):
+            if not code: return 'un'
+            mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
+            return mapping.get(code.upper(), code.lower())
 
-def providers_list(request):
+        customers = Customer.objects.all().prefetch_related('boats').order_by('name')
+        data = []
+        for c in customers:
+            boats_data = []
+            for b in c.boats.all():
+                boats_data.append({
+                    'id': b.id,
+                    'name': b.name,
+                    'boat_type': b.get_boat_type_display(),
+                    'flag': b.flag,
+                    'flag_code': get_flag_code(b.flag),
+                    'length': str(b.length),
+                    'beam': str(b.beam),
+                    'draft': str(b.draft),
+                    'weight': str(b.weight),
+                    'diesel': str(b.diesel_tank),
+                    'water': str(b.water_tank),
+                    'image_url': b.image.url if b.image else '/static/marina/img/default_boat.png',
+                    'notes': b.notes
+                })
+            
+            data.append({
+                'id': c.id,
+                'name': c.name,
+                'email': c.email,
+                'phone': c.phone,
+                'address': c.address,
+                'tax_number': c.tax_number,
+                'boats': boats_data,
+                'boat_count': len(boats_data)
+            })
+        return JsonResponse(data, safe=False)
+    
+    return render(request, 'marina/customers_list.html')
+
+@login_required
+def customer_create(request):
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                return HttpResponse('<script>window.location.reload();</script>')
+            return redirect('customers_list')
+    else:
+        form = CustomerForm()
+    
+    return render(request, 'marina/partials/customer_form_modal.html', {
+        'form': form,
+        'editing': False
+    })
+
+@login_required
+def customer_edit(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, instance=customer)
+        if form.is_valid():
+            form.save()
+            if request.htmx:
+                return HttpResponse('<script>window.location.reload();</script>')
+            return redirect('customers_list')
+    else:
+        form = CustomerForm(instance=customer)
+    
+    return render(request, 'marina/partials/customer_form_modal.html', {
+        'form': form,
+        'customer': customer,
+        'editing': True
+    })
     providers = ServiceProvider.objects.all().order_by('name')
     return render(request, 'marina/providers_list.html', {'providers': providers})
 
