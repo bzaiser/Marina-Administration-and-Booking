@@ -220,33 +220,47 @@ class Service(models.Model):
         verbose_name = _("Service Catalog")
         verbose_name_plural = _("Service Catalog")
 
-class BookingService(models.Model):
+class ServiceOrder(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),
         ('COMPLETED', 'Completed'),
         ('CANCELLED', 'Cancelled'),
     ]
-
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='services', null=True, blank=True)
-    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
-    boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
-    berth = models.ForeignKey('Berth', on_delete=models.SET_NULL, related_name='services', null=True, blank=True)
     
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
+    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
+    boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
+    berth = models.ForeignKey('Berth', on_delete=models.SET_NULL, related_name='service_orders', null=True, blank=True)
+    
+    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    notes = models.TextField(_("Notes"), blank=True, null=True)
+    
+    # Scheduling for Planning View
+    scheduled_start = models.DateField(_("Scheduled Start"), null=True, blank=True)
+    scheduled_end = models.DateField(_("Scheduled End"), null=True, blank=True)
+    
+    date = models.DateTimeField(_("Date Added"), auto_now_add=True)
+
+    def __str__(self):
+        target = "Walk-in"
+        if self.boat: target = self.boat.name
+        elif self.customer: target = self.customer.name
+        return f"Order #{self.id} for {target} ({self.get_status_display()})"
+
+    class Meta:
+        verbose_name = _("Service Order")
+        verbose_name_plural = _("Service Orders")
+
+class ServiceOrderItem(models.Model):
+    order = models.ForeignKey(ServiceOrder, on_delete=models.CASCADE, related_name='items')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     quantity = models.FloatField(_("Quantity / Units"), default=1.0)
     
     price_per_unit = models.DecimalField(_("Price per Unit (At Booking)"), max_digits=10, decimal_places=2, blank=True, null=True)
     tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, blank=True, null=True)
     
-    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='PENDING')
-    notes = models.TextField(_("Notes for Provider"), blank=True, null=True)
-    
-    # Scheduling for Planning View
-    scheduled_start = models.DateField(_("Scheduled Start"), null=True, blank=True)
-    scheduled_end = models.DateField(_("Scheduled End"), null=True, blank=True)
-    workload_hours = models.FloatField(_("Workload (Hours)"), default=0.0)
-    
+    notes = models.TextField(_("Notes"), blank=True, null=True)
     date = models.DateTimeField(_("Date Added"), auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -257,20 +271,7 @@ class BookingService(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        try:
-            unit_display = self.service.get_unit_display()
-        except Exception:
-            unit_display = "Units"
-            
-        target = "Walk-in"
-        if self.booking:
-            target = f"Booking {self.booking.id}"
-        elif self.boat:
-            target = f"Boat {self.boat.name}"
-        elif self.customer:
-            target = f"Customer {self.customer.name}"
-            
-        return f"{self.quantity} {unit_display} of {self.service.name} for {target}"
+        return f"{self.quantity} x {self.service.name}"
 
     @property
     def total_price(self):
@@ -278,8 +279,8 @@ class BookingService(models.Model):
         return self.quantity * float(price)
 
     class Meta:
-        verbose_name = _("Service Order")
-        verbose_name_plural = _("Service Orders")
+        verbose_name = _("Order Item")
+        verbose_name_plural = _("Order Items")
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [

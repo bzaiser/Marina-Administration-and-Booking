@@ -1,33 +1,34 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, BookingService, Country, ServiceProvider
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, ServiceOrder, ServiceOrderItem, Country, ServiceProvider
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('iso_code', 'name')
     search_fields = ('iso_code', 'name')
 
-@admin.register(BookingService)
-class BookingServiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'service', 'quantity', 'boat', 'scheduled_start', 'status', 'total_price')
-    list_display_links = ('id', 'service', 'boat')
-    list_filter = ('status', 'service', 'scheduled_start', 'date')
+class ServiceOrderItemInline(admin.TabularInline):
+    model = ServiceOrderItem
+    extra = 1
+    readonly_fields = ('total_price',)
+
+@admin.register(ServiceOrder)
+class ServiceOrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'boat', 'scheduled_start', 'status')
+    list_display_links = ('id', 'boat')
+    list_filter = ('status', 'scheduled_start', 'date')
     search_fields = ('notes', 'boat__name', 'customer__name')
-    readonly_fields = ('total_price', 'date')
+    inlines = [ServiceOrderItemInline]
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('service', 'quantity', 'status', 'notes')
+            'fields': ('status', 'notes')
         }),
         ('Assignment', {
             'fields': ('booking', 'customer', 'boat', 'berth')
         }),
-        ('Scheduling & Workload', {
-            'fields': ('scheduled_start', 'scheduled_end', 'workload_hours')
-        }),
-        ('Pricing (Snapshot)', {
-            'fields': ('price_per_unit', 'tax_rate', 'total_price', 'date'),
-            'description': 'These prices are captured at the time of booking to ensure invoice stability.'
+        ('Scheduling', {
+            'fields': ('scheduled_start', 'scheduled_end')
         }),
     )
 

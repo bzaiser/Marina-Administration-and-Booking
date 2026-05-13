@@ -97,30 +97,31 @@ class BoatForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
-from .models import BookingService
-
-class BookingServiceForm(forms.ModelForm):
-    class Meta:
-        model = BookingService
-        fields = ['service', 'quantity', 'notes']
-        widgets = {
-            'service': forms.Select(attrs={'class': 'form-select select2-search'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
-            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional notes...'}),
-        }
+from .models import ServiceOrder, ServiceOrderItem
 
 class ServiceOrderForm(forms.ModelForm):
     class Meta:
-        model = BookingService
-        fields = ['boat', 'service', 'berth', 'quantity', 'status', 'scheduled_start', 'scheduled_end', 'workload_hours', 'notes']
+        model = ServiceOrder
+        fields = ['boat', 'berth', 'status', 'scheduled_start', 'scheduled_end', 'notes', 'booking', 'customer']
         widgets = {
             'boat': forms.Select(attrs={'class': 'form-select select2-search'}),
-            'service': forms.Select(attrs={'class': 'form-select select2-search'}),
             'berth': forms.Select(attrs={'class': 'form-select select2-search'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'scheduled_start': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'scheduled_end': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'workload_hours': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.5', 'placeholder': 'Estimated hours'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Job details...'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'General job notes...'}),
+            'booking': forms.HiddenInput(),
+            'customer': forms.HiddenInput(),
+        }
+
+class ServiceOrderItemForm(forms.ModelForm):
+    class Meta:
+        model = ServiceOrderItem
+        fields = ['service', 'quantity', 'notes', 'price_per_unit', 'tax_rate']
+        widgets = {
+            'service': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item notes...'}),
+            'price_per_unit': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'tax_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }

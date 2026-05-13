@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, BookingService
-from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, BookingServiceForm
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, ServiceOrder, ServiceOrderItem
+from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, ServiceOrderForm, ServiceOrderItemForm
 
 @login_required
 def quick_boat_create(request):
@@ -88,9 +88,12 @@ def checkout_view(request, berth_id):
     berth_fee = booking.calculate_price()
     
     # Calculate service costs
-    from .models import BookingService, InvoiceItem
-    booked_services = booking.services.all()
-    service_total = sum(s.total_price for s in booked_services)
+    from .models import ServiceOrder, ServiceOrderItem, InvoiceItem
+    booked_orders = ServiceOrder.objects.filter(booking=booking)
+    service_total = 0
+    for order in booked_orders:
+        for item in order.items.all():
+            service_total += item.total_price
     
     total_price = berth_fee + service_total
     
@@ -117,14 +120,15 @@ def checkout_view(request, berth_id):
         )
         
         # Add service line items
-        for bs in booked_services:
-            InvoiceItem.objects.create(
-                invoice=invoice,
-                description=f"Service: {bs.service.name}",
-                quantity=bs.quantity,
-                unit=bs.service.unit,
-                unit_price=bs.service.price_per_unit
-            )
+        for order in booked_orders:
+            for item in order.items.all():
+                InvoiceItem.objects.create(
+                    invoice=invoice,
+                    description=f"Service: {item.service.name}",
+                    quantity=item.quantity,
+                    unit=item.service.unit,
+                    unit_price=item.price_per_unit or item.service.price_per_unit
+                )
         
         # Redirect to invoice edit to allow final adjustments (discount, extra items, etc.)
         return invoice_edit(request, invoice.id)
@@ -138,7 +142,7 @@ def checkout_view(request, berth_id):
         'total_price': total_price,
         'berth_fee': berth_fee,
         'service_total': service_total,
-        'booked_services': booked_services
+        'booked_orders': booked_orders
     })
 
 @login_required
@@ -154,8 +158,8 @@ def booking_edit(request, booking_id):
     else:
         form = BookingForm(instance=booking)
     
-    services = booking.services.all().select_related('service')
-    service_form = BookingServiceForm()
+    orders = ServiceOrder.objects.filter(booking=booking).prefetch_related('items__service')
+    order_form = ServiceOrderForm()
     all_services = Service.objects.all().order_by('name')
     
     template = 'marina/partials/booking_form.html'
@@ -166,50 +170,32 @@ def booking_edit(request, booking_id):
         'form': form, 
         'editing': True,
         'booking': booking,
-        'services': services,
+        'orders': orders,
         'all_services': all_services,
-        'service_form': service_form,
+        'order_form': order_form,
         'partial_template': 'marina/partials/booking_form.html',
         'title': f'Edit Booking #{booking.id}'
     })
 
 @login_required
-def booking_add_service_inline(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+def service_order_edit(request, order_id):
+    order = get_object_or_404(ServiceOrder, id=order_id)
     if request.method == 'POST':
-        form = BookingServiceForm(request.POST)
+        form = ServiceOrderForm(request.POST, instance=order)
         if form.is_valid():
-            bs = form.save(commit=False)
-            bs.booking = booking
-            bs.save()
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
+    else:
+        form = ServiceOrderForm(instance=order)
     
-    services = booking.services.all().select_related('service')
-    all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/partials/booking_services_list.html', {
-        'booking': booking,
-        'services': services,
-        'all_services': all_services,
-        'service_form': BookingServiceForm()
-    })
-
-@login_required
-def booking_remove_service_inline(request, service_id):
-    bs = get_object_or_404(BookingService, id=service_id)
-    booking = bs.booking
-    bs.delete()
-    
-    services = booking.services.all().select_related('service')
-    all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/partials/booking_services_list.html', {
-        'booking': booking,
-        'services': services,
-        'all_services': all_services,
-        'service_form': BookingServiceForm()
+    return render(request, 'marina/modals/service_order_form.html', {
+        'form': form,
+        'order': order,
+        'title': 'Edit Service Order'
     })
 
 @login_required
 def service_order_create(request):
-    from .forms import ServiceOrderForm
     boat_id = request.GET.get('boat_id')
     initial = {}
     if boat_id:
@@ -226,25 +212,6 @@ def service_order_create(request):
     return render(request, 'marina/modals/service_order_form.html', {
         'form': form,
         'title': 'Create Service Order'
-    })
-
-@login_required
-def service_order_edit(request, order_id):
-    from .forms import ServiceOrderForm
-    order = get_object_or_404(BookingService, id=order_id)
-    
-    if request.method == 'POST':
-        form = ServiceOrderForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
-    else:
-        form = ServiceOrderForm(instance=order)
-    
-    return render(request, 'marina/modals/service_order_form.html', {
-        'form': form,
-        'order': order,
-        'title': 'Edit Service Order'
     })
 
 @login_required
@@ -954,10 +921,10 @@ def api_planning_data(request):
             'ref': b.reference,
             'category': 'booking'
         })
-    scheduled_services = BookingService.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner', 'service')
+    scheduled_orders = ServiceOrder.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner')
     service_items = []
     unassigned_exists = False
-    for s in scheduled_services:
+    for s in scheduled_orders:
         style = f"background-color: #f39c12; border-color: #e67e22; color: white;"
         if s.status == 'COMPLETED': style = f"background-color: #27ae60; border-color: #2ecc71; color: white;"
         elif s.status == 'IN_PROGRESS': style = f"background-color: #3498db; border-color: #2980b9; color: white;"
@@ -974,12 +941,16 @@ def api_planning_data(request):
             else:
                 unassigned_exists = True
 
+        # Get list of services in this order for content
+        item_names = ", ".join([item.service.name for item in s.items.all()])
+        content = f"🛠 {item_names if item_names else 'Empty Order'}"
+
         service_items.append({
             'id': f"service_{s.id}",
             'group': group_id,
             'start': s.scheduled_start.isoformat(),
             'end': (s.scheduled_end + datetime.timedelta(days=1)).isoformat() if s.scheduled_end else (s.scheduled_start + datetime.timedelta(days=1)).isoformat(),
-            'content': f"🛠 {s.service.name}",
+            'content': content,
             'style': style,
             'owner': s.boat.owner.name if s.boat.owner else '',
             'boat_type': s.boat.get_boat_type_display(),
@@ -995,7 +966,7 @@ def api_planning_data(request):
             'language': s.boat.owner.language if s.boat.owner else '',
             'year': s.boat.year_built,
             'ref': s.get_status_display(),
-            'notes': f"Workload: {s.workload_hours}h | {s.notes or ''}",
+            'notes': s.notes or '',
             'category': 'service',
             'order_id': s.id
         })
