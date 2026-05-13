@@ -9,9 +9,26 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(BookingService)
 class BookingServiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'service', 'quantity', 'status', 'total_price', 'booking', 'customer', 'boat', 'date')
-    list_filter = ('status', 'service', 'date')
-    search_fields = ('notes', 'booking__boat__name', 'customer__name', 'boat__name')
+    list_display = ('id', 'service', 'quantity', 'status', 'total_price', 'boat', 'scheduled_start', 'status')
+    list_filter = ('status', 'service', 'scheduled_start', 'date')
+    search_fields = ('notes', 'boat__name', 'customer__name')
+    readonly_fields = ('total_price', 'date')
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('service', 'quantity', 'status', 'notes')
+        }),
+        ('Assignment', {
+            'fields': ('booking', 'customer', 'boat', 'berth')
+        }),
+        ('Scheduling & Workload', {
+            'fields': ('scheduled_start', 'scheduled_end', 'workload_hours')
+        }),
+        ('Pricing (Snapshot)', {
+            'fields': ('price_per_unit', 'tax_rate', 'total_price', 'date'),
+            'description': 'These prices are captured at the time of booking to ensure invoice stability.'
+        }),
+    )
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
