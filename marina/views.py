@@ -296,7 +296,21 @@ def dashboard(request):
     }
 
     for block_name, b_list in block_berths.items():
-        total_in_block = len(b_list)
+        # Get the capacity of the block. We assume at least 15 slots, 
+        # or more if the highest berth number is higher.
+        max_num = 0
+        for b in b_list:
+            m = re.search(r'(\d+)', b.number)
+            if m:
+                max_num = max(max_num, int(m.group(1)))
+        
+        # This allows for dynamic blocks but keeps positions fixed if a middle berth is deleted.
+        # It also handles blocks with more than 15 berths.
+        total_slots = max(15, max_num)
+        
+        # We strip the block name to be safe against trailing spaces
+        s_name = block_name.strip()
+        
         for idx, berth in enumerate(b_list):
             booking = Booking.objects.filter(
                 berth=berth, 
@@ -308,14 +322,19 @@ def dashboard(request):
             # Interpolate position and calculate dimensions
             x, y, rot = 0, 0, 0
             w, h = 15, 55 # fallback defaults
-            if block_name in segments:
-                start, end, angle, l_short = segments[block_name]
+            if s_name in segments:
+                start, end, angle, l_short = segments[s_name]
                 l_long = math.hypot(end[0] - start[0], end[1] - start[1])
                 
-                w = l_long / total_in_block
+                # Each slot has a fixed width based on the total capacity
+                w = l_long / total_slots
                 h = l_short
                 
-                fraction = (idx + 0.5) / total_in_block
+                # Use the berth's number to find its slot, fallback to enumerate index if not numeric
+                m = re.search(r'(\d+)', berth.number)
+                slot_idx = int(m.group(1)) - 1 if m else idx
+                
+                fraction = (slot_idx + 0.5) / total_slots
                 x = start[0] + fraction * (end[0] - start[0])
                 y = start[1] + fraction * (end[1] - start[1])
                 rot = angle
