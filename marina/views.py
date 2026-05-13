@@ -671,6 +671,9 @@ def customer_edit(request, pk):
         'customer': customer,
         'editing': True
     })
+
+@login_required
+def providers_list(request):
     providers = ServiceProvider.objects.all().order_by('name')
     return render(request, 'marina/providers_list.html', {'providers': providers})
 
