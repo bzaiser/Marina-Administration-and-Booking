@@ -122,13 +122,12 @@ def checkout_view(request, berth_id):
                 invoice=invoice,
                 description=f"Service: {bs.service.name}",
                 quantity=bs.quantity,
+                unit=bs.service.unit,
                 unit_price=bs.service.price_per_unit
             )
         
-        template = 'marina/partials/checkout_success.html'
-        if not request.htmx:
-            template = 'marina/checkout_success_full.html'
-        return render(request, template, {'invoice': invoice})
+        # Redirect to invoice edit to allow final adjustments (discount, extra items, etc.)
+        return invoice_edit(request, invoice.id)
 
     template = 'marina/partials/checkout_confirm.html'
     if not request.htmx:
