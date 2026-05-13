@@ -8,6 +8,7 @@ from marina import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.dashboard, name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard_path'),
     path('calendar/', views.calendar_view, name='calendar'),
     path('berths/', views.berths_grid, name='berths_grid'),
     path('bookings/', views.bookings_list, name='bookings_list'),
