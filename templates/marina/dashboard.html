@@ -221,7 +221,17 @@
                          <path style="display:inline;fill:none;stroke:#00ffff;stroke-width:3;stroke-dasharray:none" d="m 233.95291,115.98513 4.95664,94.17597 426.27012,-37.67039 -6.93927,-92.193312 z" id="path14" inkscape:label="Berth A" />
                        </g>
 
-                       <g id="berths-layer">
+                       
+                        <!-- Block Labels -->
+                        <g id=block-labels style="font-family: 'Inter', sans-serif; font-weight: 800; pointer-events: none; text-transform: uppercase;">
+                            <text x="450" y="100" fill="#00ffff" font-size="28" text-anchor="middle" style="filter: drop-shadow(0px 0px 2px white);">Block A</text>
+                            <text x="450" y="250" fill="#ff00ff" font-size="28" text-anchor="middle" style="filter: drop-shadow(0px 0px 2px white);">Block B</text>
+                            <text x="450" y="500" fill="#ff6600" font-size="28" text-anchor="middle" style="filter: drop-shadow(0px 0px 2px white);">Block C</text>
+                            <text x="450" y="650" fill="#89a02c" font-size="28" text-anchor="middle" style="filter: drop-shadow(0px 0px 2px white);">Block D</text>
+                            <text x="940" y="400" fill="#ff0000" font-size="28" text-anchor="middle" style="filter: drop-shadow(0px 0px 2px white);">Block E</text>
+                        </g>
+
+                        <g id="berths-layer">
                          {% for item in all_berths %}
                              <g transform="translate({{ item.x }}, {{ item.y }}) rotate({{ item.rot }})" 
                                 cursor="pointer" onclick="handleBerthClick(event, '{{ item.obj.id }}', '{{ item.booking.id|default:'' }}')"
