@@ -173,7 +173,7 @@
                     </div>
 
                     <!-- Custom Map Navigation -->
-                    <div class="position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2" style="z-index: 10;">
+                    <div class="position-absolute bottom-0 start-0 m-3 d-flex flex-column gap-2" style="z-index: 10;">
                         <button type="button" class="btn btn-white shadow border rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" onclick="window.marinaPanZoom.zoomIn()">
                             <i class="bi bi-plus-lg fs-5 text-primary"></i>
                         </button>
@@ -380,12 +380,11 @@
             controlIconsEnabled: false,
             fit: true,
             center: true,
-            minZoom: 1, // Will be set dynamically after init
+            minZoom: 0.1, // Will be overridden
             maxZoom: 10,
-            onUpdatedCTM: function() {
-                // Ensure we don't zoom out past the initial fit
+            onZoom: function(newZoom) {
                 const sizes = this.getSizes();
-                if (this.realZoom < sizes.minZoom) {
+                if (newZoom < sizes.minZoom) {
                     this.zoom(sizes.minZoom);
                 }
             },
@@ -394,7 +393,6 @@
                 const gutterWidth = shelf.width;
                 const gutterHeight = shelf.height;
                 
-                // Calculate limits based on current zoom
                 const leftLimit = -((shelf.viewBox.x + shelf.viewBox.width) * shelf.realZoom) + gutterWidth;
                 const rightLimit = gutterWidth - shelf.viewBox.x * shelf.realZoom;
                 const topLimit = -((shelf.viewBox.y + shelf.viewBox.height) * shelf.realZoom) + gutterHeight;
@@ -404,7 +402,6 @@
                 customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
                 customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
 
-                // If not zoomed in, keep centered
                 if (Math.abs(shelf.realZoom - shelf.minZoom) < 0.01) {
                     return false;
                 }
@@ -413,7 +410,7 @@
             }
         });
 
-        // Set minZoom to the initial fit zoom
+        // Set absolute minZoom to the initial fit level
         const initialSizes = window.marinaPanZoom.getSizes();
         window.marinaPanZoom.setMinZoom(initialSizes.realZoom);
 
