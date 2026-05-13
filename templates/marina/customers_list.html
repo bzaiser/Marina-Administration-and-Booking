@@ -177,13 +177,21 @@
 
     async function loadData() {
         try {
-            const response = await fetch('{% url "customers_list" %}', {
-                headers: { 'Accept': 'application/json' }
-            });
+            console.log('Fetching customer data...');
+            const response = await fetch('{% url "customers_list" %}?json=1');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
             const data = await response.json();
-            gridApi.setGridOption('rowData', data);
+            console.log('Data received:', data.length, 'customers');
+            
+            if (gridApi) {
+                gridApi.setGridOption('rowData', data);
+            } else {
+                console.error('Grid API not initialized yet');
+            }
         } catch (error) {
             console.error('Error loading customer data:', error);
+            alert('Failed to load customer data. Please check the console for details.');
         }
     }
 
