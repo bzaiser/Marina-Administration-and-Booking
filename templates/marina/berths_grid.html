@@ -16,6 +16,15 @@
     </div>
 </div>
 
+<style>
+    .accordion-collapse {
+        overflow: visible !important;
+    }
+    .accordion-body {
+        overflow: visible !important;
+    }
+</style>
+
 <div class="accordion" id="marinaAccordion">
     {% for block in blocks %}
     <div class="accordion-item mb-2 shadow-sm border-0 rounded">
@@ -30,7 +39,7 @@
         </h2>
         <div id="collapse{{ block.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#marinaAccordion">
             <div class="accordion-body p-0">
-                <div id="grid-{{ block.id }}" class="ag-theme-alpine w-100" style="height: 450px;"></div>
+                <div id="grid-{{ block.id }}" class="ag-theme-alpine w-100"></div>
             </div>
         </div>
     </div>
@@ -145,6 +154,7 @@
             columnDefs: columnDefs,
             defaultColDef: { resizable: true, sortable: true, filter: true },
             rowData: [],
+            domLayout: 'autoHeight',
             animateRows: true,
             onCellDoubleClicked: function(params) {
                 if (params.data && params.data.boat_id) {
