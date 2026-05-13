@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/events/', views.api_events, name='api_events'),
     path('api/planning-data/', views.api_planning_data, name='api_planning_data'),
     path('api/berths/', views.api_berths, name='api_berths'),
+    path('api/bookings/', views.api_bookings, name='api_bookings'),
     path('invoice/create/', views.invoice_create, name='invoice_create'),
     path('invoice/pdf/<int:invoice_id>/', views.invoice_pdf, name='invoice_pdf'),
     path('invoice/edit/<int:pk>/', views.invoice_edit, name='invoice_edit'),

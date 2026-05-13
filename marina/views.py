@@ -936,3 +936,43 @@ def api_berths(request):
             'status': status
         })
     return JsonResponse(data, safe=False)
+
+@login_required
+def api_bookings(request):
+    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('services', 'services__service')
+    data = []
+    for b in bookings:
+        services = []
+        for bs in b.services.all():
+            services.append({
+                'name': bs.service.name,
+                'type': bs.service.get_service_type_display(),
+                'quantity': bs.quantity,
+                'unit': bs.service.get_unit_display(),
+                'total': float(bs.total_price)
+            })
+            
+        data.append({
+            'id': b.id,
+            'boat_name': b.boat.name,
+            'boat_id': b.boat.id,
+            'owner_name': b.boat.owner.name,
+            'flag': b.boat.get_flag_code(),
+            'berth_num': b.berth.number,
+            'berth_id': b.berth.id,
+            'block_name': b.berth.block.name,
+            'block_color': b.berth.block.color,
+            'start_date': b.start_date.strftime('%d.%m.%Y'),
+            'end_date': b.end_date.strftime('%d.%m.%Y'),
+            'start_iso': b.start_date.isoformat(),
+            'end_iso': b.end_date.isoformat(),
+            'duration': b.duration_days,
+            'status': b.get_status_display(),
+            'status_code': b.status,
+            'type': b.get_booking_type_display(),
+            'berth_fee': float(b.calculate_price()),
+            'services': services,
+            'total_services': sum(s['total'] for s in services),
+            'notes': b.notes
+        })
+    return JsonResponse(data, safe=False)
