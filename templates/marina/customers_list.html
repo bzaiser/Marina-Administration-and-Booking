@@ -53,26 +53,16 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
-<!-- AG Grid CSS & JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+<!-- AG Grid JS (v33+ handles CSS internally via Theming API) -->
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 
 <!-- Flag Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css">
 
 <style>
-    /* AG Grid Customizations */
-    .ag-theme-alpine {
-        --ag-header-background-color: #f8f9fa;
-        --ag-header-foreground-color: #495057;
-        --ag-row-hover-color: #f1f3f5;
-        --ag-selected-row-background-color: #e7f1ff;
-        --ag-font-size: 13px;
         --ag-font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
     .ag-header-cell-label { font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
