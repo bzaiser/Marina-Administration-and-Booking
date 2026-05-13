@@ -1,12 +1,14 @@
 <div id="services-list-container">
+    <!-- List of already booked services -->
     <div class="table-responsive">
-        <table class="table table-sm align-middle mb-0">
+        <table class="table table-hover align-middle mb-0">
             <thead class="table-light small text-uppercase text-muted">
                 <tr>
-                    <th class="ps-3">Service</th>
-                    <th class="text-end">Qty / Unit</th>
-                    <th>Notes</th>
-                    <th class="text-end pe-3">Action</th>
+                    <th class="ps-3" style="width: 35%;">Service</th>
+                    <th style="width: 15%;">Quantity</th>
+                    <th style="width: 15%;">Unit Price</th>
+                    <th style="width: 25%;">Notes</th>
+                    <th class="text-end pe-3" style="width: 10%;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,9 +18,12 @@
                         <div class="fw-bold text-dark">{{ s.service.name }}</div>
                         <div class="xx-small text-muted text-uppercase">{{ s.service.get_service_type_display }}</div>
                     </td>
-                    <td class="text-end">
-                        <span class="fw-bold text-primary">{{ s.quantity }}</span> 
+                    <td>
+                        <span class="fw-bold">{{ s.quantity }}</span> 
                         <small class="text-muted text-uppercase" style="font-size: 0.65rem;">{{ s.service.get_unit_display }}</small>
+                    </td>
+                    <td>
+                        <span class="text-muted">€{{ s.service.price_per_unit|floatformat:2 }}</span>
                     </td>
                     <td><small class="text-muted">{{ s.notes|default:"-" }}</small></td>
                     <td class="text-end pe-3">
@@ -34,8 +39,8 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="text-center py-4 text-muted small">
-                        <i class="bi bi-info-circle me-1"></i> No services added yet.
+                    <td colspan="5" class="text-center py-4 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> No services added to this booking yet.
                     </td>
                 </tr>
                 {% endfor %}
@@ -43,38 +48,48 @@
         </table>
     </div>
 
-    <!-- Redesigned Add Form - Vertical/Horizontal Hybrid for better space -->
+    <!-- Enhanced Inline Add Form -->
     <div class="p-4 bg-light border-top">
         <form hx-post="{% url 'booking_add_service_inline' booking.id %}" hx-target="#services-list-container" hx-swap="outerHTML">
             {% csrf_token %}
             
-            <!-- Row 1: Service Selection (Full Width) -->
+            <!-- 1. Service Selection -->
             <div class="mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-0">1. Select Service</label>
-                    <div id="service-price-preview" class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill" style="display: none;">
-                        <i class="bi bi-tag-fill me-1"></i> <span id="preview-price-val">0.00</span> / <span id="preview-unit-val">-</span>
-                    </div>
-                </div>
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">1. Select Service</label>
                 {{ service_form.service }}
             </div>
             
-            <!-- Row 2: Quantity -->
-            <div class="mb-3">
-                <label class="form-label small fw-bold text-muted text-uppercase mb-1">2. Quantity</label>
-                <div class="input-group" style="max-width: 250px;">
-                    {{ service_form.quantity }}
-                    <span class="input-group-text bg-white small text-muted border-start-0" id="dynamic-unit-label" style="min-width: 80px; justify-content: center;">-</span>
+            <div class="row g-3 mb-3">
+                <!-- 2. Quantity & Price Info -->
+                <div class="col-md-5">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">2. Quantity</label>
+                    <div class="input-group">
+                        {{ service_form.quantity }}
+                        <span class="input-group-text bg-white small text-muted border-start-0" id="dynamic-unit-label" style="min-width: 120px; justify-content: center;">-</span>
+                    </div>
+                    <div id="service-price-info" class="xx-small mt-1 text-primary fw-bold" style="display: none;">
+                        Unit Price: <span id="preview-price-val">€0.00</span>
+                    </div>
+                </div>
+
+                <!-- Live Total Preview -->
+                <div class="col-md-7">
+                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">Estimated Total</label>
+                    <div class="d-flex align-items-center h-100 pb-2">
+                        <div id="total-price-preview" class="h4 mb-0 fw-bold text-success">
+                            €0.00
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Row 3: Notes (Full Width) -->
+            <!-- 3. Notes -->
             <div class="mb-3">
                 <label class="form-label small fw-bold text-muted text-uppercase mb-1">3. Optional Notes</label>
                 {{ service_form.notes }}
             </div>
             
-            <!-- Row 3: Action Button (Full Width for visibility) -->
+            <!-- Add Button -->
             <div class="d-grid">
                 <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm py-3">
                     <i class="bi bi-plus-circle-fill me-2"></i>Add Service to Booking
@@ -85,7 +100,6 @@
 </div>
 
 <style>
-    /* Ensure select2 is wide enough */
     .select2-container { width: 100% !important; }
     .select2-selection--single { height: 45px !important; display: flex !important; align-items: center !important; }
     #services-list-container input { height: 45px; }
@@ -97,39 +111,44 @@
             {% for s in all_services %}
             "{{ s.id }}": {
                 "unit": "{{ s.get_unit_display }}",
-                "price": "{{ s.price_per_unit|floatformat:2 }}"
+                "price": {{ s.price_per_unit|stringformat:".2f" }}
             }{% if not forloop.last %},{% endif %}
             {% endfor %}
         };
 
         const container = document.getElementById('services-list-container');
         const serviceSelect = container.querySelector('select[name="service"]');
+        const quantityInput = container.querySelector('input[name="quantity"]');
         const unitLabel = document.getElementById('dynamic-unit-label');
-        const pricePreview = document.getElementById('service-price-preview');
-        const priceVal = document.getElementById('preview-price-val');
-        const unitVal = document.getElementById('preview-unit-val');
+        const priceInfo = document.getElementById('service-price-info');
+        const priceValDisplay = document.getElementById('preview-price-val');
+        const totalDisplay = document.getElementById('total-price-preview');
 
-        function updateServiceDetails() {
-            const val = serviceSelect.value;
-            if (val && servicesData[val]) {
-                const data = servicesData[val];
+        function updateTotals() {
+            const serviceId = serviceSelect.value;
+            const qty = parseFloat(quantityInput.value) || 0;
+            
+            if (serviceId && servicesData[serviceId]) {
+                const data = servicesData[serviceId];
                 unitLabel.innerText = data.unit;
-                priceVal.innerText = '€' + data.price;
-                unitVal.innerText = data.unit;
-                pricePreview.style.display = 'inline-block';
+                priceValDisplay.innerText = '€' + data.price.toFixed(2);
+                priceInfo.style.display = 'block';
+                
+                const total = qty * data.price;
+                totalDisplay.innerText = '€' + total.toFixed(2);
             } else {
                 unitLabel.innerText = '-';
-                pricePreview.style.display = 'none';
+                priceInfo.style.display = 'none';
+                totalDisplay.innerText = '€0.00';
             }
         }
 
-        // Handle both standard select and select2
-        $(serviceSelect).on('change', updateServiceDetails);
+        $(serviceSelect).on('change', updateTotals);
+        quantityInput.addEventListener('input', updateTotals);
         
         // Initial run
-        updateServiceDetails();
+        updateTotals();
 
-        // Re-initialize Select2
         if (typeof initSelect2 === 'function') {
             initSelect2(container);
         }
