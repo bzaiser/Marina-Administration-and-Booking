@@ -173,15 +173,15 @@
                     </div>
 
                     <!-- Custom Map Navigation -->
-                    <div class="position-absolute bottom-0 start-0 m-3 d-flex flex-column gap-2" style="z-index: 10;">
-                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.zoomIn()">
-                            <i class="bi bi-plus-lg text-primary"></i>
+                    <div class="position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2" style="z-index: 10;">
+                        <button type="button" class="btn btn-white shadow border rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" onclick="window.marinaPanZoom.zoomIn()">
+                            <i class="bi bi-plus-lg fs-5 text-primary"></i>
                         </button>
-                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.zoomOut()">
-                            <i class="bi bi-dash-lg text-primary"></i>
+                        <button type="button" class="btn btn-white shadow border rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" onclick="window.marinaPanZoom.zoomOut()">
+                            <i class="bi bi-dash-lg fs-5 text-primary"></i>
                         </button>
-                        <button type="button" class="btn btn-sm shadow-sm border rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: white !important;" onclick="window.marinaPanZoom.reset()">
-                            <i class="bi bi-arrow-counterclockwise text-muted"></i>
+                        <button type="button" class="btn btn-white shadow border rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" onclick="window.marinaPanZoom.reset(); window.marinaPanZoom.fit(); window.marinaPanZoom.center();">
+                            <i class="bi bi-arrows-fullscreen fs-6 text-muted"></i>
                         </button>
                     </div>
 
@@ -380,32 +380,42 @@
             controlIconsEnabled: false,
             fit: true,
             center: true,
-            minZoom: 0.1,
+            minZoom: 1, // Will be set dynamically after init
             maxZoom: 10,
+            onUpdatedCTM: function() {
+                // Ensure we don't zoom out past the initial fit
+                const sizes = this.getSizes();
+                if (this.realZoom < sizes.minZoom) {
+                    this.zoom(sizes.minZoom);
+                }
+            },
             beforePan: function(oldPan, newPan) {
-                var stopPan = false
-                  , marginLeft = 0
-                  , marginTop = 0
-                  , shelf = this.getSizes()
-                  , gutterWidth = shelf.width
-                  , gutterHeight = shelf.height
-                  , leftLimit = -((shelf.viewBox.x + shelf.viewBox.width) * shelf.realZoom) + gutterWidth
-                  , rightLimit = gutterWidth - shelf.viewBox.x * shelf.realZoom
-                  , topLimit = -((shelf.viewBox.y + shelf.viewBox.height) * shelf.realZoom) + gutterHeight
-                  , bottomLimit = gutterHeight - shelf.viewBox.y * shelf.realZoom;
+                const shelf = this.getSizes();
+                const gutterWidth = shelf.width;
+                const gutterHeight = shelf.height;
+                
+                // Calculate limits based on current zoom
+                const leftLimit = -((shelf.viewBox.x + shelf.viewBox.width) * shelf.realZoom) + gutterWidth;
+                const rightLimit = gutterWidth - shelf.viewBox.x * shelf.realZoom;
+                const topLimit = -((shelf.viewBox.y + shelf.viewBox.height) * shelf.realZoom) + gutterHeight;
+                const bottomLimit = gutterHeight - shelf.viewBox.y * shelf.realZoom;
 
-                var customPan = {};
+                const customPan = {};
                 customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
                 customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
 
-                // Disable pan if not zoomed in (roughly)
-                if (shelf.realZoom <= shelf.minZoom * 1.01) {
+                // If not zoomed in, keep centered
+                if (Math.abs(shelf.realZoom - shelf.minZoom) < 0.01) {
                     return false;
                 }
 
                 return customPan;
             }
         });
+
+        // Set minZoom to the initial fit zoom
+        const initialSizes = window.marinaPanZoom.getSizes();
+        window.marinaPanZoom.setMinZoom(initialSizes.realZoom);
 
         // Occupancy Chart
         const ctx = document.getElementById('occupancyChart').getContext('2d');
