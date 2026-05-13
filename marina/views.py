@@ -909,9 +909,16 @@ def api_planning_data(request):
     for idx, block in enumerate(blocks):
         # We collect the IDs as strings to be safe
         berth_ids = [str(b.id) for b in block.berths.all()]
+        
+        icon = "bi-water"
+        if block.block_type == 'SERVICE':
+            icon = "bi-tools"
+        elif block.block_type == 'LAND':
+            icon = "bi-house-door"
+            
         resources.append({
             'id': f"block_{block.id}",
-            'content': f"Block {block.name}",
+            'content': f"<i class='bi {icon} me-1'></i> Block {block.name}",
             'nestedGroups': berth_ids,
             'className': 'bg-light fw-bold',
             'color': block.color,
@@ -923,6 +930,7 @@ def api_planning_data(request):
             'id': str(berth.id),
             'content': f"{berth.number}",
             'block_color': berth.block.color,
+            'block_type': berth.block.block_type,
             'order': int(berth.number) if str(berth.number).isdigit() else 999
         })
 
@@ -992,12 +1000,28 @@ def api_planning_data(request):
         elif s.status == 'IN_PROGRESS':
             style = f"background-color: #3498db; border-color: #2980b9; color: white;"
 
+        # Determine the group (resource) for this service
+        group_id = 'group_services' # Fallback
+        if s.berth:
+            group_id = str(s.berth_id)
+        elif s.booking:
+            group_id = str(s.booking.berth_id)
+        else:
+            # Try to find an active booking for this boat at start date
+            active_b = Booking.objects.filter(
+                boat=s.boat,
+                start_date__lte=s.scheduled_start,
+                end_date__gte=s.scheduled_start
+            ).first()
+            if active_b:
+                group_id = str(active_b.berth_id)
+
         items.append({
             'id': f"service_{s.id}",
-            'group': 'group_services',
+            'group': group_id,
             'start': s.scheduled_start.isoformat(),
             'end': (s.scheduled_end + datetime.timedelta(days=1)).isoformat() if s.scheduled_end else (s.scheduled_start + datetime.timedelta(days=1)).isoformat(),
-            'content': f"[{s.service.name}] {s.boat.name}",
+            'content': f"🛠 {s.service.name}",
             'style': style,
             'owner': s.boat.owner.name if s.boat.owner else '',
             'boat_type': s.boat.get_boat_type_display(),

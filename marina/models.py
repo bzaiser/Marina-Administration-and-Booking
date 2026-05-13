@@ -78,7 +78,13 @@ class Boat(models.Model):
         ordering = ['name']
 
 class Block(models.Model):
+    TYPE_CHOICES = [
+        ('WATER', 'Water Berth'),
+        ('SERVICE', 'Service / Dry-Dock'),
+        ('LAND', 'Land Storage'),
+    ]
     name = models.CharField(max_length=50, unique=True)
+    block_type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='WATER')
     key = models.CharField(max_length=10, blank=True, null=True, help_text="Mapping key for SVG coordinates (e.g., 'A', 'B', 'C')")
     color = ColorField(default='#3498db')
     description = models.TextField(blank=True)
@@ -221,6 +227,7 @@ class BookingService(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='services', null=True, blank=True)
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
     boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='services', null=True, blank=True)
+    berth = models.ForeignKey('Berth', on_delete=models.SET_NULL, related_name='services', null=True, blank=True)
     
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     quantity = models.FloatField(_("Quantity / Units"), default=1.0)

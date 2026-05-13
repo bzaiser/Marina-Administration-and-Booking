@@ -18,23 +18,36 @@ def seed_data():
 
     print("Creating Blocks...")
     blocks = [
-        Block.objects.create(name='A', color='#3498db'),
-        Block.objects.create(name='B', color='#9b59b6'),
-        Block.objects.create(name='C', color='#e67e22'),
-        Block.objects.create(name='D', color='#2ecc71'),
-        Block.objects.create(name='E', color='#e74c3c'),
+        Block.objects.create(name='A', color='#3498db', block_type='WATER'),
+        Block.objects.create(name='B', color='#9b59b6', block_type='WATER'),
+        Block.objects.create(name='C', color='#e67e22', block_type='WATER'),
+        Block.objects.create(name='D', color='#2ecc71', block_type='WATER'),
+        Block.objects.create(name='E', color='#e74c3c', block_type='WATER'),
+        Block.objects.create(name='F', color='#f39c12', block_type='SERVICE'),
     ]
 
     print("Creating Berths...")
     all_berths = []
+    service_berths = []
     for block in blocks:
-        for i in range(1, 16):
-            all_berths.append(Berth.objects.create(
-                block=block,
-                number=i,
-                max_length=random.choice([10, 12, 15, 20]),
-                max_weight=random.choice([5, 10, 20, 40])
-            ))
+        if block.block_type == 'SERVICE':
+            for i in range(1, 6):
+                b = Berth.objects.create(
+                    block=block,
+                    number=f"DOCK {i}",
+                    max_length=25.0,
+                    max_weight=100.0
+                )
+                all_berths.append(b)
+                service_berths.append(b)
+        else:
+            for i in range(1, 16):
+                all_berths.append(Berth.objects.create(
+                    block=block,
+                    number=i,
+                    max_length=random.choice([10, 12, 15, 20]),
+                    max_weight=random.choice([5, 10, 20, 40])
+                ))
 
     print("Creating Customers...")
     customers_data = [
@@ -137,6 +150,43 @@ def seed_data():
             end_date=today + timedelta(days=random.randint(10, 20)),
             booking_type='SHORT',
             status='ACTIVE'
+        )
+
+    print("Creating Services and Orders...")
+    from marina.models import Service, BookingService, ServiceProvider
+    
+    BookingService.objects.all().delete()
+    Service.objects.all().delete()
+    ServiceProvider.objects.all().delete()
+    
+    provider = ServiceProvider.objects.create(
+        name="Samos Marine Services",
+        phone="+30 22730 12345",
+        email="info@samos-marine.gr"
+    )
+    
+    services = [
+        Service.objects.create(name="Engine Maintenance", service_type='MAINTENANCE', unit='HOUR', price_per_unit=65, color='#f39c12', provider=provider),
+        Service.objects.create(name="Hull Cleaning", service_type='CLEANING', unit='PIECE', price_per_unit=150, color='#3498db', provider=provider),
+        Service.objects.create(name="Antifouling", service_type='MAINTENANCE', unit='PIECE', price_per_unit=450, color='#e67e22', provider=provider),
+    ]
+    
+    # Create some scheduled service orders for the planning view
+    for i in range(4):
+        boat = boats[i]
+        service = random.choice(services)
+        # Randomly assign a service berth to some services
+        chosen_berth = random.choice(service_berths) if random.random() > 0.5 else None
+        
+        BookingService.objects.create(
+            boat=boat,
+            service=service,
+            berth=chosen_berth,
+            scheduled_start=today + timedelta(days=random.randint(-2, 5)),
+            scheduled_end=today + timedelta(days=random.randint(6, 12)),
+            status=random.choice(['PENDING', 'IN_PROGRESS', 'COMPLETED']),
+            workload_hours=random.randint(2, 20),
+            notes="Standard seasonal checkup"
         )
 
     print("Seeding completed successfully!")

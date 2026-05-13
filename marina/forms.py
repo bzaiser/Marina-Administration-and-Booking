@@ -112,10 +112,11 @@ class BookingServiceForm(forms.ModelForm):
 class ServiceOrderForm(forms.ModelForm):
     class Meta:
         model = BookingService
-        fields = ['boat', 'service', 'quantity', 'status', 'scheduled_start', 'scheduled_end', 'workload_hours', 'notes']
+        fields = ['boat', 'service', 'berth', 'quantity', 'status', 'scheduled_start', 'scheduled_end', 'workload_hours', 'notes']
         widgets = {
             'boat': forms.Select(attrs={'class': 'form-select select2-search'}),
             'service': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'berth': forms.Select(attrs={'class': 'form-select select2-search'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'scheduled_start': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
