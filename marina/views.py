@@ -595,12 +595,13 @@ def invoice_remove_item(request, pk):
 
 @login_required
 def customers_list(request):
-        # Helper to map flags
-        def get_flag_code(code):
-            if not code: return 'un'
-            mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
-            return mapping.get(code.upper(), code.lower())
+    # Helper to map flags
+    def get_flag_code(code):
+        if not code: return 'un'
+        mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
+        return mapping.get(code.upper(), code.lower())
 
+    if request.headers.get('Accept') == 'application/json':
         customers = Customer.objects.all().prefetch_related('boats').order_by('name')
         data = []
         for c in customers:
