@@ -115,6 +115,7 @@
             {
                 headerName: "Owned Boats",
                 field: "boats",
+                valueFormatter: params => "", // Suppress v35 object warning
                 cellRenderer: (params) => {
                     if (!params.value || params.value.length === 0) return '<span class="text-muted small italic">No boats</span>';
                     let html = '<div class="d-flex flex-wrap pt-1">';
@@ -155,7 +156,7 @@
         rowHeight: 60,
         animateRows: true,
         headerHeight: 40,
-        getRowId: (params) => params.data.id
+        getRowId: (params) => String(params.data.id),
     };
 
     document.addEventListener('DOMContentLoaded', () => {
