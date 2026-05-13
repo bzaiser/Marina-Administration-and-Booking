@@ -109,14 +109,14 @@
     </div>
 </div>
 
-<!-- Boat Detail Offcanvas (Modern Sidebar) -->
-<div class="offcanvas offcanvas-end border-0 shadow-lg" tabindex="-1" id="boatDetailOffcanvas" style="width: 450px;">
-    <div class="offcanvas-header bg-light">
-        <h5 class="offcanvas-title fw-bold" id="offcanvasLabel">Boat Specifications</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0" id="detailContent">
-        <!-- Content loaded via JS -->
+<!-- Boat Detail Modal (Consistent with the rest of the app) -->
+<div class="modal fade" id="boatDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div id="boatModalContent">
+                <!-- Content loaded via JS -->
+            </div>
+        </div>
     </div>
 </div>
 
@@ -221,63 +221,72 @@
 
     function showBoatDetails(boatJson) {
         const boat = JSON.parse(boatJson);
-        const content = document.getElementById('detailContent');
+        const content = document.getElementById('boatModalContent');
         
         content.innerHTML = `
-            <div class="p-0">
-                <img src="${boat.image_url}" class="img-fluid w-100 mb-0" style="height: 250px; object-fit: cover;">
-                
-                <div class="p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold mb-0">${boat.name}</h4>
-                        <span class="badge bg-primary rounded-pill px-3">${boat.boat_type}</span>
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-info-circle text-primary me-2"></i>Boat Specifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-5">
+                        <img src="${boat.image_url}" class="img-fluid h-100 w-100" style="object-fit: cover; min-height: 300px;">
                     </div>
-                    
-                    <div class="row g-3 text-center mb-4 bg-light mx-0 py-3 rounded-3">
-                        <div class="col-4">
-                            <div class="text-muted xx-small">Length</div>
-                            <div class="fw-bold">${boat.length}m</div>
+                    <div class="col-md-7 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="fw-bold mb-0">${boat.name}</h3>
+                            <span class="badge bg-primary rounded-pill px-3">${boat.boat_type}</span>
                         </div>
-                        <div class="col-4">
-                            <div class="text-muted xx-small">Width</div>
-                            <div class="fw-bold">${boat.width}m</div>
+                        
+                        <div class="row g-3 text-center mb-4 bg-light mx-0 py-3 rounded-3">
+                            <div class="col-4">
+                                <div class="text-muted xx-small">Length</div>
+                                <div class="fw-bold">${boat.length}m</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-muted xx-small">Width</div>
+                                <div class="fw-bold">${boat.width}m</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-muted xx-small">Draft</div>
+                                <div class="fw-bold">${boat.draft}m</div>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <div class="text-muted xx-small">Draft</div>
-                            <div class="fw-bold">${boat.draft}m</div>
-                        </div>
-                    </div>
 
-                    <div class="card border-0 bg-light rounded-3 mb-4">
-                        <div class="card-body">
-                            <h6 class="fw-bold small text-uppercase text-muted mb-3"><i class="bi bi-gear-fill me-2"></i>Technical Specs</h6>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Weight:</span>
-                                <span class="fw-bold">${boat.weight} t</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Diesel:</span>
-                                <span class="fw-bold">${boat.diesel} L</span>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <span>Water:</span>
-                                <span class="fw-bold">${boat.water} L</span>
+                        <div class="card border-0 bg-light rounded-3 mb-4">
+                            <div class="card-body py-2 px-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small text-muted">Weight:</span>
+                                    <span class="fw-bold small">${boat.weight} t</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small text-muted">Diesel:</span>
+                                    <span class="fw-bold small">${boat.diesel} L</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="small text-muted">Water:</span>
+                                    <span class="fw-bold small">${boat.water} L</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-card-text me-2"></i>Notes</h6>
-                        <div class="p-3 bg-light rounded-3 text-muted" style="font-size: 0.9rem; line-height: 1.6;">
-                            ${boat.notes || 'No technical notes recorded.'}
+                        <div class="mb-0">
+                            <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-card-text me-2"></i>Notes</h6>
+                            <div class="p-3 bg-light rounded-3 text-muted small" style="line-height: 1.5;">
+                                ${boat.notes || 'No technical notes recorded.'}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
         `;
         
-        const offcanvas = new bootstrap.Offcanvas(document.getElementById('boatDetailOffcanvas'));
-        offcanvas.show();
+        const modal = new bootstrap.Modal(document.getElementById('boatDetailModal'));
+        modal.show();
     }
 
     // HTMX reload listener
