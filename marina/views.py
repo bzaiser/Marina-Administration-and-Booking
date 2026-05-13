@@ -618,7 +618,7 @@ def customers_list(request):
                 'weight': str(b.weight),
                 'diesel': str(b.diesel_tank),
                 'water': str(b.water_tank),
-                'image_url': b.image.url if b.image else '/static/marina/img/default_boat.png',
+                'image_url': b.image.url if b.image else '/static/img/no-boat.png',
                 'notes': b.notes
             })
         
