@@ -601,7 +601,7 @@ def customers_list(request):
         mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
         return mapping.get(code.upper(), code.lower())
 
-    if request.headers.get('Accept') == 'application/json':
+    if 'application/json' in request.headers.get('Accept', '') or request.GET.get('json'):
         customers = Customer.objects.all().prefetch_related('boats').order_by('name')
         data = []
         for c in customers:
