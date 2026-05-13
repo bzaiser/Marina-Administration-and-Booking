@@ -955,18 +955,26 @@ def api_planning_data(request):
             'type': 'booking'
         })
     scheduled_services = BookingService.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner', 'service')
-    resources.append({'id': 'group_services', 'content': 'Unassigned Services', 'className': 'bg-warning-soft fw-bold', 'order': 9999})
+    service_items = []
+    unassigned_exists = False
     for s in scheduled_services:
         style = f"background-color: #f39c12; border-color: #e67e22; color: white;"
         if s.status == 'COMPLETED': style = f"background-color: #27ae60; border-color: #2ecc71; color: white;"
         elif s.status == 'IN_PROGRESS': style = f"background-color: #3498db; border-color: #2980b9; color: white;"
+        
         group_id = 'group_services'
-        if s.berth: group_id = str(s.berth_id)
-        elif s.booking: group_id = str(s.booking.berth_id)
+        if s.berth: 
+            group_id = str(s.berth_id)
+        elif s.booking: 
+            group_id = str(s.booking.berth_id)
         else:
             active_b = Booking.objects.filter(boat=s.boat, start_date__lte=s.scheduled_start, end_date__gte=s.scheduled_start).first()
-            if active_b: group_id = str(active_b.berth_id)
-        items.append({
+            if active_b: 
+                group_id = str(active_b.berth_id)
+            else:
+                unassigned_exists = True
+
+        service_items.append({
             'id': f"service_{s.id}",
             'group': group_id,
             'start': s.scheduled_start.isoformat(),
@@ -991,6 +999,11 @@ def api_planning_data(request):
             'type': 'service',
             'order_id': s.id
         })
+    
+    if unassigned_exists:
+        resources.append({'id': 'group_services', 'content': 'Unassigned Services', 'className': 'bg-warning-soft fw-bold', 'order': 9999})
+    
+    items.extend(service_items)
     return JsonResponse({'groups': resources, 'items': items}, safe=False)
 
 @login_required
