@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models.functions import Length
 from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, BookingService, Country, ServiceProvider
 
 @admin.register(Country)
@@ -36,6 +37,13 @@ class BoatAdmin(admin.ModelAdmin):
 class BerthAdmin(admin.ModelAdmin):
     list_display = ('block', 'number', 'max_length', 'max_weight')
     list_filter = ('block',)
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(
+            number_len=Length('number')
+        )
+    
+    ordering = ('block', 'number_len', 'number')
 
 @admin.register(PriceRate)
 class PriceRateAdmin(admin.ModelAdmin):
