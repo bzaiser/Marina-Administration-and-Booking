@@ -216,6 +216,10 @@ class Service(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_service_type_display()})"
 
+    class Meta:
+        verbose_name = _("Service Katalog")
+        verbose_name_plural = _("Service Katalog")
+
 class BookingService(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
@@ -272,6 +276,10 @@ class BookingService(models.Model):
     def total_price(self):
         price = self.price_per_unit if self.price_per_unit is not None else self.service.price_per_unit
         return self.quantity * float(price)
+
+    class Meta:
+        verbose_name = _("Service Auftrag")
+        verbose_name_plural = _("Service Aufträge")
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [
