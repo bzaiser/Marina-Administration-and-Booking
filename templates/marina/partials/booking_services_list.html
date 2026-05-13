@@ -59,19 +59,19 @@
                 {{ service_form.service }}
             </div>
             
-            <!-- Row 2: Details -->
-            <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">2. Quantity</label>
-                    <div class="input-group">
-                        {{ service_form.quantity }}
-                        <span class="input-group-text bg-white small text-muted border-start-0" id="dynamic-unit-label" style="min-width: 60px; justify-content: center;">-</span>
-                    </div>
+            <!-- Row 2: Quantity -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">2. Quantity</label>
+                <div class="input-group" style="max-width: 250px;">
+                    {{ service_form.quantity }}
+                    <span class="input-group-text bg-white small text-muted border-start-0" id="dynamic-unit-label" style="min-width: 80px; justify-content: center;">-</span>
                 </div>
-                <div class="col-md-8">
-                    <label class="form-label small fw-bold text-muted text-uppercase mb-1">3. Optional Notes</label>
-                    {{ service_form.notes }}
-                </div>
+            </div>
+
+            <!-- Row 3: Notes (Full Width) -->
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1">3. Optional Notes</label>
+                {{ service_form.notes }}
             </div>
             
             <!-- Row 3: Action Button (Full Width for visibility) -->
