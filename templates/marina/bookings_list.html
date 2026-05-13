@@ -266,8 +266,22 @@
 
     // Modal Action Handlers
     function editBooking(id) {
-        htmx.ajax('GET', `/booking/edit/${id}/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
-            new bootstrap.Modal(document.getElementById('modals-here')).show();
+        console.log("Editing booking:", id);
+        const modalElement = document.getElementById('modals-here');
+        const modalContent = modalElement.querySelector('.modal-content');
+        
+        // Reset content to show loading state
+        modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading booking data...</p></div>';
+        
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+
+        htmx.ajax('GET', `/booking/edit/${id}/`, {
+            target: '#modals-here .modal-content',
+            swap: 'innerHTML'
+        }).catch(err => {
+            console.error("HTMX Error:", err);
+            modalContent.innerHTML = '<div class="alert alert-danger m-3">Error loading booking data. Please try again.</div>';
         });
     }
 
