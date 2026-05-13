@@ -9,7 +9,8 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(BookingService)
 class BookingServiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'service', 'quantity', 'status', 'total_price', 'boat', 'scheduled_start', 'status')
+    list_display = ('id', 'service', 'quantity', 'boat', 'scheduled_start', 'status', 'total_price')
+    list_display_links = ('id', 'service', 'boat')
     list_filter = ('status', 'service', 'scheduled_start', 'date')
     search_fields = ('notes', 'boat__name', 'customer__name')
     readonly_fields = ('total_price', 'date')
