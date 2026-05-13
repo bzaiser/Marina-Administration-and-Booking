@@ -601,40 +601,43 @@ def customers_list(request):
         mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
         return mapping.get(code.upper(), code.lower())
 
-    if 'application/json' in request.headers.get('Accept', '') or request.GET.get('json'):
-        customers = Customer.objects.all().prefetch_related('boats').order_by('name')
-        data = []
-        for c in customers:
-            boats_data = []
-            for b in c.boats.all():
-                boats_data.append({
-                    'id': b.id,
-                    'name': b.name,
-                    'boat_type': b.get_boat_type_display(),
-                    'flag': b.flag,
-                    'flag_code': get_flag_code(b.flag),
-                    'length': str(b.length),
-                    'width': str(b.width),
-                    'draft': str(b.draft),
-                    'weight': str(b.weight),
-                    'diesel': str(b.diesel_tank),
-                    'water': str(b.water_tank),
-                    'image_url': b.image.url if b.image else '/static/marina/img/default_boat.png',
-                    'notes': b.notes
-                })
-            
-            data.append({
-                'id': c.id,
-                'name': c.name,
-                'email': c.email,
-                'phone': c.phone,
-                'address': c.address,
-                'boats': boats_data,
-                'boat_count': len(boats_data)
+    customers = Customer.objects.all().prefetch_related('boats').order_by('name')
+    data = []
+    for c in customers:
+        boats_data = []
+        for b in c.boats.all():
+            boats_data.append({
+                'id': b.id,
+                'name': b.name,
+                'boat_type': b.get_boat_type_display(),
+                'flag': b.flag,
+                'flag_code': get_flag_code(b.flag),
+                'length': str(b.length),
+                'width': str(b.width),
+                'draft': str(b.draft),
+                'weight': str(b.weight),
+                'diesel': str(b.diesel_tank),
+                'water': str(b.water_tank),
+                'image_url': b.image.url if b.image else '/static/marina/img/default_boat.png',
+                'notes': b.notes
             })
-        return JsonResponse(data, safe=False)
+        
+        data.append({
+            'id': c.id,
+            'name': c.name,
+            'email': c.email,
+            'phone': c.phone,
+            'address': c.address,
+            'boats': boats_data,
+            'boat_count': len(boats_data)
+        })
     
-    return render(request, 'marina/customers_list.html')
+    import json
+    customers_json = json.dumps(data)
+    
+    return render(request, 'marina/customers_list.html', {
+        'customers_json': customers_json
+    })
 
 @login_required
 def customer_create(request):

@@ -172,27 +172,14 @@
         const gridDiv = document.querySelector('#customerGrid');
         gridApi = agGrid.createGrid(gridDiv, gridOptions);
         
-        loadData();
+        // Load data directly from template context (same as bookings)
+        const rowData = {{ customers_json|safe }};
+        gridApi.setGridOption('rowData', rowData);
     });
 
-    async function loadData() {
-        try {
-            console.log('Fetching customer data...');
-            const response = await fetch('{% url "customers_list" %}?json=1');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            
-            const data = await response.json();
-            console.log('Data received:', data.length, 'customers');
-            
-            if (gridApi) {
-                gridApi.setGridOption('rowData', data);
-            } else {
-                console.error('Grid API not initialized yet');
-            }
-        } catch (error) {
-            console.error('Error loading customer data:', error);
-            alert('Failed to load customer data. Please check the console for details.');
-        }
+    // Helper for manual refresh if needed
+    function reloadGrid() {
+        window.location.reload();
     }
 
     function onFilterTextBoxChanged() {
@@ -224,7 +211,7 @@
         if (confirm("Are you sure you want to delete this customer?")) {
             htmx.ajax('POST', `/customers/delete/${id}/`, {
                 headers: {'X-CSRFToken': '{{ csrf_token }}'}
-            }).then(() => loadData());
+            }).then(() => window.location.reload());
         }
     }
 
