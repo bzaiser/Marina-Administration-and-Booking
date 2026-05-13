@@ -96,3 +96,15 @@ class BoatForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
+from .models import BookingService
+
+class BookingServiceForm(forms.ModelForm):
+    class Meta:
+        model = BookingService
+        fields = ['service', 'quantity', 'notes']
+        widgets = {
+            'service': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
+            'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional notes...'}),
+        }

@@ -148,9 +148,15 @@ def booking_edit(request, booking_id):
         form = BookingForm(request.POST, instance=booking)
         if form.is_valid():
             form.save()
-            return HttpResponse('<script>window.location.reload();</script>')
+            if request.htmx:
+                return HttpResponse('<script>window.location.reload();</script>')
+            return redirect('bookings_list')
     else:
         form = BookingForm(instance=booking)
+    
+    services = booking.services.all().select_related('service')
+    service_form = BookingServiceForm()
+    
     template = 'marina/partials/booking_form.html'
     if not request.htmx:
         template = 'marina/full_page_modal.html'
@@ -158,8 +164,41 @@ def booking_edit(request, booking_id):
     return render(request, template, {
         'form': form, 
         'editing': True,
+        'booking': booking,
+        'services': services,
+        'service_form': service_form,
         'partial_template': 'marina/partials/booking_form.html',
         'title': f'Edit Booking #{booking.id}'
+    })
+
+@login_required
+def booking_add_service_inline(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.method == 'POST':
+        form = BookingServiceForm(request.POST)
+        if form.is_valid():
+            bs = form.save(commit=False)
+            bs.booking = booking
+            bs.save()
+    
+    services = booking.services.all().select_related('service')
+    return render(request, 'marina/partials/booking_services_list.html', {
+        'booking': booking,
+        'services': services,
+        'service_form': BookingServiceForm()
+    })
+
+@login_required
+def booking_remove_service_inline(request, service_id):
+    bs = get_object_or_404(BookingService, id=service_id)
+    booking = bs.booking
+    bs.delete()
+    
+    services = booking.services.all().select_related('service')
+    return render(request, 'marina/partials/booking_services_list.html', {
+        'booking': booking,
+        'services': services,
+        'service_form': BookingServiceForm()
     })
 
 @login_required
