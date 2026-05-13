@@ -71,19 +71,21 @@
             <!-- Quick Actions Grid -->
             <div class="row g-2 mb-3">
                 <div class="col-md-3">
-                    <a href="{% url 'quick_boat_create' %}" class="text-decoration-none h-100 d-block">
-                        <div class="card quick-action-card h-100 p-2">
-                            <div class="d-flex align-items-center">
-                                <div class="quick-action-icon bg-primary-subtle text-primary me-2">
-                                    <i class="bi bi-person-plus"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-dark fw-bold small">Check-In</h6>
-                                    <p class="xx-small text-muted mb-0">New Boat</p>
-                                </div>
+                    <div class="card quick-action-card h-100 p-2" 
+                         style="cursor: pointer;"
+                         hx-get="{% url 'booking_create' %}" 
+                         hx-target="#modals-here .modal-content"
+                         onclick="new bootstrap.Modal(document.getElementById('modals-here')).show()">
+                        <div class="d-flex align-items-center">
+                            <div class="quick-action-icon bg-primary-subtle text-primary me-2">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 text-dark fw-bold small">Check-In</h6>
+                                <p class="xx-small text-muted mb-0">New Boat</p>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="col-md-3">
                     <a href="{% url 'calendar' %}" class="text-decoration-none h-100 d-block">
