@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider
-from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, BookingService
+from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, BookingServiceForm
 
 @login_required
 def quick_boat_create(request):
