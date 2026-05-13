@@ -3,58 +3,78 @@
         <table class="table table-sm align-middle mb-0">
             <thead class="table-light small text-uppercase text-muted">
                 <tr>
-                    <th class="ps-3">Service</th>
-                    <th class="text-end">Qty</th>
-                    <th>Notes</th>
-                    <th class="text-end pe-3">Action</th>
+                    <th class="ps-3" style="width: 40%;">Service</th>
+                    <th class="text-end" style="width: 20%;">Qty / Unit</th>
+                    <th style="width: 30%;">Notes</th>
+                    <th class="text-end pe-3" style="width: 10%;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for s in services %}
                 <tr>
-                    <td class="ps-3 fw-bold">{{ s.service.name }}</td>
-                    <td class="text-end">{{ s.quantity }} <small class="text-muted">{{ s.service.get_unit_display }}</small></td>
-                    <td><small class="text-muted">{{ s.notes|default:"" }}</small></td>
+                    <td class="ps-3">
+                        <div class="fw-bold text-dark">{{ s.service.name }}</div>
+                        <div class="xx-small text-muted">{{ s.service.get_service_type_display }}</div>
+                    </td>
+                    <td class="text-end">
+                        <span class="fw-bold text-primary">{{ s.quantity }}</span> 
+                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">{{ s.service.get_unit_display }}</small>
+                    </td>
+                    <td><small class="text-muted">{{ s.notes|default:"-" }}</small></td>
                     <td class="text-end pe-3">
                         <button type="button" 
                                 class="btn btn-sm btn-outline-danger border-0" 
                                 hx-post="{% url 'booking_remove_service_inline' s.id %}" 
                                 hx-target="#services-list-container" 
-                                hx-swap="outerHTML">
+                                hx-swap="outerHTML"
+                                hx-confirm="Remove this service?">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="text-center py-3 text-muted small">No services added yet.</td>
+                    <td colspan="4" class="text-center py-4 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> No services added yet. Use the form below to add one.
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Inline Add Form -->
-    <div class="p-3 bg-light border-top">
-        <form hx-post="{% url 'booking_add_service_inline' booking.id %}" hx-target="#services-list-container" hx-swap="outerHTML" class="row g-2 align-items-end">
+    <!-- Enhanced Inline Add Form -->
+    <div class="p-4 bg-light border-top">
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <span class="small fw-bold text-muted text-uppercase">Add New Service</span>
+            <div id="service-price-preview" class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill shadow-sm" style="display: none;">
+                <i class="bi bi-tag-fill me-1"></i> <span id="preview-price-val">0.00</span> / <span id="preview-unit-val">-</span>
+            </div>
+        </div>
+        
+        <form hx-post="{% url 'booking_add_service_inline' booking.id %}" hx-target="#services-list-container" hx-swap="outerHTML" class="row g-3 align-items-end">
             {% csrf_token %}
-            <div class="col-md-5">
-                <label class="form-label xx-small fw-bold text-muted mb-1 text-uppercase">Service to add</label>
+            <div class="col-lg-5 col-md-12">
+                <label class="form-label xx-small fw-bold text-muted mb-1 text-uppercase">Service Selection</label>
                 {{ service_form.service }}
             </div>
-            <div class="col-md-2">
+            
+            <div class="col-lg-2 col-md-4">
                 <label class="form-label xx-small fw-bold text-muted mb-1 text-uppercase">Quantity</label>
-                <div class="input-group input-group-sm">
+                <div class="input-group">
                     {{ service_form.quantity }}
+                    <span class="input-group-text bg-white small text-muted border-start-0" id="dynamic-unit-label">-</span>
                 </div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label xx-small fw-bold text-muted mb-1 text-uppercase">Notes</label>
+            
+            <div class="col-lg-3 col-md-8">
+                <label class="form-label xx-small fw-bold text-muted mb-1 text-uppercase">Internal Notes (Optional)</label>
                 {{ service_form.notes }}
             </div>
-            <div class="col-md-2 text-end">
-                <button type="submit" class="btn btn-success btn-sm w-100 py-2 fw-bold">
-                    <i class="bi bi-plus-lg me-1"></i>Add
+            
+            <div class="col-lg-2 col-md-12 text-end">
+                <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">
+                    <i class="bi bi-plus-circle me-2"></i>Add Service
                 </button>
             </div>
         </form>
@@ -62,8 +82,46 @@
 </div>
 
 <script>
-    // Re-initialize Select2 if needed
-    if (typeof initSelect2 === 'function') {
-        initSelect2(document.getElementById('services-list-container'));
-    }
+    (function() {
+        const servicesData = {
+            {% for s in all_services %}
+            "{{ s.id }}": {
+                "unit": "{{ s.get_unit_display }}",
+                "price": "{{ s.price_per_unit|floatformat:2 }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        const container = document.getElementById('services-list-container');
+        const serviceSelect = container.querySelector('select[name="service"]');
+        const unitLabel = document.getElementById('dynamic-unit-label');
+        const pricePreview = document.getElementById('service-price-preview');
+        const priceVal = document.getElementById('preview-price-val');
+        const unitVal = document.getElementById('preview-unit-val');
+
+        function updateServiceDetails() {
+            const val = serviceSelect.value;
+            if (val && servicesData[val]) {
+                const data = servicesData[val];
+                unitLabel.innerText = data.unit;
+                priceVal.innerText = '€' + data.price;
+                unitVal.innerText = data.unit;
+                pricePreview.style.display = 'inline-block';
+            } else {
+                unitLabel.innerText = '-';
+                pricePreview.style.display = 'none';
+            }
+        }
+
+        // Handle both standard select and select2
+        $(serviceSelect).on('change', updateServiceDetails);
+        
+        // Initial run
+        updateServiceDetails();
+
+        // Re-initialize Select2
+        if (typeof initSelect2 === 'function') {
+            initSelect2(container);
+        }
+    })();
 </script>

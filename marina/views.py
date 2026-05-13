@@ -156,6 +156,7 @@ def booking_edit(request, booking_id):
     
     services = booking.services.all().select_related('service')
     service_form = BookingServiceForm()
+    all_services = Service.objects.all().order_by('name')
     
     template = 'marina/partials/booking_form.html'
     if not request.htmx:
@@ -166,6 +167,7 @@ def booking_edit(request, booking_id):
         'editing': True,
         'booking': booking,
         'services': services,
+        'all_services': all_services,
         'service_form': service_form,
         'partial_template': 'marina/partials/booking_form.html',
         'title': f'Edit Booking #{booking.id}'
@@ -182,9 +184,11 @@ def booking_add_service_inline(request, booking_id):
             bs.save()
     
     services = booking.services.all().select_related('service')
+    all_services = Service.objects.all().order_by('name')
     return render(request, 'marina/partials/booking_services_list.html', {
         'booking': booking,
         'services': services,
+        'all_services': all_services,
         'service_form': BookingServiceForm()
     })
 
@@ -195,9 +199,11 @@ def booking_remove_service_inline(request, service_id):
     bs.delete()
     
     services = booking.services.all().select_related('service')
+    all_services = Service.objects.all().order_by('name')
     return render(request, 'marina/partials/booking_services_list.html', {
         'booking': booking,
         'services': services,
+        'all_services': all_services,
         'service_form': BookingServiceForm()
     })
 
