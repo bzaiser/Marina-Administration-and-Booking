@@ -39,11 +39,9 @@ class BerthAdmin(admin.ModelAdmin):
     list_filter = ('block',)
     
     def get_queryset(self, request):
-        return super().get_queryset(request).annotate(
-            number_len=Length('number')
-        )
+        return super().get_queryset(request)
     
-    ordering = ('block', 'number_len', 'number')
+    ordering = ('block', Length('number').asc(), 'number')
 
 @admin.register(PriceRate)
 class PriceRateAdmin(admin.ModelAdmin):
