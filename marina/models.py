@@ -217,8 +217,8 @@ class Service(models.Model):
         return f"{self.name} ({self.get_service_type_display()})"
 
     class Meta:
-        verbose_name = _("Service Katalog")
-        verbose_name_plural = _("Service Katalog")
+        verbose_name = _("Service Catalog")
+        verbose_name_plural = _("Service Catalog")
 
 class BookingService(models.Model):
     STATUS_CHOICES = [
@@ -278,8 +278,8 @@ class BookingService(models.Model):
         return self.quantity * float(price)
 
     class Meta:
-        verbose_name = _("Service Auftrag")
-        verbose_name_plural = _("Service Aufträge")
+        verbose_name = _("Service Order")
+        verbose_name_plural = _("Service Orders")
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [
