@@ -379,9 +379,32 @@
             zoomEnabled: true,
             controlIconsEnabled: false,
             fit: true,
-            center: false,
-            minZoom: 0.5,
-            maxZoom: 10
+            center: true,
+            minZoom: 0.1,
+            maxZoom: 10,
+            beforePan: function(oldPan, newPan) {
+                var stopPan = false
+                  , marginLeft = 0
+                  , marginTop = 0
+                  , shelf = this.getSizes()
+                  , gutterWidth = shelf.width
+                  , gutterHeight = shelf.height
+                  , leftLimit = -((shelf.viewBox.x + shelf.viewBox.width) * shelf.realZoom) + gutterWidth
+                  , rightLimit = gutterWidth - shelf.viewBox.x * shelf.realZoom
+                  , topLimit = -((shelf.viewBox.y + shelf.viewBox.height) * shelf.realZoom) + gutterHeight
+                  , bottomLimit = gutterHeight - shelf.viewBox.y * shelf.realZoom;
+
+                var customPan = {};
+                customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
+                customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
+
+                // Disable pan if not zoomed in (roughly)
+                if (shelf.realZoom <= shelf.minZoom * 1.01) {
+                    return false;
+                }
+
+                return customPan;
+            }
         });
 
         // Occupancy Chart
