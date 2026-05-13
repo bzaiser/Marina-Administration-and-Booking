@@ -266,9 +266,6 @@
         htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
     }
 
-    let allGroups = [];
-    let allItems = [];
-
     function loadData() {
         const year = document.getElementById('year-selector').value;
         fetch(`/api/planning-data/?year=${year}`)
