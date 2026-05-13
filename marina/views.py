@@ -614,7 +614,7 @@ def customers_list(request):
                     'flag': b.flag,
                     'flag_code': get_flag_code(b.flag),
                     'length': str(b.length),
-                    'beam': str(b.beam),
+                    'width': str(b.width),
                     'draft': str(b.draft),
                     'weight': str(b.weight),
                     'diesel': str(b.diesel_tank),
@@ -629,7 +629,6 @@ def customers_list(request):
                 'email': c.email,
                 'phone': c.phone,
                 'address': c.address,
-                'tax_number': c.tax_number,
                 'boats': boats_data,
                 'boat_count': len(boats_data)
             })
