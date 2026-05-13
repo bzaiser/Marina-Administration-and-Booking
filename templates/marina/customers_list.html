@@ -185,16 +185,22 @@
         rowHeight: 65,
         animateRows: true,
         headerHeight: 45,
-        getRowId: (params) => params.data.id
+        getRowId: (params) => params.data.id,
+        onGridReady: (params) => {
+            gridApi = params.api;
+            params.api.sizeColumnsToFit();
+        }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
         const gridDiv = document.querySelector('#customerGrid');
-        gridApi = new agGrid.Grid(gridDiv, gridOptions);
+        new agGrid.Grid(gridDiv, gridOptions);
     });
 
     function onFilterTextBoxChanged() {
-        gridOptions.api.setQuickFilter(document.getElementById('filter-text-box').value);
+        if (gridApi) {
+            gridApi.setQuickFilter(document.getElementById('filter-text-box').value);
+        }
     }
 
     function editCustomer(id) {
