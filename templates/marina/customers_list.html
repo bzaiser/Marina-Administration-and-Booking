@@ -109,13 +109,13 @@
     </div>
 </div>
 
-<!-- Boat Detail Sidebar -->
-<div id="detailPanel">
-    <div class="detail-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 fw-bold">Boat Details</h5>
-        <button type="button" class="btn-close" onclick="closeDetailPanel()"></button>
+<!-- Boat Detail Offcanvas (Modern Sidebar) -->
+<div class="offcanvas offcanvas-end border-0 shadow-lg" tabindex="-1" id="boatDetailOffcanvas" style="width: 450px;">
+    <div class="offcanvas-header bg-light">
+        <h5 class="offcanvas-title fw-bold" id="offcanvasLabel">Boat Specifications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div id="detailContent" class="detail-body">
+    <div class="offcanvas-body p-0" id="detailContent">
         <!-- Content loaded via JS -->
     </div>
 </div>
@@ -221,60 +221,63 @@
 
     function showBoatDetails(boatJson) {
         const boat = JSON.parse(boatJson);
-        const panel = document.getElementById('detailPanel');
         const content = document.getElementById('detailContent');
         
         content.innerHTML = `
-            <div class="text-center mb-4">
-                <img src="${boat.image_url}" class="img-fluid rounded-4 shadow-sm mb-3" style="max-height: 200px; width: 100%; object-fit: cover;">
-                <h4 class="fw-bold mb-1">${boat.name}</h4>
-                <span class="badge bg-primary rounded-pill mb-3">${boat.boat_type}</span>
-            </div>
-            
-            <div class="row g-3 text-center mb-4">
-                <div class="col-4 border-top pt-2">
-                    <div class="text-muted xx-small">Length</div>
-                    <div class="fw-bold">${boat.length}m</div>
-                </div>
-                <div class="col-4 border-top pt-2">
-                    <div class="text-muted xx-small">Width</div>
-                    <div class="fw-bold">${boat.width}m</div>
-                </div>
-                <div class="col-4 border-top pt-2">
-                    <div class="text-muted xx-small">Draft</div>
-                    <div class="fw-bold">${boat.draft}m</div>
-                </div>
-            </div>
+            <div class="p-0">
+                <img src="${boat.image_url}" class="img-fluid w-100 mb-0" style="height: 250px; object-fit: cover;">
+                
+                <div class="p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold mb-0">${boat.name}</h4>
+                        <span class="badge bg-primary rounded-pill px-3">${boat.boat_type}</span>
+                    </div>
+                    
+                    <div class="row g-3 text-center mb-4 bg-light mx-0 py-3 rounded-3">
+                        <div class="col-4">
+                            <div class="text-muted xx-small">Length</div>
+                            <div class="fw-bold">${boat.length}m</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-muted xx-small">Width</div>
+                            <div class="fw-bold">${boat.width}m</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-muted xx-small">Draft</div>
+                            <div class="fw-bold">${boat.draft}m</div>
+                        </div>
+                    </div>
 
-            <div class="card bg-light border-0 rounded-3 mb-3">
-                <div class="card-body p-3">
-                    <h6 class="fw-bold small text-uppercase text-muted mb-2">Technical Specs</h6>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Weight:</span>
-                        <span class="fw-bold">${boat.weight} t</span>
+                    <div class="card border-0 bg-light rounded-3 mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold small text-uppercase text-muted mb-3"><i class="bi bi-gear-fill me-2"></i>Technical Specs</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Weight:</span>
+                                <span class="fw-bold">${boat.weight} t</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Diesel:</span>
+                                <span class="fw-bold">${boat.diesel} L</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Water:</span>
+                                <span class="fw-bold">${boat.water} L</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Diesel:</span>
-                        <span class="fw-bold">${boat.diesel} L</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Water:</span>
-                        <span class="fw-bold">${boat.water} L</span>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold small text-uppercase text-muted mb-2"><i class="bi bi-card-text me-2"></i>Notes</h6>
+                        <div class="p-3 bg-light rounded-3 text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                            ${boat.notes || 'No technical notes recorded.'}
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="mb-3">
-                <h6 class="fw-bold small text-uppercase text-muted mb-2">Notes</h6>
-                <p class="small text-muted p-3 bg-light rounded-3">${boat.notes || 'No technical notes recorded.'}</p>
             </div>
         `;
         
-        panel.classList.add('open');
-    }
-
-    function closeDetailPanel() {
-        document.getElementById('detailPanel').classList.remove('open');
+        const offcanvas = new bootstrap.Offcanvas(document.getElementById('boatDetailOffcanvas'));
+        offcanvas.show();
     }
 
     // HTMX reload listener
