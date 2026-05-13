@@ -55,7 +55,10 @@
                     <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()" title="Reset Filters">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </button>
-                    <a href="{% url 'planning_grid' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+                    <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="createBooking()">
+                        <i class="bi bi-plus-lg me-1"></i>New Booking
+                    </button>
+                    <a href="{% url 'planning_grid' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
                         <i class="bi bi-grid-3x3-gap me-1"></i>Planning Grid
                     </a>
                 </div>
@@ -265,6 +268,13 @@
     }
 
     // Modal Action Handlers
+    function createBooking() {
+        htmx.ajax('GET', `/booking/create/`, {target: '#modals-here .modal-content', swap: 'innerHTML'}).then(() => {
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modals-here'));
+            modal.show();
+        });
+    }
+
     function editBooking(id) {
         console.log("Editing booking:", id);
         const modalElement = document.getElementById('modals-here');
