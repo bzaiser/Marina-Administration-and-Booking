@@ -220,22 +220,22 @@
         fetch('/api/bookings/')
             .then(response => response.json())
             .then(data => {
-                gridApi.setGridOption('rowData', data);
+                gridApi.setRowData(data);
             });
     }
 
     function onSearchInput() {
         const value = document.getElementById('booking-search').value;
-        gridApi.setGridOption('quickFilterText', value);
+        gridApi.setQuickFilter(value);
     }
 
     function resetFilters() {
         document.getElementById('booking-search').value = '';
-        gridApi.setGridOption('quickFilterText', '');
+        gridApi.setQuickFilter('');
         gridApi.setFilterModel(null);
-        gridApi.applyColumnState({
-            defaultState: { sort: null },
-        });
+        if (gridApi.setColumnState) {
+            gridApi.setColumnState([{ colId: 'id', sort: null }]);
+        }
     }
 
     // Modal Action Handlers
