@@ -68,6 +68,7 @@ class Boat(models.Model):
 
 class Block(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    key = models.CharField(max_length=10, blank=True, null=True, help_text="Mapping key for SVG coordinates (e.g., 'A', 'B', 'C')")
     color = ColorField(default='#3498db')
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='blocks/', blank=True, null=True)

@@ -308,8 +308,8 @@ def dashboard(request):
         # It also handles blocks with more than 15 berths.
         total_slots = max(15, max_num)
         
-        # We strip the block name to be safe against trailing spaces
-        s_name = block_name.strip()
+        # Use the block's 'key' for coordinate lookup, fallback to name if key is missing
+        lookup_key = (berth.block.key or berth.block.name).strip()
         
         for idx, berth in enumerate(b_list):
             booking = Booking.objects.filter(
@@ -322,8 +322,8 @@ def dashboard(request):
             # Interpolate position and calculate dimensions
             x, y, rot = 0, 0, 0
             w, h = 15, 55 # fallback defaults
-            if s_name in segments:
-                start, end, angle, l_short = segments[s_name]
+            if lookup_key in segments:
+                start, end, angle, l_short = segments[lookup_key]
                 l_long = math.hypot(end[0] - start[0], end[1] - start[1])
                 
                 # Each slot has a fixed width based on the total capacity

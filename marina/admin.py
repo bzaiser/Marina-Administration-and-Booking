@@ -20,7 +20,7 @@ class ServiceProviderAdmin(admin.ModelAdmin):
 
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'description')
+    list_display = ('name', 'key', 'color', 'description')
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
