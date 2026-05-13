@@ -170,11 +170,30 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const gridDiv = document.querySelector('#customerGrid');
-        gridApi = agGrid.createGrid(gridDiv, gridOptions);
         
-        // Load data directly from template context (same as bookings)
-        const rowData = {{ customers_json|safe }};
-        gridApi.setGridOption('rowData', rowData);
+        // Safety check for gridDiv
+        if (!gridDiv) {
+            console.error('Element #customerGrid not found!');
+            return;
+        }
+
+        try {
+            gridApi = agGrid.createGrid(gridDiv, gridOptions);
+            
+            // Safe data injection using escapejs
+            const rowData = JSON.parse('{{ customers_json|escapejs }}');
+            console.log('Customer data loaded successfully:', rowData.length, 'records');
+            
+            gridApi.setGridOption('rowData', rowData);
+            
+            // Ensure columns fit
+            setTimeout(() => {
+                gridApi.sizeColumnsToFit();
+            }, 200);
+
+        } catch (err) {
+            console.error('Error initializing AG Grid:', err);
+        }
     });
 
     // Helper for manual refresh if needed
