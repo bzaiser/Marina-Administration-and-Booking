@@ -207,12 +207,10 @@
                          <path style="fill:#de8787;stroke-width:0.984736" d="M -4.1862113,139.42969 1001.3403,48.082489 999.57564,-0.764963 -7.0097326,0.117745 Z" id="path8" inkscape:label="Town" />
                          <path style="display:inline;fill:#c8b7b7" d="m 324.55062,806.75624 6.30876,35.74964 478.06377,-161.22386 25.93601,-141.5966 -25.93601,-5.60778 -23.83309,127.57713 z" id="path5" inkscape:label="Wall" />
                        </g>
-                       <g inkscape:groupmode="layer" id="layer4" inkscape:label="Buildings" style="display:inline" sodipodi:insensitive="true">
-                         <g id="g13" inkscape:label="Shape" style="display:inline" transform="translate(0,-26)">
-                           <path id="path4" style="display:inline;fill:#ececec" inkscape:label="Kai" d="m 785.13011,685.0062 90.79136,-501.80163 -25.36385,-4.83636 8.92193,-108.975397 H 751.42503 l -1.98265,209.169767 -38.66171,38.66171 37.67038,82.28005 -12.88723,256.7534 41.63568,27.75713 z m 0,0.99132 L 288.47584,847.58364 273.60595,810.90458 736.55514,653.28377 Z M 232.96159,142.75093 755.39033,97.149938 759.35564,69.392813 228.00496,77.32342 Z m 518.99433,133.65891 -458.52345,153.8256 12.88723,26.7658 408.13592,-138.83545 z" />
-                         </g>
-                         <path style="fill:#aa0000;stroke-width:1.31052" d="m 789.31067,171.83393 48.89061,9.90132 -2.49522,19.76178 -24.02214,-4.57973 -5.75313,28.38382 -24.29096,-5.28072 z" id="path13" inkscape:label="Office" />
-                         <path style="fill:#918a6f" d="m 843.27083,149.94429 34.3477,8.41167 -19.62725,104.44503 -35.04867,-11.21558 z" id="path12" inkscape:label="Facilities" />
+                       
+                       <!-- Kai (Dock) - Click leads to Berth Management -->
+                       <g id="g13" inkscape:label="Shape" style="display:inline; cursor: pointer;" transform="translate(0,-26)" onclick="window.location='{% url 'berths_grid' %}'">
+                         <path id="path4" style="display:inline;fill:#ececec" inkscape:label="Kai" d="m 785.13011,685.0062 90.79136,-501.80163 -25.36385,-4.83636 8.92193,-108.975397 H 751.42503 l -1.98265,209.169767 -38.66171,38.66171 37.67038,82.28005 -12.88723,256.7534 41.63568,27.75713 z m 0,0.99132 L 288.47584,847.58364 273.60595,810.90458 736.55514,653.28377 Z M 232.96159,142.75093 755.39033,97.149938 759.35564,69.392813 228.00496,77.32342 Z m 518.99433,133.65891 -458.52345,153.8256 12.88723,26.7658 408.13592,-138.83545 z" />
                        </g>
                        
                        <g inkscape:groupmode="layer" id="layer5" inkscape:label="Berthes" style="stroke:#00ffff;stroke-width:2;stroke-dasharray:none">
@@ -226,7 +224,7 @@
                        <g id="berths-layer">
                          {% for item in all_berths %}
                              <g transform="translate({{ item.x }}, {{ item.y }}) rotate({{ item.rot }})" 
-                                cursor="pointer" onclick="window.location='/berths/?block={{ item.obj.block.name }}&berth={{ item.obj.number }}'"
+                                cursor="pointer" onclick="handleBerthClick(event, '{{ item.obj.id }}', '{{ item.booking.id|default:'' }}')"
                                 onmouseenter="showBoatInfo(event, '{{ item.boat_name|escapejs }}', '{{ item.owner|escapejs }}', '{{ item.length }}', '{{ item.start }}', '{{ item.end }}')"
                                 onmouseleave="hideBoatInfo()">
                                  
@@ -445,6 +443,47 @@
 
     function hideBoatInfo() {
         document.getElementById('boat-tooltip').style.display = 'none';
+    }
+
+    // Smart Click Handling
+    function handleBerthClick(event, berthId, bookingId) {
+        event.stopPropagation();
+        if (bookingId) {
+            editBooking(bookingId);
+        } else {
+            createBooking(berthId);
+        }
+    }
+
+    function createBooking(berthId = '') {
+        let url = `/booking/create/`;
+        if (berthId) url += `?resource=${berthId}`;
+        
+        const modalElement = document.getElementById('modals-here');
+        const modalContent = modalElement.querySelector('.modal-content');
+        modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Opening booking form...</p></div>';
+        
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+
+        htmx.ajax('GET', url, {
+            target: '#modals-here .modal-content',
+            swap: 'innerHTML'
+        });
+    }
+
+    function editBooking(id) {
+        const modalElement = document.getElementById('modals-here');
+        const modalContent = modalElement.querySelector('.modal-content');
+        modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading booking data...</p></div>';
+        
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+
+        htmx.ajax('GET', `/booking/edit/${id}/`, {
+            target: '#modals-here .modal-content',
+            swap: 'innerHTML'
+        });
     }
 </script>
 
