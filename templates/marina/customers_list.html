@@ -146,12 +146,13 @@
             field: "boats",
             cellRenderer: (params) => {
                 if (!params.value || params.value.length === 0) return '<span class="text-muted small italic">No boats</span>';
-                let html = '<div class="d-flex flex-wrap pt-1">';
+                let html = '<div class="py-1">';
                 params.value.forEach(boat => {
                     html += `
-                        <div class="boat-badge shadow-sm" onclick="showBoatDetails('${JSON.stringify(boat).replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">
+                        <div class="boat-badge shadow-sm mb-1" onclick="showBoatDetails('${JSON.stringify(boat).replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">
                             <span class="fi fi-${boat.flag_code} fis me-2 rounded-circle" style="width: 14px; height: 14px;"></span>
                             <span class="fw-bold">${boat.name}</span>
+                            <span class="text-muted ms-2 small">(${boat.length}m)</span>
                         </div>
                     `;
                 });
@@ -180,7 +181,7 @@
         columnDefs: columnDefs,
         rowData: {{ customers_json|safe }},
         pagination: true,
-        paginationPageSize: 15,
+        paginationPageSize: 50,
         rowHeight: 65,
         animateRows: true,
         headerHeight: 45,
