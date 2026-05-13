@@ -176,7 +176,7 @@
         timeline.on('click', function (properties) {
             if (properties.item) {
                 const item = items.get(properties.item);
-                if (item.type === 'service') {
+                if (item.category === 'service') {
                     editServiceOrder(item.order_id);
                 } else {
                     editBooking(properties.item);
@@ -279,23 +279,18 @@
                     const isBlock = String(g.id).startsWith('block_');
                     const color = g.color || g.block_color || '#aaa';
                     
-                    // Simple, robust content generation
-                    let contentStr = '';
                     if (isBlock) {
                         const icon = g.block_type === 'SERVICE' ? 'bi-tools' : 'bi-water';
-                        contentStr = `<div class="d-flex align-items-center gap-2">
-                                        <span class="rounded-circle" style="width:10px; height:10px; background:${color};"></span>
-                                        <i class="bi ${icon}"></i>
-                                        <strong>${g.content}</strong>
-                                      </div>`;
+                        return {
+                            ...g,
+                            content: `<i class="bi ${icon} me-2"></i><strong>${g.content}</strong>`
+                        };
                     } else {
-                        contentStr = `<div style="border-left: 3px solid ${color}; padding-left: 8px;">${g.content}</div>`;
+                        return {
+                            ...g,
+                            content: `<span style="border-left: 3px solid ${color}; padding-left: 8px;">${g.content}</span>`
+                        };
                     }
-                    
-                    return {
-                        ...g,
-                        content: contentStr
-                    };
                 }));
                 
                 items.clear();

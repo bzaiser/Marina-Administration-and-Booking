@@ -952,7 +952,7 @@ def api_planning_data(request):
             'year': b.boat.year_built,
             'notes': b.notes,
             'ref': b.reference,
-            'type': 'booking'
+            'category': 'booking'
         })
     scheduled_services = BookingService.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner', 'service')
     service_items = []
@@ -996,7 +996,7 @@ def api_planning_data(request):
             'year': s.boat.year_built,
             'ref': s.get_status_display(),
             'notes': f"Workload: {s.workload_hours}h | {s.notes or ''}",
-            'type': 'service',
+            'category': 'service',
             'order_id': s.id
         })
     

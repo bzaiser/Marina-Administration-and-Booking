@@ -71,10 +71,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- AG Grid CSS & JS (Pinned to v32.3.3 for stability) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/styles/ag-grid.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/styles/ag-theme-alpine.css">
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/dist/ag-grid-community.min.js"></script>
+<!-- AG Grid CSS & JS (Managed globally via base.html) -->
 
 <!-- Flag Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css">
@@ -144,6 +141,7 @@
         {
             headerName: "Owned Boats",
             field: "boats",
+            cellDataType: false,
             cellRenderer: (params) => {
                 if (!params.value || params.value.length === 0) return '<span class="text-muted small italic">No boats</span>';
                 let html = '<div class="py-1">';
@@ -167,6 +165,7 @@
             width: 120, 
             pinned: 'right',
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 return `
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-outline-primary" onclick="editCustomer(${params.data.id})" title="Edit"><i class="bi bi-pencil"></i></button>
@@ -178,13 +177,14 @@
     ];
 
     const gridOptions = {
+        theme: 'legacy',
         columnDefs: columnDefs,
         rowData: {{ customers_json|safe }},
         pagination: false,
         rowHeight: 85,
         animateRows: true,
         headerHeight: 45,
-        getRowId: (params) => params.data.id,
+        getRowId: (params) => String(params.data.id),
         onGridReady: (params) => {
             gridApi = params.api;
             params.api.sizeColumnsToFit();
@@ -193,7 +193,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const gridDiv = document.querySelector('#customerGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
+        gridApi = agGrid.createGrid(gridDiv, gridOptions);
     });
 
     function onFilterTextBoxChanged() {

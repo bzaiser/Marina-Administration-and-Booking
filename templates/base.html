@@ -37,6 +37,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- AG Grid -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
     <script src="{% static 'vendor/ag-grid/ag-grid-community.min.js' %}"></script>
     
     <!-- jQuery (Required for Select2) -->
@@ -183,7 +185,7 @@
     
     {% block extra_js %}{% endblock %}
 
-    <!-- PWA Service Worker Registration -->
+    <!-- PWA Service Worker Registration (Temporarily disabled for debugging)
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -193,5 +195,6 @@
             });
         }
     </script>
+    -->
 </body>
 </html>

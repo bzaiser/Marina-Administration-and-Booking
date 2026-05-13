@@ -4,9 +4,7 @@
 {% block title %}Bookings - Marina Samos{% endblock %}
 
 {% block extra_head %}
-<!-- AG Grid CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+<!-- AG Grid CSS inherited from base.html -->
 
 <style>
     .ag-theme-alpine {
@@ -73,8 +71,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- AG Grid JS -->
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+<!-- AG Grid JS (Managed globally via base.html) -->
 
 <script>
     let gridApi;
@@ -113,7 +110,6 @@
             width: 120,
             sortable: true, 
             filter: 'agTextColumnFilter',
-            enableRowGroup: true,
             cellRenderer: (params) => {
                 if (!params.data) return '';
                 return `
@@ -153,8 +149,7 @@
             headerName: "Status", 
             width: 120,
             sortable: true, 
-            filter: 'agSetColumnFilter',
-            enableRowGroup: true,
+            filter: true,
             cellRenderer: (params) => {
                 if (!params.data) return '';
                 const code = params.data.status_code;
@@ -171,7 +166,9 @@
         },
         {
             headerName: "Services",
+            field: "services",
             width: 110,
+            cellDataType: false,
             cellRenderer: (params) => {
                 if (!params.data) return '';
                 const count = params.data.services.length;
@@ -202,6 +199,7 @@
     ];
 
     const gridOptions = {
+        theme: 'legacy',
         columnDefs: columnDefs,
         defaultColDef: {
             resizable: true,
@@ -212,11 +210,10 @@
         rowData: [],
         rowHeight: 52,
         animateRows: true,
-        rowGroupPanelShow: 'always',
-        groupDisplayType: 'groupRows',
         pagination: true,
         paginationPageSize: 20,
         domLayout: 'normal',
+        getRowId: (params) => String(params.data.id),
         onGridReady: (params) => {
             gridApi = params.api;
             setTimeout(loadData, 200);
@@ -229,10 +226,10 @@
             .then(response => response.json())
             .then(data => {
                 console.log("Data received:", data.length, "rows");
-                if (gridApi.setRowData) {
-                    gridApi.setRowData(data);
-                } else {
+                if (gridApi.setGridOption) {
                     gridApi.setGridOption('rowData', data);
+                } else {
+                    gridApi.setRowData(data);
                 }
             })
             .catch(err => console.error("Error loading bookings:", err));
@@ -240,24 +237,17 @@
 
     function onSearchInput() {
         const value = document.getElementById('booking-search').value;
-        if (gridApi.setQuickFilter) {
-            gridApi.setQuickFilter(value);
-        } else {
-            gridApi.setGridOption('quickFilterText', value);
-        }
+        gridApi.setGridOption('quickFilterText', value);
     }
 
     function resetFilters() {
         document.getElementById('booking-search').value = '';
-        if (gridApi.setQuickFilter) {
-            gridApi.setQuickFilter('');
-        } else {
-            gridApi.setGridOption('quickFilterText', '');
-        }
+        gridApi.setGridOption('quickFilterText', '');
         gridApi.setFilterModel(null);
-        if (gridApi.setColumnState) {
-            gridApi.setColumnState([{ colId: 'id', sort: null }]);
-        }
+        gridApi.applyColumnState({
+            state: [{ colId: 'id', sort: null }],
+            defaultState: { sort: null }
+        });
     }
 
     // Modal Action Handlers
@@ -295,7 +285,7 @@
     }
 
     function checkout(id) {
-        const rowNode = gridApi.getRowNode(id);
+        const rowNode = gridApi.getRowNode(String(id));
         if (rowNode && rowNode.data) {
             window.location.href = `/checkout/${rowNode.data.berth_id}/`;
         }
@@ -311,7 +301,7 @@
     }
 
     function showServices(id) {
-        const rowNode = gridApi.getRowNode(id);
+        const rowNode = gridApi.getRowNode(String(id));
         if (!rowNode || !rowNode.data) return;
         
         const rowData = rowNode.data;
@@ -361,13 +351,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const gridDiv = document.querySelector('#bookingGrid');
-        // Compatibility check for grid creation
-        if (typeof agGrid.createGrid === 'function') {
-            gridApi = agGrid.createGrid(gridDiv, gridOptions);
-        } else {
-            new agGrid.Grid(gridDiv, gridOptions);
-            gridApi = gridOptions.api;
-        }
+        gridApi = agGrid.createGrid(gridDiv, gridOptions);
     });
 
     // Refresh on modal hidden
