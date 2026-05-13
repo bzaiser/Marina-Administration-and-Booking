@@ -4,6 +4,10 @@
 {% block title %}Bookings - Marina Samos{% endblock %}
 
 {% block extra_head %}
+<!-- AG Grid CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css">
+
 <style>
     .ag-theme-alpine {
         --ag-header-background-color: #f8f9fa;
@@ -73,6 +77,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- AG Grid JS -->
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
 <script>
     let gridApi;
 
@@ -92,10 +99,11 @@
             sortable: true, 
             filter: 'agTextColumnFilter',
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 return `
                     <div class="py-1">
                         <div class="fw-bold d-flex align-items-center">
-                            <span class="fi fi-${params.data.flag} fis me-2"></span>
+                            <span class="fi fi-${params.data.flag || 'xx'} fis me-2"></span>
                             ${params.value}
                         </div>
                         <div class="xx-small text-muted text-truncate"><i class="bi bi-person me-1"></i>${params.data.owner_name}</div>
@@ -111,6 +119,7 @@
             filter: 'agTextColumnFilter',
             enableRowGroup: true,
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 return `
                     <span class="badge bg-light text-dark border">
                         <i class="bi bi-geo-alt-fill me-1" style="color: ${params.data.block_color};"></i>
@@ -125,7 +134,7 @@
             width: 120,
             sortable: true, 
             filter: 'agDateColumnFilter',
-            cellRenderer: (params) => params.data.start_date
+            cellRenderer: (params) => params.data ? params.data.start_date : ''
         },
         { 
             field: "end_iso", 
@@ -133,7 +142,7 @@
             width: 120,
             sortable: true, 
             filter: 'agDateColumnFilter',
-            cellRenderer: (params) => params.data.end_date
+            cellRenderer: (params) => params.data ? params.data.end_date : ''
         },
         { 
             field: "duration", 
@@ -151,6 +160,7 @@
             filter: 'agSetColumnFilter',
             enableRowGroup: true,
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 const code = params.data.status_code;
                 return `<span class="status-badge status-${code}">${params.value}</span>`;
             }
@@ -167,6 +177,7 @@
             headerName: "Services",
             width: 110,
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 const count = params.data.services.length;
                 if (count === 0) return '<span class="text-muted small">-</span>';
                 return `<button class="btn btn-sm btn-link p-0 text-primary fw-bold" onclick="showServices(${params.data.id})">${count} Serv.</button>`;
@@ -177,6 +188,7 @@
             width: 150, 
             pinned: 'right',
             cellRenderer: (params) => {
+                if (!params.data) return '';
                 const b = params.data;
                 let checkoutBtn = '';
                 if (b.status_code === 'ACTIVE') {
@@ -212,26 +224,41 @@
         domLayout: 'normal',
         onGridReady: (params) => {
             gridApi = params.api;
-            loadData();
+            setTimeout(loadData, 200);
         }
     };
 
     function loadData() {
+        console.log("Fetching bookings data...");
         fetch('/api/bookings/')
             .then(response => response.json())
             .then(data => {
-                gridApi.setRowData(data);
-            });
+                console.log("Data received:", data.length, "rows");
+                if (gridApi.setRowData) {
+                    gridApi.setRowData(data);
+                } else {
+                    gridApi.setGridOption('rowData', data);
+                }
+            })
+            .catch(err => console.error("Error loading bookings:", err));
     }
 
     function onSearchInput() {
         const value = document.getElementById('booking-search').value;
-        gridApi.setQuickFilter(value);
+        if (gridApi.setQuickFilter) {
+            gridApi.setQuickFilter(value);
+        } else {
+            gridApi.setGridOption('quickFilterText', value);
+        }
     }
 
     function resetFilters() {
         document.getElementById('booking-search').value = '';
-        gridApi.setQuickFilter('');
+        if (gridApi.setQuickFilter) {
+            gridApi.setQuickFilter('');
+        } else {
+            gridApi.setGridOption('quickFilterText', '');
+        }
         gridApi.setFilterModel(null);
         if (gridApi.setColumnState) {
             gridApi.setColumnState([{ colId: 'id', sort: null }]);
@@ -252,8 +279,10 @@
     }
 
     function checkout(id) {
-        const rowData = gridApi.getRowNode(id).data;
-        window.location.href = `/checkout/${rowData.berth_id}/`;
+        const rowNode = gridApi.getRowNode(id);
+        if (rowNode && rowNode.data) {
+            window.location.href = `/checkout/${rowNode.data.berth_id}/`;
+        }
     }
 
     function deleteBooking(id) {
@@ -266,7 +295,10 @@
     }
 
     function showServices(id) {
-        const rowData = gridApi.getRowNode(id).data;
+        const rowNode = gridApi.getRowNode(id);
+        if (!rowNode || !rowNode.data) return;
+        
+        const rowData = rowNode.data;
         const services = rowData.services;
         let html = `
             <div class="modal-header">
@@ -313,7 +345,13 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const gridDiv = document.querySelector('#bookingGrid');
-        new agGrid.Grid(gridDiv, gridOptions);
+        // Compatibility check for grid creation
+        if (typeof agGrid.createGrid === 'function') {
+            gridApi = agGrid.createGrid(gridDiv, gridOptions);
+        } else {
+            new agGrid.Grid(gridDiv, gridOptions);
+            gridApi = gridOptions.api;
+        }
     });
 
     // Refresh on modal hidden
