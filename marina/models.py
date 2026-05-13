@@ -87,7 +87,8 @@ class Berth(models.Model):
         unique_together = ('block', 'number')
         verbose_name = _("Berth")
         verbose_name_plural = _("Berths")
-        ordering = ['block', 'number']
+        from django.db.models.functions import Length
+        ordering = ['block', Length('number').asc(), 'number']
 
 class PriceRate(models.Model):
     from_meters = models.DecimalField(_("From Meters"), max_digits=5, decimal_places=2, default=0.0)

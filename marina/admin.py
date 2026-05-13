@@ -36,7 +36,6 @@ class BoatAdmin(admin.ModelAdmin):
 class BerthAdmin(admin.ModelAdmin):
     list_display = ('block', 'number', 'max_length', 'max_weight')
     list_filter = ('block',)
-    ordering = ('block', 'number')
 
 @admin.register(PriceRate)
 class PriceRateAdmin(admin.ModelAdmin):
