@@ -896,35 +896,23 @@ def reports_view(request):
 def api_planning_data(request):
     import datetime
     year = int(request.GET.get('year', datetime.date.today().year))
-    
     start_date = datetime.date(year, 1, 1)
     end_date = datetime.date(year, 12, 31)
-    
-    # 1. Groups: All Berths nested under Blocks
     from .models import Block, Berth
     blocks = Block.objects.all().order_by('name')
     berths = Berth.objects.all().select_related('block').order_by('block__name', 'number')
-    
     resources = []
     for idx, block in enumerate(blocks):
-        # We collect the IDs as strings to be safe
         berth_ids = [str(b.id) for b in block.berths.all()]
-        
-        icon = "bi-water"
-        if block.block_type == 'SERVICE':
-            icon = "bi-tools"
-        elif block.block_type == 'LAND':
-            icon = "bi-house-door"
-            
         resources.append({
             'id': f"block_{block.id}",
-            'content': f"<i class='bi {icon} me-1'></i> Block {block.name}",
+            'content': f"Block {block.name}",
             'nestedGroups': berth_ids,
             'className': 'bg-light fw-bold',
             'color': block.color,
+            'block_type': block.block_type,
             'order': idx * 1000
         })
-    
     for berth in berths:
         resources.append({
             'id': str(berth.id),
@@ -933,25 +921,14 @@ def api_planning_data(request):
             'block_type': berth.block.block_type,
             'order': int(berth.number) if str(berth.number).isdigit() else 999
         })
-
-    # 2. Items: All Bookings for that year
-    bookings = Booking.objects.filter(
-        start_date__lte=end_date,
-        end_date__gte=start_date
-    ).select_related('boat', 'boat__owner', 'berth')
-    
+    bookings = Booking.objects.filter(start_date__lte=end_date, end_date__gte=start_date).select_related('boat', 'boat__owner', 'berth')
     items = []
     for b in bookings:
         flag = (b.boat.flag or 'xx').lower()
-        # We convert to emoji flag for the bar to keep it simple and light
-        # But we can also use the renderer in JS
-        # Style for At Sea vs Normal
         base_color = b.boat.color or '#3498db'
         style = f"background-color: {base_color}; border-color: {base_color}; color: white;"
         if b.is_at_sea:
-            # Classic fine dark stripes
             style = f"background-image: linear-gradient(45deg, rgba(0,0,0,0.3) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.3) 75%, transparent 75%, transparent); background-size: 8px 8px; background-color: {base_color}; border: 1px solid {base_color}; color: white;"
-
         items.append({
             'id': b.id,
             'group': str(b.berth_id),
@@ -977,45 +954,18 @@ def api_planning_data(request):
             'ref': b.reference,
             'type': 'booking'
         })
-        
-    # 3. Items: Scheduled Services
-    scheduled_services = BookingService.objects.filter(
-        scheduled_start__isnull=False,
-        scheduled_start__lte=end_date,
-        scheduled_end__gte=start_date
-    ).select_related('boat', 'boat__owner', 'service')
-    
-    # Add a global group for Services if any exist
-    resources.append({
-        'id': 'group_services',
-        'content': '🛠 Service & Maintenance',
-        'className': 'bg-warning-soft fw-bold',
-        'order': 9999
-    })
-    
+    scheduled_services = BookingService.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner', 'service')
+    resources.append({'id': 'group_services', 'content': 'Unassigned Services', 'className': 'bg-warning-soft fw-bold', 'order': 9999})
     for s in scheduled_services:
         style = f"background-color: #f39c12; border-color: #e67e22; color: white;"
-        if s.status == 'COMPLETED':
-            style = f"background-color: #27ae60; border-color: #2ecc71; color: white;"
-        elif s.status == 'IN_PROGRESS':
-            style = f"background-color: #3498db; border-color: #2980b9; color: white;"
-
-        # Determine the group (resource) for this service
-        group_id = 'group_services' # Fallback
-        if s.berth:
-            group_id = str(s.berth_id)
-        elif s.booking:
-            group_id = str(s.booking.berth_id)
+        if s.status == 'COMPLETED': style = f"background-color: #27ae60; border-color: #2ecc71; color: white;"
+        elif s.status == 'IN_PROGRESS': style = f"background-color: #3498db; border-color: #2980b9; color: white;"
+        group_id = 'group_services'
+        if s.berth: group_id = str(s.berth_id)
+        elif s.booking: group_id = str(s.booking.berth_id)
         else:
-            # Try to find an active booking for this boat at start date
-            active_b = Booking.objects.filter(
-                boat=s.boat,
-                start_date__lte=s.scheduled_start,
-                end_date__gte=s.scheduled_start
-            ).first()
-            if active_b:
-                group_id = str(active_b.berth_id)
-
+            active_b = Booking.objects.filter(boat=s.boat, start_date__lte=s.scheduled_start, end_date__gte=s.scheduled_start).first()
+            if active_b: group_id = str(active_b.berth_id)
         items.append({
             'id': f"service_{s.id}",
             'group': group_id,
@@ -1041,7 +991,6 @@ def api_planning_data(request):
             'type': 'service',
             'order_id': s.id
         })
-
     return JsonResponse({'groups': resources, 'items': items}, safe=False)
 
 @login_required
@@ -1049,34 +998,28 @@ def api_resources(request):
     from .models import Block, Berth
     blocks = Block.objects.all().order_by('name')
     berths = Berth.objects.all().select_related('block').order_by('block__name', 'number')
-    
     resources = []
-    # Add Blocks as parent groups
     for idx, block in enumerate(blocks):
         resources.append({
             'id': f"block_{block.id}",
             'content': f"Block {block.name}",
-            'nestedGroups': [b.id for b in block.berths.all()],
+            'nestedGroups': [str(b.id) for b in block.berths.all()],
             'className': 'bg-light fw-bold',
+            'block_type': block.block_type,
             'order': idx * 1000
         })
-        
-    # Add Berths as child groups
     for berth in berths:
-        try:
-            b_order = int(berth.number)
-        except ValueError:
-            b_order = 999
-            
+        try: b_order = int(berth.number)
+        except ValueError: b_order = 999
         resources.append({
-            'id': berth.id,
+            'id': str(berth.id),
             'content': f"{berth.number}",
+            'block_color': berth.block.color,
+            'block_type': berth.block.block_type,
             'order': b_order
         })
-        
     return JsonResponse(resources, safe=False)
 
-@login_required
 def api_events(request):
     start = request.GET.get('start')
     end = request.GET.get('end')
