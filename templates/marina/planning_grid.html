@@ -62,12 +62,17 @@
             <option value="2027">2027</option>
         </select>
         <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-warning" onclick="createServiceOrder()"><i class="bi bi-gear-fill me-1"></i>New Service Order</button>
             <button class="btn btn-outline-secondary" onclick="handleZoomIn()"><i class="bi bi-zoom-in"></i></button>
             <button class="btn btn-outline-secondary" onclick="handleZoomOut()"><i class="bi bi-zoom-out"></i></button>
             <button class="btn btn-outline-primary" onclick="loadData()"><i class="bi bi-arrow-clockwise"></i></button>
         </div>
     </div>
 </div>
+
+<style>
+    .bg-warning-soft { background-color: #fff3cd !important; border-top: 2px solid #ffecb5 !important; border-bottom: 2px solid #ffecb5 !important; }
+</style>
 
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
@@ -167,28 +172,71 @@
 
         timeline = new vis.Timeline(container, items, groups, options);
 
-        // Edit booking on click
+        // Edit booking or service on click
         timeline.on('click', function (properties) {
             if (properties.item) {
-                editBooking(properties.item);
+                const item = items.get(properties.item);
+                if (item.type === 'service') {
+                    editServiceOrder(item.order_id);
+                } else {
+                    editBooking(properties.item);
+                }
             }
         });
 
         // Create booking on double-click empty space
         timeline.on('doubleClick', function (properties) {
-            if (!properties.item && properties.group && !String(properties.group).startsWith('block_')) {
-                // Determine the start and end dates based on click position
-                const startDate = new Date(properties.time);
-                // Assume a default duration of 7 days
-                const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-                
-                const startStr = startDate.toISOString().split('T')[0];
-                const endStr = endDate.toISOString().split('T')[0];
-                const berthId = properties.group;
-                
-                createBooking(berthId, startStr, endStr);
+            if (!properties.item && properties.group) {
+                if (properties.group === 'group_services') {
+                    createServiceOrder();
+                } else if (!String(properties.group).startsWith('block_')) {
+                    // Determine the start and end dates based on click position
+                    const startDate = new Date(properties.time);
+                    // Assume a default duration of 7 days
+                    const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+                    
+                    const startStr = startDate.toISOString().split('T')[0];
+                    const endStr = endDate.toISOString().split('T')[0];
+                    const berthId = properties.group;
+                    
+                    createBooking(berthId, startStr, endStr);
+                }
             }
         });
+        
+        // Listen for data changes from modals
+        document.body.addEventListener('planningDataChanged', () => {
+            loadData();
+            // Close modal if open
+            const modalEl = document.getElementById('modals-here');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        });
+    }
+
+    function createServiceOrder(boatId) {
+        let url = `/service-order/create/`;
+        if (boatId) url += `?boat_id=${boatId}`;
+        
+        const modalEl = document.getElementById('modals-here');
+        modalEl.addEventListener('htmx:afterSwap', function handler() {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            modalEl.removeEventListener('htmx:afterSwap', handler);
+        });
+        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
+    }
+
+    function editServiceOrder(orderId) {
+        if (!orderId) return;
+        const url = `/service-order/edit/${orderId}/`;
+        const modalEl = document.getElementById('modals-here');
+        modalEl.addEventListener('htmx:afterSwap', function handler() {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            modalEl.removeEventListener('htmx:afterSwap', handler);
+        });
+        htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
     }
 
     function createBooking(berthId, startStr, endStr) {

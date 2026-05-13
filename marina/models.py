@@ -230,6 +230,12 @@ class BookingService(models.Model):
     
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='PENDING')
     notes = models.TextField(_("Notes for Provider"), blank=True, null=True)
+    
+    # Scheduling for Planning View
+    scheduled_start = models.DateField(_("Scheduled Start"), null=True, blank=True)
+    scheduled_end = models.DateField(_("Scheduled End"), null=True, blank=True)
+    workload_hours = models.FloatField(_("Workload (Hours)"), default=0.0)
+    
     date = models.DateTimeField(_("Date Added"), auto_now_add=True)
 
     def save(self, *args, **kwargs):

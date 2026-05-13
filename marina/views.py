@@ -208,6 +208,46 @@ def booking_remove_service_inline(request, service_id):
     })
 
 @login_required
+def service_order_create(request):
+    from .forms import ServiceOrderForm
+    boat_id = request.GET.get('boat_id')
+    initial = {}
+    if boat_id:
+        initial['boat'] = boat_id
+    
+    if request.method == 'POST':
+        form = ServiceOrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
+    else:
+        form = ServiceOrderForm(initial=initial)
+    
+    return render(request, 'marina/modals/service_order_form.html', {
+        'form': form,
+        'title': 'Create Service Order'
+    })
+
+@login_required
+def service_order_edit(request, order_id):
+    from .forms import ServiceOrderForm
+    order = get_object_or_404(BookingService, id=order_id)
+    
+    if request.method == 'POST':
+        form = ServiceOrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
+    else:
+        form = ServiceOrderForm(instance=order)
+    
+    return render(request, 'marina/modals/service_order_form.html', {
+        'form': form,
+        'order': order,
+        'title': 'Edit Service Order'
+    })
+
+@login_required
 def booking_delete(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     if request.method == 'POST':
@@ -926,9 +966,58 @@ def api_planning_data(request):
             'language': b.boat.owner.language if b.boat.owner else '',
             'year': b.boat.year_built,
             'notes': b.notes,
-            'ref': b.reference
+            'ref': b.reference,
+            'type': 'booking'
         })
         
+    # 3. Items: Scheduled Services
+    scheduled_services = BookingService.objects.filter(
+        scheduled_start__isnull=False,
+        scheduled_start__lte=end_date,
+        scheduled_end__gte=start_date
+    ).select_related('boat', 'boat__owner', 'service')
+    
+    # Add a global group for Services if any exist
+    resources.append({
+        'id': 'group_services',
+        'content': '🛠 Service & Maintenance',
+        'className': 'bg-warning-soft fw-bold',
+        'order': 9999
+    })
+    
+    for s in scheduled_services:
+        style = f"background-color: #f39c12; border-color: #e67e22; color: white;"
+        if s.status == 'COMPLETED':
+            style = f"background-color: #27ae60; border-color: #2ecc71; color: white;"
+        elif s.status == 'IN_PROGRESS':
+            style = f"background-color: #3498db; border-color: #2980b9; color: white;"
+
+        items.append({
+            'id': f"service_{s.id}",
+            'group': 'group_services',
+            'start': s.scheduled_start.isoformat(),
+            'end': (s.scheduled_end + datetime.timedelta(days=1)).isoformat() if s.scheduled_end else (s.scheduled_start + datetime.timedelta(days=1)).isoformat(),
+            'content': f"[{s.service.name}] {s.boat.name}",
+            'style': style,
+            'owner': s.boat.owner.name if s.boat.owner else '',
+            'boat_type': s.boat.get_boat_type_display(),
+            'boat_image': s.boat.image.url if s.boat.image else '/static/img/no-boat.png',
+            'arrival': s.scheduled_start.strftime('%d.%m.%Y'),
+            'departure': s.scheduled_end.strftime('%d.%m.%Y') if s.scheduled_end else '-',
+            'phone': s.boat.owner.phone if (s.boat.owner) else '',
+            'engine': s.boat.engine or '-',
+            'specs': f"{s.boat.length}m x {s.boat.width}m",
+            'draft': s.boat.draft,
+            'diesel': s.boat.diesel_tank,
+            'water': s.boat.water_tank,
+            'language': s.boat.owner.language if s.boat.owner else '',
+            'year': s.boat.year_built,
+            'ref': s.get_status_display(),
+            'notes': f"Workload: {s.workload_hours}h | {s.notes or ''}",
+            'type': 'service',
+            'order_id': s.id
+        })
+
     return JsonResponse({'groups': resources, 'items': items}, safe=False)
 
 @login_required

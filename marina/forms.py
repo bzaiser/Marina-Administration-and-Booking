@@ -108,3 +108,18 @@ class BookingServiceForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
             'notes': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional notes...'}),
         }
+
+class ServiceOrderForm(forms.ModelForm):
+    class Meta:
+        model = BookingService
+        fields = ['boat', 'service', 'quantity', 'status', 'scheduled_start', 'scheduled_end', 'workload_hours', 'notes']
+        widgets = {
+            'boat': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'service': forms.Select(attrs={'class': 'form-select select2-search'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1', 'value': '1.0'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'scheduled_start': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'scheduled_end': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'workload_hours': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.5', 'placeholder': 'Estimated hours'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Job details...'}),
+        }
