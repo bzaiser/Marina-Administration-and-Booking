@@ -73,7 +73,7 @@
                                            data-bs-title="<strong>{{ berth.current_booking.boat.name }}</strong>" 
                                            data-bs-content='
                                                 <div class="p-1">
-                                                    <img src="{{ berth.current_booking.boat.image.url|default:"/static/img/default-boat.png" }}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
+                                                    <img src="{% if berth.current_booking.boat.image %}{{ berth.current_booking.boat.image.url }}{% else %}/static/img/default-boat.png{% endif %}" class="img-fluid rounded mb-2" style="max-height: 120px; width: 100%; object-fit: cover;">
                                                     <div class="mb-1 d-flex align-items-center">
                                                         <span class="fi fi-{{ berth.current_booking.boat.flag|lower|default:"xx" }} fis me-2"></span>
                                                         <strong>{{ berth.current_booking.boat.owner.name }}</strong>
