@@ -169,6 +169,7 @@ def checkout_view(request, berth_id):
         'booked_services': booked_services
     })
 
+
 @login_required
 def booking_edit(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
@@ -734,24 +735,62 @@ def invoice_edit(request, pk):
         'title': f'Edit Invoice #{invoice.id}'
     })
 
+@login_required
 def invoice_add_item(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     if request.method == 'POST':
+        # Also save header if present in request
+        header_form = InvoiceForm(request.POST, instance=invoice)
+        if header_form.is_valid():
+            header_form.save()
+
         form = InvoiceItemForm(request.POST)
         if form.is_valid():
             item = form.save(commit=False)
             item.invoice = invoice
             item.save()
             invoice.recalculate_total()
+            
+    if request.htmx:
+        # Re-render the whole modal to keep state consistent
+        form = InvoiceForm(instance=invoice)
+        item_form = InvoiceItemForm()
+        services = Service.objects.all().order_by('name')
+        return render(request, 'marina/partials/invoice_edit_modal.html', {
+            'invoice': invoice,
+            'form': form,
+            'item_form': item_form,
+            'services': services,
+            'title': f'Edit Invoice #{invoice.id}'
+        })
     return redirect('invoice_edit', pk=pk)
 
+@login_required
 def invoice_remove_item(request, pk):
     item = get_object_or_404(InvoiceItem, pk=pk)
-    invoice_pk = item.invoice.pk
     invoice = item.invoice
+    
+    if request.method == 'POST':
+        # Also save header if present in request
+        header_form = InvoiceForm(request.POST, instance=invoice)
+        if header_form.is_valid():
+            header_form.save()
+            
     item.delete()
     invoice.recalculate_total()
-    return redirect('invoice_edit', pk=invoice_pk)
+    
+    if request.htmx:
+        form = InvoiceForm(instance=invoice)
+        item_form = InvoiceItemForm()
+        services = Service.objects.all().order_by('name')
+        return render(request, 'marina/partials/invoice_edit_modal.html', {
+            'invoice': invoice,
+            'form': form,
+            'item_form': item_form,
+            'services': services,
+            'title': f'Edit Invoice #{invoice.id}'
+        })
+    return redirect('invoice_edit', pk=invoice.id)
 
 @login_required
 def customers_list(request):
