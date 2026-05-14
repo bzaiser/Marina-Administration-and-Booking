@@ -176,7 +176,7 @@ def booking_edit(request, booking_id):
     
     supplies = booking.supplies.all().select_related('service')
     supply_form = BookingSupplyForm()
-    all_services = Service.objects.filter(service_type='SUPPLY').order_by('name')
+    all_services = Service.objects.exclude(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
     
     template = 'marina/partials/booking_form.html'
     if not request.htmx:
@@ -231,7 +231,7 @@ def work_order_edit(request, order_id):
     else:
         form = WorkOrderForm(instance=order)
     
-    all_services = Service.objects.all().order_by('name')
+    all_services = Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
     return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
         'order': order,
@@ -253,7 +253,7 @@ def work_order_add_item(request, order_id):
                 quantity=quantity
             )
     
-    all_services = Service.objects.all().order_by('name')
+    all_services = Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
     return render(request, 'marina/partials/work_order_items_table.html', {
         'order': order,
         'all_services': all_services
@@ -265,7 +265,7 @@ def work_order_remove_item(request, item_id):
     order = item.order
     item.delete()
     
-    all_services = Service.objects.all().order_by('name')
+    all_services = Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
     return render(request, 'marina/partials/work_order_items_table.html', {
         'order': order,
         'all_services': all_services
@@ -300,7 +300,7 @@ def work_order_create(request):
     else:
         form = WorkOrderForm(initial=initial)
     
-    all_services = Service.objects.all().order_by('name')
+    all_services = Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
     return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
         'title': 'Create Work Order',

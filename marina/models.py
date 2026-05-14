@@ -202,6 +202,7 @@ class Service(models.Model):
     TYPE_CHOICES = [
         ('SUPPLY', 'Supply (Water, Electricity, etc.)'),
         ('MAINTENANCE', 'Maintenance & Repair'),
+        ('PART', 'Spare Part / Material'),
         ('CLEANING', 'Cleaning'),
         ('ADMINISTRATIVE', 'Administrative'),
         ('OTHER', 'Other'),
