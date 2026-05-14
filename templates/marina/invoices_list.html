@@ -54,6 +54,15 @@
                         <td class="text-end fw-bold">€{{ invoice.total_amount }}</td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">
+                                {% if invoice.mydata_mark %}
+                                    <button class="btn btn-success" title="Submitted to myDATA (Mark: {{ invoice.mydata_mark }})" disabled>
+                                        <i class="bi bi-cloud-check"></i>
+                                    </button>
+                                {% else %}
+                                    <a href="{% url 'invoice_submit_mydata' invoice.id %}" class="btn btn-outline-info" title="Submit to myDATA (Greece)">
+                                        <i class="bi bi-cloud-arrow-up"></i>
+                                    </a>
+                                {% endif %}
                                 <a href="{% url 'invoice_pdf' invoice.id %}" class="btn btn-outline-danger" target="_blank" title="Download PDF">
                                     <i class="bi bi-file-earmark-pdf"></i>
                                 </a>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider
+from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider, Service
 
 class InvoiceForm(forms.ModelForm):
     discount = forms.DecimalField(required=False, initial=0, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}))
@@ -100,6 +100,18 @@ class BoatForm(forms.ModelForm):
 from .models import ServiceOrder, ServiceOrderItem
 
 class ServiceOrderForm(forms.ModelForm):
+    initial_service = forms.ModelChoiceField(
+        queryset=Service.objects.all(), 
+        required=False, 
+        label="Add First Service (Optional)",
+        widget=forms.Select(attrs={'class': 'form-select select2-search'})
+    )
+    initial_quantity = forms.FloatField(
+        required=False, 
+        initial=1.0, 
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'})
+    )
+
     class Meta:
         model = ServiceOrder
         fields = ['boat', 'berth', 'status', 'scheduled_start', 'scheduled_end', 'notes', 'booking', 'customer']

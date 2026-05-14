@@ -22,6 +22,8 @@ urlpatterns = [
     path('planning/', views.planning_grid, name='planning_grid'),
     path('service-order/create/', views.service_order_create, name='service_order_create'),
     path('service-order/edit/<int:order_id>/', views.service_order_edit, name='service_order_edit'),
+    path('service-order/add-item/<int:order_id>/', views.service_order_add_item, name='service_order_add_item'),
+    path('service-order/remove-item/<int:item_id>/', views.service_order_remove_item, name='service_order_remove_item'),
     path('booking/create/', views.booking_create, name='booking_create'),
     path('booking/quick-boat/', views.quick_boat_create, name='quick_boat_create'),
     path('booking/edit/<int:booking_id>/', views.booking_edit, name='booking_edit'),
@@ -41,6 +43,7 @@ urlpatterns = [
     path('invoice/remove-item/<int:pk>/', views.invoice_remove_item, name='invoice_remove_item'),
     path('invoice/mark-paid/<int:pk>/', views.invoice_mark_paid, name='invoice_mark_paid'),
     path('invoice/delete/<int:pk>/', views.invoice_delete, name='invoice_delete'),
+    path('invoice/submit-mydata/<int:pk>/', views.invoice_submit_mydata, name='invoice_submit_mydata'),
     
     # Auth
     path('accounts/', include('django.contrib.auth.urls')),

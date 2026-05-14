@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
 from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, ServiceOrder, ServiceOrderItem
 from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, ServiceOrderForm, ServiceOrderItemForm
+from .mydata_utils import send_invoice_to_mydata
+from django.contrib import messages
 
 @login_required
 def quick_boat_create(request):
@@ -188,30 +190,86 @@ def service_order_edit(request, order_id):
     else:
         form = ServiceOrderForm(instance=order)
     
+    all_services = Service.objects.all().order_by('name')
     return render(request, 'marina/modals/service_order_form.html', {
         'form': form,
         'order': order,
-        'title': 'Edit Service Order'
+        'title': 'Edit Service Order',
+        'all_services': all_services
+    })
+
+@login_required
+def service_order_add_item(request, order_id):
+    order = get_object_or_404(ServiceOrder, id=order_id)
+    if request.method == 'POST':
+        service_id = request.POST.get('add_service_id')
+        quantity = float(request.POST.get('add_quantity', 1))
+        if service_id:
+            service = get_object_or_404(Service, id=service_id)
+            ServiceOrderItem.objects.create(
+                order=order,
+                service=service,
+                quantity=quantity
+            )
+    
+    all_services = Service.objects.all().order_by('name')
+    return render(request, 'marina/partials/service_order_items_table.html', {
+        'order': order,
+        'all_services': all_services
+    })
+
+@login_required
+def service_order_remove_item(request, item_id):
+    item = get_object_or_404(ServiceOrderItem, id=item_id)
+    order = item.order
+    item.delete()
+    
+    all_services = Service.objects.all().order_by('name')
+    return render(request, 'marina/partials/service_order_items_table.html', {
+        'order': order,
+        'all_services': all_services
     })
 
 @login_required
 def service_order_create(request):
     boat_id = request.GET.get('boat_id')
+    booking_id = request.GET.get('booking_id')
     initial = {}
     if boat_id:
         initial['boat'] = boat_id
+    if booking_id:
+        initial['booking'] = booking_id
+        # Also try to pre-fill boat from booking
+        booking = Booking.objects.filter(id=booking_id).first()
+        if booking:
+            initial['boat'] = booking.boat_id
+            initial['customer'] = booking.boat.owner_id
+            initial['berth'] = booking.berth_id
     
     if request.method == 'POST':
         form = ServiceOrderForm(request.POST)
         if form.is_valid():
-            form.save()
+            order = form.save()
+            
+            # Create initial item if provided
+            initial_service = form.cleaned_data.get('initial_service')
+            initial_qty = form.cleaned_data.get('initial_quantity') or 1.0
+            if initial_service:
+                ServiceOrderItem.objects.create(
+                    order=order,
+                    service=initial_service,
+                    quantity=initial_qty
+                )
+            
             return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
     else:
         form = ServiceOrderForm(initial=initial)
     
+    all_services = Service.objects.all().order_by('name')
     return render(request, 'marina/modals/service_order_form.html', {
         'form': form,
-        'title': 'Create Service Order'
+        'title': 'Create Service Order',
+        'all_services': all_services
     })
 
 @login_required
@@ -223,7 +281,7 @@ def booking_delete(request, booking_id):
     return render(request, 'marina/partials/booking_delete_confirm.html', {'booking': booking})
 
 def add_service(request, booking_id):
-    from .models import BookingService, Service, Invoice, InvoiceItem
+    from .models import ServiceOrder, ServiceOrderItem, Service, Invoice, InvoiceItem
     booking = get_object_or_404(Booking, id=booking_id)
     services = Service.objects.all().order_by('name')
     
@@ -236,9 +294,19 @@ def add_service(request, booking_id):
         service = get_object_or_404(Service, id=service_id)
         final_price = float(price_override) if price_override else service.price_per_unit
         
-        # Create BookingService entry
-        bs = BookingService.objects.create(
+        # Create a ServiceOrder header first
+        order = ServiceOrder.objects.create(
             booking=booking,
+            boat=booking.boat,
+            customer=booking.boat.owner,
+            berth=booking.berth,
+            status='PENDING',
+            notes=f"Added from booking #{booking.id}"
+        )
+        
+        # Create the item within that order
+        item = ServiceOrderItem.objects.create(
+            order=order,
             service=service,
             quantity=quantity,
             price_per_unit=final_price,
@@ -1101,18 +1169,19 @@ def api_berths(request):
 
 @login_required
 def api_bookings(request):
-    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('services', 'services__service')
+    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('service_orders__items__service')
     data = []
     for b in bookings:
         services = []
-        for bs in b.services.all():
-            services.append({
-                'name': bs.service.name,
-                'type': bs.service.get_service_type_display(),
-                'quantity': bs.quantity,
-                'unit': bs.service.get_unit_display(),
-                'total': float(bs.total_price)
-            })
+        for order in b.service_orders.all():
+            for item in order.items.all():
+                services.append({
+                    'name': item.service.name,
+                    'type': item.service.get_service_type_display(),
+                    'quantity': item.quantity,
+                    'unit': item.service.get_unit_display(),
+                    'total': float(item.total_price)
+                })
             
         data.append({
             'id': b.id,
@@ -1138,3 +1207,12 @@ def api_bookings(request):
             'notes': b.notes
         })
     return JsonResponse(data, safe=False)
+@login_required
+def invoice_submit_mydata(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    success, message = send_invoice_to_mydata(invoice)
+    if success:
+        messages.success(request, f'Invoice #{invoice.id} submitted to myDATA! {message}')
+    else:
+        messages.error(request, f'myDATA Submission Failed: {message}')
+    return redirect('invoices_list')
