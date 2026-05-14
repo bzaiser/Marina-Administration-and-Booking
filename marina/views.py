@@ -243,6 +243,7 @@ def work_order_edit(request, order_id):
     return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
         'order': order,
+        'editing': True,
         'title': 'Edit Work Order',
         'all_services': all_services
     })
