@@ -9,3 +9,4 @@ pytest-django
 xhtml2pdf
 gunicorn
 whitenoise
+mydatanaut
