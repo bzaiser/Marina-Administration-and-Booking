@@ -1,6 +1,6 @@
 <div class="modal-header border-0 pb-0">
     <h5 class="modal-title fw-bold">
-        <i class="bi bi-gear-wide-connected text-warning me-2"></i>
+        <i class="bi bi-tools text-warning me-2"></i>
         {{ title }}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -10,28 +10,39 @@
     {% csrf_token %}
     <div class="modal-body pt-3">
         
-        <!-- Boat & General Section -->
+        <!-- Boat & Location Section -->
         <div class="card bg-light border-0 rounded-3 mb-3">
             <div class="card-body p-3">
                 <div class="row g-3">
-                    <div class="col-md-12">
+                    <div class="col-md-7">
                         <label class="form-label small fw-bold text-muted text-uppercase">Target Boat</label>
                         {{ form.boat }}
                     </div>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Dry Dock / Berth</label>
+                        {{ form.berth }}
+                    </div>
 
                     {% if not order %}
-                    <div class="col-md-8">
-                        <label class="form-label small fw-bold text-muted text-uppercase text-primary">Add First Service</label>
-                        {{ form.initial_service }}
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold text-muted text-uppercase text-primary">Quantity</label>
-                        {{ form.initial_quantity }}
+                    <div class="col-md-12">
+                        <div class="p-3 border border-warning border-opacity-25 rounded-3 bg-white shadow-sm mt-2">
+                            <h6 class="small fw-bold text-warning text-uppercase mb-3"><i class="bi bi-plus-circle me-1"></i>Initial Work Item</h6>
+                            <div class="row g-2">
+                                <div class="col-md-8">
+                                    <label class="form-label xx-small fw-bold text-muted text-uppercase">Task / Part</label>
+                                    {{ form.initial_service }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label xx-small fw-bold text-muted text-uppercase">Quantity</label>
+                                    {{ form.initial_quantity }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     {% endif %}
 
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Job Details / Notes</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">Job Description / Internal Notes</label>
                         {{ form.notes }}
                     </div>
                 </div>
@@ -42,10 +53,10 @@
         <!-- Items Section -->
         <div class="card border-0 shadow-sm rounded-3 mb-3 overflow-hidden">
             <div class="card-header bg-white border-0 pt-3">
-                <h6 class="fw-bold mb-0"><i class="bi bi-list-ul text-primary me-2"></i>Order Items</h6>
+                <h6 class="fw-bold mb-0"><i class="bi bi-list-check text-primary me-2"></i>Work Details & Parts</h6>
             </div>
             <div class="card-body p-0">
-                {% include "marina/partials/service_order_items_table.html" %}
+                {% include "marina/partials/work_order_items_table.html" %}
             </div>
         </div>
         {% endif %}
@@ -55,12 +66,12 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Scheduled Start</label>
-                        {{ form.scheduled_start }}
+                        <label class="form-label small fw-bold text-muted text-uppercase">Yard Start</label>
+                        {{ form.start_date }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Scheduled End</label>
-                        {{ form.scheduled_end }}
+                        <label class="form-label small fw-bold text-muted text-uppercase">Yard End</label>
+                        {{ form.end_date }}
                     </div>
                 </div>
             </div>
@@ -79,42 +90,40 @@
         </div>
 
         <div id="form-indicator" class="htmx-indicator mt-3 text-center">
-            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-            <span class="ms-2 small text-muted">Processing order...</span>
+            <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
+            <span class="ms-2 small text-muted">Updating yard records...</span>
         </div>
     </div>
 
     <div class="modal-footer border-0 pt-0 pb-4">
         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary rounded-pill px-4">
-            <i class="bi bi-check2-circle me-1"></i> Save Service Order
+        <button type="submit" class="btn btn-warning rounded-pill px-4 text-dark fw-bold">
+            <i class="bi bi-check2-circle me-1"></i> Save Work Order
         </button>
     </div>
 </form>
 
 <script>
-    function initOrderItemsSelect2() {
+    function initWorkItemsSelect2() {
         $('.select2-search-items').select2({
             dropdownParent: $('#modals-here'),
             width: '100%',
-            placeholder: 'Select service...'
+            placeholder: 'Select task or part...'
         });
     }
 
     $(document).ready(function() {
-        // Initialize Select2 with 100% width to fix the narrow boxes
         $('.select2-search').select2({
             dropdownParent: $('#modals-here'),
             width: '100%',
             placeholder: 'Select an option...'
         });
-        initOrderItemsSelect2();
+        initWorkItemsSelect2();
     });
 
-    // Re-initialize on HTMX swaps inside this modal
     document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.detail.target.id === 'order-items-table-container') {
-            initOrderItemsSelect2();
+        if (evt.detail.target.id === 'work-items-table-container') {
+            initWorkItemsSelect2();
         }
     });
 </script>

@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, ServiceOrder, ServiceOrderItem
-from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, ServiceOrderForm, ServiceOrderItemForm
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, WorkOrder, WorkOrderItem, BookingSupply
+from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, WorkOrderForm, WorkOrderItemForm, BookingSupplyForm
 from .mydata_utils import send_invoice_to_mydata
 from django.contrib import messages
 
@@ -89,15 +89,18 @@ def checkout_view(request, berth_id):
     # Calculate estimated price (Berth Fee)
     berth_fee = booking.calculate_price()
     
-    # Calculate service costs
-    from .models import ServiceOrder, ServiceOrderItem, InvoiceItem
-    booked_orders = ServiceOrder.objects.filter(booking=booking)
-    service_total = 0
-    for order in booked_orders:
-        for item in order.items.all():
-            service_total += item.total_price
+    # Calculate supply costs (Marina World)
+    supplies = booking.supplies.all()
+    supply_total = sum(s.total_price for s in supplies)
     
-    total_price = berth_fee + service_total
+    # Calculate related Work Orders (Yard World) - Optionally included or just listed
+    work_orders = WorkOrder.objects.filter(boat=booking.boat, status='COMPLETED') # Only bill completed work?
+    work_total = 0
+    for order in work_orders:
+        for item in order.items.all():
+            work_total += item.total_price
+    
+    total_price = berth_fee + supply_total + work_total
     
     if request.method == 'POST':
         # Finalize checkout
@@ -121,19 +124,28 @@ def checkout_view(request, berth_id):
             unit_price=berth_fee / booking.duration_days if booking.duration_days > 0 else 0
         )
         
-        # Add service line items
-        for order in booked_orders:
+        # Add supply line items
+        for supply in supplies:
+            InvoiceItem.objects.create(
+                invoice=invoice,
+                description=f"Supply: {supply.service.name}",
+                quantity=supply.quantity,
+                unit=supply.service.unit,
+                unit_price=supply.unit_price or supply.service.price_per_unit
+            )
+
+        # Add work order line items (if any)
+        for order in work_orders:
             for item in order.items.all():
                 InvoiceItem.objects.create(
                     invoice=invoice,
-                    description=f"Service: {item.service.name}",
+                    description=f"Yard Work: {item.service.name}",
                     quantity=item.quantity,
                     unit=item.service.unit,
-                    unit_price=item.price_per_unit or item.service.price_per_unit
+                    unit_price=item.unit_price or item.service.price_per_unit
                 )
         
-        # Redirect to invoice edit to allow final adjustments (discount, extra items, etc.)
-        return invoice_edit(request, invoice.id)
+        return redirect('invoice_edit', pk=invoice.id)
 
     template = 'marina/partials/checkout_confirm.html'
     if not request.htmx:
@@ -143,8 +155,10 @@ def checkout_view(request, berth_id):
         'booking': booking,
         'total_price': total_price,
         'berth_fee': berth_fee,
-        'service_total': service_total,
-        'booked_orders': booked_orders
+        'supply_total': supply_total,
+        'work_total': work_total,
+        'supplies': supplies,
+        'work_orders': work_orders
     })
 
 @login_required
@@ -160,9 +174,9 @@ def booking_edit(request, booking_id):
     else:
         form = BookingForm(instance=booking)
     
-    orders = ServiceOrder.objects.filter(booking=booking).prefetch_related('items__service')
-    order_form = ServiceOrderForm()
-    all_services = Service.objects.all().order_by('name')
+    supplies = booking.supplies.all().select_related('service')
+    supply_form = BookingSupplyForm()
+    all_services = Service.objects.filter(service_type='SUPPLY').order_by('name')
     
     template = 'marina/partials/booking_form.html'
     if not request.htmx:
@@ -172,82 +186,103 @@ def booking_edit(request, booking_id):
         'form': form, 
         'editing': True,
         'booking': booking,
-        'orders': orders,
+        'supplies': supplies,
+        'supply_form': supply_form,
         'all_services': all_services,
-        'order_form': order_form,
         'partial_template': 'marina/partials/booking_form.html',
         'title': f'Edit Booking #{booking.id}'
     })
 
 @login_required
-def service_order_edit(request, order_id):
-    order = get_object_or_404(ServiceOrder, id=order_id)
+def booking_add_supply(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
     if request.method == 'POST':
-        form = ServiceOrderForm(request.POST, instance=order)
+        service_id = request.POST.get('service')
+        quantity = float(request.POST.get('quantity', 1))
+        if service_id:
+            service = get_object_or_404(Service, id=service_id)
+            BookingSupply.objects.create(
+                booking=booking,
+                service=service,
+                quantity=quantity
+            )
+            return HttpResponse(status=204, headers={'HX-Trigger': 'suppliesChanged'})
+    return HttpResponse(status=400)
+
+@login_required
+def booking_remove_supply(request, supply_id):
+    supply = get_object_or_404(BookingSupply, id=supply_id)
+    supply.delete()
+    return HttpResponse(status=204, headers={'HX-Trigger': 'suppliesChanged'})
+
+@login_required
+def work_order_list(request):
+    orders = WorkOrder.objects.all().order_by('-date_created')
+    return render(request, 'marina/work_order_list.html', {'orders': orders})
+
+@login_required
+def work_order_edit(request, order_id):
+    order = get_object_or_404(WorkOrder, id=order_id)
+    if request.method == 'POST':
+        form = WorkOrderForm(request.POST, instance=order)
         if form.is_valid():
             form.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
     else:
-        form = ServiceOrderForm(instance=order)
+        form = WorkOrderForm(instance=order)
     
     all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/modals/service_order_form.html', {
+    return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
         'order': order,
-        'title': 'Edit Service Order',
+        'title': 'Edit Work Order',
         'all_services': all_services
     })
 
 @login_required
-def service_order_add_item(request, order_id):
-    order = get_object_or_404(ServiceOrder, id=order_id)
+def work_order_add_item(request, order_id):
+    order = get_object_or_404(WorkOrder, id=order_id)
     if request.method == 'POST':
         service_id = request.POST.get('add_service_id')
         quantity = float(request.POST.get('add_quantity', 1))
         if service_id:
             service = get_object_or_404(Service, id=service_id)
-            ServiceOrderItem.objects.create(
+            WorkOrderItem.objects.create(
                 order=order,
                 service=service,
                 quantity=quantity
             )
     
     all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/partials/service_order_items_table.html', {
+    return render(request, 'marina/partials/work_order_items_table.html', {
         'order': order,
         'all_services': all_services
     })
 
 @login_required
-def service_order_remove_item(request, item_id):
-    item = get_object_or_404(ServiceOrderItem, id=item_id)
+def work_order_remove_item(request, item_id):
+    item = get_object_or_404(WorkOrderItem, id=item_id)
     order = item.order
     item.delete()
     
     all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/partials/service_order_items_table.html', {
+    return render(request, 'marina/partials/work_order_items_table.html', {
         'order': order,
         'all_services': all_services
     })
 
 @login_required
-def service_order_create(request):
+def work_order_create(request):
     boat_id = request.GET.get('boat_id')
-    booking_id = request.GET.get('booking_id')
     initial = {}
     if boat_id:
         initial['boat'] = boat_id
-    if booking_id:
-        initial['booking'] = booking_id
-        # Also try to pre-fill boat from booking
-        booking = Booking.objects.filter(id=booking_id).first()
-        if booking:
-            initial['boat'] = booking.boat_id
-            initial['customer'] = booking.boat.owner_id
-            initial['berth'] = booking.berth_id
+        boat = Boat.objects.filter(id=boat_id).first()
+        if boat:
+            initial['customer'] = boat.owner_id
     
     if request.method == 'POST':
-        form = ServiceOrderForm(request.POST)
+        form = WorkOrderForm(request.POST)
         if form.is_valid():
             order = form.save()
             
@@ -255,7 +290,7 @@ def service_order_create(request):
             initial_service = form.cleaned_data.get('initial_service')
             initial_qty = form.cleaned_data.get('initial_quantity') or 1.0
             if initial_service:
-                ServiceOrderItem.objects.create(
+                WorkOrderItem.objects.create(
                     order=order,
                     service=initial_service,
                     quantity=initial_qty
@@ -263,12 +298,12 @@ def service_order_create(request):
             
             return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
     else:
-        form = ServiceOrderForm(initial=initial)
+        form = WorkOrderForm(initial=initial)
     
     all_services = Service.objects.all().order_by('name')
-    return render(request, 'marina/modals/service_order_form.html', {
+    return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
-        'title': 'Create Service Order',
+        'title': 'Create Work Order',
         'all_services': all_services
     })
 
@@ -989,7 +1024,7 @@ def api_planning_data(request):
             'ref': b.reference,
             'category': 'booking'
         })
-    scheduled_orders = ServiceOrder.objects.filter(scheduled_start__isnull=False, scheduled_start__lte=end_date, scheduled_end__gte=start_date).select_related('boat', 'boat__owner')
+    scheduled_orders = WorkOrder.objects.filter(start_date__isnull=False, start_date__lte=end_date, end_date__gte=start_date).select_related('boat', 'boat__owner', 'berth')
     service_items = []
     unassigned_exists = False
     for s in scheduled_orders:
@@ -1000,10 +1035,8 @@ def api_planning_data(request):
         group_id = 'group_services'
         if s.berth: 
             group_id = str(s.berth_id)
-        elif s.booking: 
-            group_id = str(s.booking.berth_id)
         else:
-            active_b = Booking.objects.filter(boat=s.boat, start_date__lte=s.scheduled_start, end_date__gte=s.scheduled_start).first()
+            active_b = Booking.objects.filter(boat=s.boat, start_date__lte=s.start_date, end_date__gte=s.start_date).first()
             if active_b: 
                 group_id = str(active_b.berth_id)
             else:
@@ -1016,22 +1049,22 @@ def api_planning_data(request):
         service_items.append({
             'id': f"service_{s.id}",
             'group': group_id,
-            'start': s.scheduled_start.isoformat(),
-            'end': (s.scheduled_end + datetime.timedelta(days=1)).isoformat() if s.scheduled_end else (s.scheduled_start + datetime.timedelta(days=1)).isoformat(),
+            'start': s.start_date.isoformat(),
+            'end': (s.end_date + datetime.timedelta(days=1)).isoformat() if s.end_date else (s.start_date + datetime.timedelta(days=1)).isoformat(),
             'content': content,
             'style': style,
-            'owner': s.boat.owner.name if s.boat.owner else '',
+            'owner': s.customer.name if s.customer else (s.boat.owner.name if s.boat.owner else ''),
             'boat_type': s.boat.get_boat_type_display(),
             'boat_image': s.boat.image.url if s.boat.image else '/static/img/no-boat.png',
-            'arrival': s.scheduled_start.strftime('%d.%m.%Y'),
-            'departure': s.scheduled_end.strftime('%d.%m.%Y') if s.scheduled_end else '-',
-            'phone': s.boat.owner.phone if (s.boat.owner) else '',
+            'arrival': s.start_date.strftime('%d.%m.%Y'),
+            'departure': s.end_date.strftime('%d.%m.%Y') if s.end_date else '-',
+            'phone': (s.customer.phone if s.customer else (s.boat.owner.phone if s.boat.owner else '')),
             'engine': s.boat.engine or '-',
             'specs': f"{s.boat.length}m x {s.boat.width}m",
             'draft': s.boat.draft,
             'diesel': s.boat.diesel_tank,
             'water': s.boat.water_tank,
-            'language': s.boat.owner.language if s.boat.owner else '',
+            'language': (s.customer.language if s.customer else (s.boat.owner.language if s.boat.owner else '')),
             'year': s.boat.year_built,
             'ref': s.get_status_display(),
             'notes': s.notes or '',
@@ -1169,22 +1202,28 @@ def api_berths(request):
 
 @login_required
 def api_bookings(request):
-    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('service_orders__items__service')
+    # Fetch normal bookings
+    bookings = Booking.objects.all().select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('supplies__service')
+    
+    # Fetch work orders that occupy a berth
+    work_orders = WorkOrder.objects.filter(berth__isnull=False).select_related('boat', 'boat__owner', 'berth', 'berth__block').prefetch_related('items__service')
+    
     data = []
+    
+    # Normal Bookings (Marina)
     for b in bookings:
-        services = []
-        for order in b.service_orders.all():
-            for item in order.items.all():
-                services.append({
-                    'name': item.service.name,
-                    'type': item.service.get_service_type_display(),
-                    'quantity': item.quantity,
-                    'unit': item.service.get_unit_display(),
-                    'total': float(item.total_price)
-                })
+        supplies = []
+        for supply in b.supplies.all():
+            supplies.append({
+                'name': supply.service.name,
+                'quantity': supply.quantity,
+                'total': float(supply.total_price)
+            })
             
         data.append({
-            'id': b.id,
+            'id': f"b-{b.id}",
+            'real_id': b.id,
+            'type_group': 'marina',
             'boat_name': b.boat.name,
             'boat_id': b.boat.id,
             'owner_name': b.boat.owner.name,
@@ -1197,15 +1236,53 @@ def api_bookings(request):
             'end_date': b.end_date.strftime('%d.%m.%Y'),
             'start_iso': b.start_date.isoformat(),
             'end_iso': b.end_date.isoformat(),
-            'duration': b.duration_days,
             'status': b.get_status_display(),
             'status_code': b.status,
-            'type': b.get_booking_type_display(),
-            'berth_fee': float(b.calculate_price()),
-            'services': services,
-            'total_services': sum(s['total'] for s in services),
-            'notes': b.notes
+            'type': 'Booking',
+            'services': supplies,
+            'total_services': sum(s['total'] for s in supplies),
+            'notes': b.notes,
+            'color': '#3498db' # Blue for Marina
         })
+        
+    # Work Orders (Yard)
+    for w in work_orders:
+        if not w.start_date or not w.end_date:
+            continue
+            
+        items = []
+        for item in w.items.all():
+            items.append({
+                'name': item.service.name,
+                'quantity': item.quantity,
+                'total': float(item.total_price)
+            })
+            
+        data.append({
+            'id': f"w-{w.id}",
+            'real_id': w.id,
+            'type_group': 'yard',
+            'boat_name': w.boat.name,
+            'boat_id': w.boat.id,
+            'owner_name': w.customer.name if w.customer else w.boat.owner.name,
+            'flag': w.boat.get_flag_code(),
+            'berth_num': w.berth.number,
+            'berth_id': w.berth.id,
+            'block_name': w.berth.block.name,
+            'block_color': w.berth.block.color,
+            'start_date': w.start_date.strftime('%d.%m.%Y'),
+            'end_date': w.end_date.strftime('%d.%m.%Y'),
+            'start_iso': w.start_date.isoformat(),
+            'end_iso': w.end_date.isoformat(),
+            'status': w.get_status_display(),
+            'status_code': w.status,
+            'type': 'Repair/Yard',
+            'services': items,
+            'total_services': sum(s['total'] for s in items),
+            'notes': w.notes,
+            'color': '#f39c12' # Orange for Yard
+        })
+        
     return JsonResponse(data, safe=False)
 @login_required
 def invoice_submit_mydata(request, pk):

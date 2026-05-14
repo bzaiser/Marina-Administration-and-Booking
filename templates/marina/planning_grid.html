@@ -62,7 +62,7 @@
             <option value="2027">2027</option>
         </select>
         <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-warning" onclick="createServiceOrder()"><i class="bi bi-gear-fill me-1"></i>New Service Order</button>
+            <button class="btn btn-outline-warning" onclick="createWorkOrder()"><i class="bi bi-tools me-1"></i>New Work Order</button>
             <button class="btn btn-outline-secondary" onclick="handleZoomIn()"><i class="bi bi-zoom-in"></i></button>
             <button class="btn btn-outline-secondary" onclick="handleZoomOut()"><i class="bi bi-zoom-out"></i></button>
             <button class="btn btn-outline-primary" onclick="loadData()"><i class="bi bi-arrow-clockwise"></i></button>
@@ -177,7 +177,7 @@
             if (properties.item) {
                 const item = items.get(properties.item);
                 if (item.category === 'service') {
-                    editServiceOrder(item.order_id);
+                    editWorkOrder(item.order_id);
                 } else {
                     editBooking(properties.item);
                 }
@@ -188,7 +188,7 @@
         timeline.on('doubleClick', function (properties) {
             if (!properties.item && properties.group) {
                 if (properties.group === 'group_services') {
-                    createServiceOrder();
+                    createWorkOrder();
                 } else if (!String(properties.group).startsWith('block_')) {
                     // Determine the start and end dates based on click position
                     const startDate = new Date(properties.time);
@@ -214,8 +214,8 @@
         });
     }
 
-    function createServiceOrder(boatId) {
-        let url = `/service-order/create/`;
+    function createWorkOrder(boatId) {
+        let url = `{% url 'work_order_create' %}`;
         if (boatId) url += `?boat_id=${boatId}`;
         
         const modalEl = document.getElementById('modals-here');
@@ -227,9 +227,9 @@
         htmx.ajax('GET', url, {target: '#modals-here .modal-content', swap: 'innerHTML'});
     }
 
-    function editServiceOrder(orderId) {
+    function editWorkOrder(orderId) {
         if (!orderId) return;
-        const url = `/service-order/edit/${orderId}/`;
+        const url = `/service/edit/${orderId}/`;
         const modalEl = document.getElementById('modals-here');
         modalEl.addEventListener('htmx:afterSwap', function handler() {
             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);

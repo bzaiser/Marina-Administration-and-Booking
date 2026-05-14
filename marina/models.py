@@ -159,6 +159,10 @@ class Booking(models.Model):
         delta = self.end_date - self.start_date
         return max(delta.days, 1) # Minimum 1 day
 
+    @property
+    def supply_total(self):
+        return sum(s.total_price for s in self.supplies.all())
+
     def calculate_price(self):
         """Calculates the price based on boat length and the PriceRate table."""
         rate = PriceRate.objects.filter(
@@ -220,7 +224,29 @@ class Service(models.Model):
         verbose_name = _("Service Catalog")
         verbose_name_plural = _("Service Catalog")
 
-class ServiceOrder(models.Model):
+class BookingSupply(models.Model):
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='supplies')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, limit_choices_to={'service_type': 'SUPPLY'})
+    quantity = models.FloatField(_("Quantity / Units"), default=1.0)
+    unit_price = models.DecimalField(_("Price per Unit"), max_digits=10, decimal_places=2, blank=True, null=True)
+    tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, blank=True, null=True)
+    date = models.DateTimeField(_("Date Added"), auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.unit_price and self.service_id:
+            self.unit_price = self.service.price_per_unit
+        if not self.tax_rate and self.service_id:
+            self.tax_rate = self.service.tax_rate
+        super().save(*args, **kwargs)
+
+    @property
+    def total_price(self):
+        return self.quantity * float(self.unit_price)
+
+    def __str__(self):
+        return f"{self.quantity} {self.service.get_unit_display()} {self.service.name} for Booking #{self.booking_id}"
+
+class WorkOrder(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),
@@ -228,44 +254,49 @@ class ServiceOrder(models.Model):
         ('CANCELLED', 'Cancelled'),
     ]
     
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
-    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
-    boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='service_orders', null=True, blank=True)
-    berth = models.ForeignKey('Berth', on_delete=models.SET_NULL, related_name='service_orders', null=True, blank=True)
+    boat = models.ForeignKey('Boat', on_delete=models.CASCADE, related_name='work_orders')
+    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, related_name='work_orders', null=True, blank=True)
+    berth = models.ForeignKey('Berth', on_delete=models.SET_NULL, related_name='work_orders', null=True, blank=True, help_text="Dry dock or work place")
     
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='PENDING')
     notes = models.TextField(_("Notes"), blank=True, null=True)
     
     # Scheduling for Planning View
-    scheduled_start = models.DateField(_("Scheduled Start"), null=True, blank=True)
-    scheduled_end = models.DateField(_("Scheduled End"), null=True, blank=True)
+    start_date = models.DateField(_("Start Date"), null=True, blank=True)
+    end_date = models.DateField(_("End Date"), null=True, blank=True)
     
-    date = models.DateTimeField(_("Date Added"), auto_now_add=True)
+    date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
+
+    @property
+    def total_value(self):
+        return sum(item.total_price for item in self.items.all())
+
+    def save(self, *args, **kwargs):
+        if not self.customer and self.boat:
+            self.customer = self.boat.owner
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        target = "Walk-in"
-        if self.boat: target = self.boat.name
-        elif self.customer: target = self.customer.name
-        return f"Order #{self.id} for {target} ({self.get_status_display()})"
+        return f"Work Order #{self.id} - {self.boat.name} ({self.get_status_display()})"
 
     class Meta:
-        verbose_name = _("Service Order")
-        verbose_name_plural = _("Service Orders")
+        verbose_name = _("Work Order")
+        verbose_name_plural = _("Work Orders")
 
-class ServiceOrderItem(models.Model):
-    order = models.ForeignKey(ServiceOrder, on_delete=models.CASCADE, related_name='items')
+class WorkOrderItem(models.Model):
+    order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name='items')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     quantity = models.FloatField(_("Quantity / Units"), default=1.0)
     
-    price_per_unit = models.DecimalField(_("Price per Unit (At Booking)"), max_digits=10, decimal_places=2, blank=True, null=True)
+    unit_price = models.DecimalField(_("Price per Unit (At Order)"), max_digits=10, decimal_places=2, blank=True, null=True)
     tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, blank=True, null=True)
     
     notes = models.TextField(_("Notes"), blank=True, null=True)
-    date = models.DateTimeField(_("Date Added"), auto_now_add=True)
+    date_added = models.DateTimeField(_("Date Added"), auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        if not self.price_per_unit and self.service_id:
-            self.price_per_unit = self.service.price_per_unit
+        if not self.unit_price and self.service_id:
+            self.unit_price = self.service.price_per_unit
         if not self.tax_rate and self.service_id:
             self.tax_rate = self.service.tax_rate
         super().save(*args, **kwargs)
@@ -275,12 +306,11 @@ class ServiceOrderItem(models.Model):
 
     @property
     def total_price(self):
-        price = self.price_per_unit if self.price_per_unit is not None else self.service.price_per_unit
-        return self.quantity * float(price)
+        return self.quantity * float(self.unit_price)
 
     class Meta:
-        verbose_name = _("Order Item")
-        verbose_name_plural = _("Order Items")
+        verbose_name = _("Work Order Item")
+        verbose_name_plural = _("Work Order Items")
 
 class Invoice(models.Model):
     PAYMENT_STATUS = [

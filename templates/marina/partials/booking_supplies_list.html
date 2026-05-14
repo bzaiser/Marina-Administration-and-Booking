@@ -1,0 +1,75 @@
+<div id="booking-supplies-container">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr class="xx-small text-muted text-uppercase">
+                    <th class="ps-3">Utility / Item</th>
+                    <th class="text-end">Qty</th>
+                    <th class="text-end">Total</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for supply in supplies %}
+                <tr class="small">
+                    <td class="ps-3">
+                        <div class="fw-bold text-info"><i class="bi bi-droplet-fill me-1"></i>{{ supply.service.name }}</div>
+                        <div class="xx-small text-muted text-uppercase">Marina Supply</div>
+                    </td>
+                    <td class="text-end">{{ supply.quantity }} {{ supply.service.get_unit_display }}</td>
+                    <td class="text-end fw-bold text-dark">€{{ supply.total_price|floatformat:2 }}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-link text-danger p-0" 
+                                hx-post="{% url 'booking_remove_supply' supply.id %}" 
+                                hx-target="#booking-supplies-container">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-muted small">
+                        <div class="mb-2"><i class="bi bi-info-circle fs-4"></i></div>
+                        No supplies (water, power, etc.) recorded for this stay.
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                <!-- Quick Add Row inside the table footer or bottom -->
+                <tr class="bg-light border-top border-info border-opacity-10">
+                    <td class="ps-3">
+                        <select name="service" class="form-select form-select-sm" form="quick-supply-form">
+                            <option value="">Quick Add Supply...</option>
+                            {% for s in all_services %}
+                                {% if s.service_type == 'SUPPLY' %}
+                                <option value="{{ s.id }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="text-end" style="width: 100px;">
+                        <input type="number" name="quantity" value="1" step="0.1" class="form-control form-control-sm text-end" form="quick-supply-form">
+                    </td>
+                    <td></td>
+                    <td class="text-center">
+                        <form id="quick-supply-form" hx-post="{% url 'booking_add_supply' booking.id %}" hx-target="#booking-supplies-container">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-info text-white">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+            {% if supplies %}
+            <tfoot class="table-light">
+                <tr>
+                    <td colspan="2" class="text-end fw-bold ps-3">Supply Total</td>
+                    <td class="text-end fw-bold text-info fs-6">€{{ booking.supply_total|default:"0.00" }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+            {% endif %}
+        </table>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Work Orders (Yard) - Marina Samos{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div>
+            <h5 class="mb-0"><i class="bi bi-tools text-warning me-2"></i>Yard Service Management</h5>
+            <div class="small text-muted">Manage repairs, maintenance, and dry-dock projects</div>
+        </div>
+        <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">
+            <i class="bi bi-plus-lg me-1"></i>New Work Order
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Boat / Customer</th>
+                        <th>Location</th>
+                        <th>Timeline</th>
+                        <th>Status</th>
+                        <th class="text-end">Value</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="align-middle">
+                        <td><span class="text-muted">#{{ order.id }}</span></td>
+                        <td>
+                            <div class="fw-bold">{{ order.boat.name }}</div>
+                            <div class="small text-muted">{{ order.customer.name }}</div>
+                        </td>
+                        <td>
+                            {% if order.berth %}
+                                <span class="badge bg-secondary px-2"><i class="bi bi-geo-alt me-1"></i>{{ order.berth.number }}</span>
+                            {% else %}
+                                <span class="text-muted small">No location set</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.start_date %}
+                                <div class="small fw-bold text-primary">{{ order.start_date|date:"d.m.Y" }}</div>
+                                <div class="small text-muted">to {{ order.end_date|date:"d.m.Y"|default:"Open" }}</div>
+                            {% else %}
+                                <span class="text-muted small">Not scheduled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.status == 'PENDING' %}
+                                <span class="badge bg-warning text-dark px-2">Pending</span>
+                            {% elif order.status == 'IN_PROGRESS' %}
+                                <span class="badge bg-primary px-2">In Progress</span>
+                            {% elif order.status == 'COMPLETED' %}
+                                <span class="badge bg-success px-2">Completed</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark px-2">{{ order.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end fw-bold">€{{ order.total_value|floatformat:2 }}</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" hx-get="{% url 'work_order_edit' order.id %}" hx-target="#modals-here .modal-content" title="Edit Order">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-tools fs-1 d-block mb-2"></i>
+                            No work orders recorded in the yard.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Container -->
+<div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterSwap', (e) => {
+        if (e.detail.target.closest('#modals-here')) {
+            const modalElement = document.getElementById('modals-here');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modal.show();
+        }
+    });
+    
+    document.getElementById('modals-here').addEventListener('hidden.bs.modal', function () {
+        // Only reload if we are on the list page
+        if (window.location.pathname.includes('/service/')) {
+            window.location.reload();
+        }
+    });
+</script>
+{% endblock %}

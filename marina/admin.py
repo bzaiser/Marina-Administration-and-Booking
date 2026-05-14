@@ -1,36 +1,27 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, ServiceOrder, ServiceOrderItem, Country, ServiceProvider
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('iso_code', 'name')
     search_fields = ('iso_code', 'name')
 
-class ServiceOrderItemInline(admin.TabularInline):
-    model = ServiceOrderItem
-    extra = 1
-    readonly_fields = ('total_price',)
+@admin.register(BookingSupply)
+class BookingSupplyAdmin(admin.ModelAdmin):
+    list_display = ('booking', 'service', 'quantity', 'date')
+    list_filter = ('date', 'service')
 
-@admin.register(ServiceOrder)
-class ServiceOrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'boat', 'scheduled_start', 'status')
-    list_display_links = ('id', 'boat')
-    list_filter = ('status', 'scheduled_start', 'date')
-    search_fields = ('notes', 'boat__name', 'customer__name')
-    inlines = [ServiceOrderItemInline]
-    
-    fieldsets = (
-        ('Basic Information', {
-            'fields': ('status', 'notes')
-        }),
-        ('Assignment', {
-            'fields': ('booking', 'customer', 'boat', 'berth')
-        }),
-        ('Scheduling', {
-            'fields': ('scheduled_start', 'scheduled_end')
-        }),
-    )
+class WorkOrderItemInline(admin.TabularInline):
+    model = WorkOrderItem
+    extra = 1
+
+@admin.register(WorkOrder)
+class WorkOrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'boat', 'customer', 'status', 'start_date', 'end_date')
+    list_filter = ('status', 'start_date')
+    search_fields = ('boat__name', 'customer__name')
+    inlines = [WorkOrderItemInline]
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
