@@ -1,125 +1,116 @@
 <div class="modal-header border-0 pb-0">
     <h5 class="modal-title fw-bold">
-        <i class="bi bi-tools text-warning me-2"></i>
-        {{ title }}
+        <i class="bi bi-tools text-primary me-2"></i>
+        {% if editing %}Edit Work Order #{{ order.id }}{% else %}New Work Order{% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-<form hx-post="{{ request.path }}" hx-target="#modals-here .modal-content" hx-indicator="#form-indicator">
-    {% csrf_token %}
+<form hx-post="{% if editing %}{% url 'work_order_edit' order.id %}{% else %}{% url 'work_order_create' %}{% endif %}" 
+      hx-target="#modals-here .modal-content"
+      hx-indicator="#form-indicator">
     <div class="modal-body pt-3">
+        {% csrf_token %}
         
-        <!-- Boat & Location Section -->
+        <!-- Header Info Card -->
         <div class="card bg-light border-0 rounded-3 mb-3">
             <div class="card-body p-3">
                 <div class="row g-3">
-                    <div class="col-md-7">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Target Boat</label>
+                    <div class="col-md-12">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Boat / Customer</label>
                         {{ form.boat }}
                     </div>
-                    <div class="col-md-5">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Dry Dock / Berth</label>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Work Place / Berth</label>
                         {{ form.berth }}
                     </div>
-
-                    {% if not order %}
-                    <div class="col-md-12">
-                        <div class="p-3 border border-warning border-opacity-25 rounded-3 bg-white shadow-sm mt-2">
-                            <h6 class="small fw-bold text-warning text-uppercase mb-3"><i class="bi bi-plus-circle me-1"></i>Initial Work Item</h6>
-                            <div class="row g-2">
-                                <div class="col-md-8">
-                                    <label class="form-label xx-small fw-bold text-muted text-uppercase">Task / Part</label>
-                                    <select name="initial_service" id="work-order-initial-service" class="form-select select2-search" onchange="updateWorkOrderUnit()">
-                                        <option value="">Select task or part...</option>
-                                        {% for s in all_services %}
-                                        <option value="{{ s.id }}" data-unit="{{ s.get_unit_display }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label xx-small fw-bold text-muted text-uppercase">Quantity</label>
-                                    <div class="input-group">
-                                        {{ form.initial_quantity }}
-                                        <span class="input-group-text xx-small bg-white" id="work-order-unit-label">-</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Job Description / Internal Notes</label>
-                        {{ form.notes }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% if order %}
-        <!-- Items Section -->
-        <div class="card border-0 shadow-sm rounded-3 mb-3 overflow-hidden">
-            <div class="card-header bg-white border-0 pt-3">
-                <h6 class="fw-bold mb-0"><i class="bi bi-list-check text-primary me-2"></i>Work Details & Parts</h6>
-            </div>
-            <div class="card-body p-0">
-                {% include "marina/partials/work_order_items_table.html" %}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Scheduling Section -->
-        <div class="card border-0 shadow-sm rounded-3 mb-3">
-            <div class="card-body p-3">
-                <div class="row g-3">
+                    
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Yard Start</label>
-                        {{ form.start_date }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Yard End</label>
-                        {{ form.end_date }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Section -->
-        <div class="card bg-light border-0 rounded-3">
-            <div class="card-body p-3">
-                <div class="row g-3">
-                    <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Current Status</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Current Status</label>
                         {{ form.status }}
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Dates Card -->
+        <div class="card border-0 shadow-sm rounded-3 mb-3">
+            <div class="card-body p-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Start Date</label>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Estimated End Date</label>
+                        {{ form.end_date }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Card -->
+        <div class="card bg-light border-0 rounded-3 mb-3">
+            <div class="card-body p-3">
+                <label class="form-label xx-small fw-bold text-muted text-uppercase">Work Description / Internal Notes</label>
+                {{ form.notes }}
+            </div>
+        </div>
+
+        {% if not editing %}
+        <!-- Initial Service Row (Only for New Orders) -->
+        <div class="card border-primary border-opacity-25 rounded-3 mb-3">
+            <div class="card-body p-3">
+                <h6 class="small fw-bold mb-3 text-primary"><i class="bi bi-plus-circle me-1"></i>Add Initial Task or Part</h6>
+                <div class="row g-2">
+                    <div class="col-md-8">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Task / Part</label>
+                        <select name="initial_service" id="work-order-initial-service" class="form-select select2-search" onchange="updateWorkOrderUnit()">
+                            <option value="">Select task or part...</option>
+                            {% for s in all_services %}
+                            <option value="{{ s.id }}" data-unit="{{ s.get_unit_display }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Quantity</label>
+                        <div class="input-group">
+                            {{ form.initial_quantity }}
+                            <span class="input-group-text xx-small bg-white" id="work-order-unit-label">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if editing %}
+        <hr class="my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0"><i class="bi bi-list-task text-primary me-2"></i>Work Details & Parts</h6>
+            <div class="small text-muted">Manage shipyard services below</div>
+        </div>
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+            {% include "marina/partials/work_order_items_table.html" %}
+        </div>
+        {% endif %}
+
         <div id="form-indicator" class="htmx-indicator mt-3 text-center">
-            <div class="spinner-border spinner-border-sm text-warning" role="status"></div>
-            <span class="ms-2 small text-muted">Updating yard records...</span>
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            <span class="ms-2 small text-muted">Updating records...</span>
         </div>
     </div>
 
-    <div class="modal-footer border-0 pt-0 pb-4">
-        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-warning rounded-pill px-4 text-dark fw-bold">
-            <i class="bi bi-check2-circle me-1"></i> Save Work Order
+    <div class="modal-footer border-0">
+        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-check-lg me-1"></i>{% if editing %}Save Changes{% else %}Create Work Order{% endif %}
         </button>
     </div>
 </form>
 
 <script>
-    function initWorkItemsSelect2() {
-        $('.select2-search-items').select2({
-            dropdownParent: $('#modals-here'),
-            width: '100%',
-            placeholder: 'Select task or part...'
-        });
-    }
-
     function updateWorkOrderUnit() {
         const select = document.getElementById('work-order-initial-service');
         const label = document.getElementById('work-order-unit-label');
@@ -131,17 +122,19 @@
     }
 
     $(document).ready(function() {
-        $('.select2-search').select2({
-            dropdownParent: $('#modals-here'),
-            width: '100%',
-            placeholder: 'Select an option...'
-        });
-        initWorkItemsSelect2();
+        if (typeof $ !== 'undefined' && $.fn.select2) {
+            $('.select2-search').select2({
+                dropdownParent: $('#modals-here'),
+                width: '100%',
+                theme: 'bootstrap-5'
+            });
+        }
     });
 
+    // Re-initialize any needed JS after HTMX swaps if necessary
     document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.detail.target.id === 'work-items-table-container') {
-            initWorkItemsSelect2();
+        if (evt.detail.target.id === 'modals-here') {
+            // Re-init select2 if needed
         }
     });
 </script>

@@ -12,29 +12,37 @@
             </thead>
             <tbody>
                 {% for item in order.items.all %}
-                <tr>
+                <tr class="small">
                     <td class="ps-3">
-                        <div class="fw-bold">{{ item.service.name }}</div>
-                        {% if item.notes %}<div class="xx-small text-muted">{{ item.notes }}</div>{% endif %}
+                        <div class="fw-bold text-primary">{{ item.service.name }}</div>
+                        <div class="xx-small text-muted text-uppercase">{% if item.service.category %}{{ item.service.category.name }}{% else %}Yard Service{% endif %}</div>
+                        {% if item.notes %}<div class="xx-small text-muted italic">{{ item.notes }}</div>{% endif %}
                     </td>
                     <td class="text-end">{{ item.quantity }} {{ item.service.get_unit_display }}</td>
-                    <td class="text-end">€{{ item.unit_price|floatformat:2 }}</td>
-                    <td class="text-end fw-bold">€{{ item.total_price|floatformat:2 }}</td>
+                    <td class="text-end text-muted">€{{ item.unit_price|floatformat:2 }}</td>
+                    <td class="text-end fw-bold text-dark">€{{ item.total_price|floatformat:2 }}</td>
                     <td class="text-center">
                         <button type="button" class="btn btn-link text-danger p-0" 
                                 hx-post="{% url 'work_order_remove_item' item.id %}" 
                                 hx-target="#work-items-table-container"
                                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-                            <i class="bi bi-x-circle"></i>
+                            <i class="bi bi-trash"></i>
                         </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted small">
+                        <div class="mb-2"><i class="bi bi-tools fs-4"></i></div>
+                        No work or parts recorded yet.
                     </td>
                 </tr>
                 {% endfor %}
                 <!-- Quick Add Row -->
-                <tr class="bg-white">
+                <tr class="bg-light border-top border-primary border-opacity-10">
                     <td class="ps-3">
                         <select name="add_service_id" id="work-item-quick-add-service" class="form-select form-select-sm select2-search-items" onchange="updateQuickAddUnit()">
-                            <option value="">Add new item...</option>
+                            <option value="">Quick search tasks or parts...</option>
                             {% for service in all_services %}
                             <option value="{{ service.id }}" data-unit="{{ service.get_unit_display }}">{{ service.name }} (€{{ service.price_per_unit }})</option>
                             {% endfor %}
@@ -43,13 +51,13 @@
                     <td class="text-end" style="width: 140px;">
                         <div class="input-group input-group-sm">
                             <input type="number" name="add_quantity" value="1" step="0.1" class="form-control text-end">
-                            <span class="input-group-text xx-small bg-white" id="quick-add-unit-label">-</span>
+                            <span class="input-group-text xx-small bg-white border-start-0" id="quick-add-unit-label">-</span>
                         </div>
                     </td>
                     <td></td>
                     <td></td>
                     <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-primary" 
+                        <button type="button" class="btn btn-sm btn-primary text-white" 
                                 hx-post="{% url 'work_order_add_item' order.id %}" 
                                 hx-include="closest tr" 
                                 hx-target="#work-items-table-container"
@@ -71,17 +79,18 @@
         }
     }
     
-    // Initialize if Select2 is already active
     $(document).ready(function() {
-        $('#work-item-quick-add-service').on('select2:select', function (e) {
-            updateQuickAddUnit();
-        });
+        if (typeof $ !== 'undefined' && $.fn.select2) {
+            $('#work-item-quick-add-service').on('select2:select', function (e) {
+                updateQuickAddUnit();
+            });
+        }
     });
 </script>
             <tfoot class="table-light">
                 <tr>
                     <td colspan="3" class="text-end fw-bold ps-3">Total Work Order Value</td>
-                    <td class="text-end fw-bold text-primary">€{{ order.total_value|default:"0.00" }}</td>
+                    <td class="text-end fw-bold text-primary fs-6">€{{ order.total_value|default:"0.00" }}</td>
                     <td></td>
                 </tr>
             </tfoot>
