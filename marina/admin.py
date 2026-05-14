@@ -19,6 +19,7 @@ class WorkOrderItemInline(admin.TabularInline):
 @admin.register(WorkOrder)
 class WorkOrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'boat', 'customer', 'status', 'start_date', 'end_date')
+    list_display_links = ('id', 'boat', 'customer')
     list_filter = ('status', 'start_date')
     search_fields = ('boat__name', 'customer__name')
     inlines = [WorkOrderItemInline]
@@ -65,6 +66,7 @@ class BookingSubLeaseInline(admin.TabularInline):
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = ('boat', 'berth', 'start_date', 'end_date', 'booking_type', 'status', 'is_at_sea')
+    list_display_links = ('boat', 'berth')
     list_filter = ('booking_type', 'status', 'berth__block', 'is_at_sea')
     search_fields = ('boat__name', 'notes')
     date_hierarchy = 'start_date'
@@ -87,5 +89,6 @@ class InvoiceItemInline(admin.TabularInline):
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'customer', 'date', 'status', 'total_amount')
+    list_display_links = ('id', 'customer')
     list_filter = ('status', 'payment_method')
     inlines = [InvoiceItemInline]
