@@ -23,6 +23,8 @@ urlpatterns = [
     path('service/', views.work_order_list, name='work_order_list'),
     path('service/create/', views.work_order_create, name='work_order_create'),
     path('service/edit/<int:order_id>/', views.work_order_edit, name='work_order_edit'),
+    path('service/delete/<int:order_id>/', views.work_order_delete, name='work_order_delete'),
+    path('service/checkout/<int:order_id>/', views.work_order_checkout, name='work_order_checkout'),
     path('service/add-item/<int:order_id>/', views.work_order_add_item, name='work_order_add_item'),
     path('service/remove-item/<int:item_id>/', views.work_order_remove_item, name='work_order_remove_item'),
     

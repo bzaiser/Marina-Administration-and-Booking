@@ -287,6 +287,41 @@ def work_order_remove_item(request, item_id):
     })
 
 @login_required
+@login_required
+def work_order_delete(request, order_id):
+    order = get_object_or_404(WorkOrder, id=order_id)
+    if request.method == 'POST':
+        order.delete()
+        return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
+    return render(request, 'marina/modals/work_order_delete_confirm.html', {'order': order})
+
+@login_required
+def work_order_checkout(request, order_id):
+    order = get_object_or_404(WorkOrder, id=order_id)
+    
+    # Create Invoice
+    invoice = Invoice.objects.create(
+        customer=order.customer or order.boat.owner,
+        total_amount=order.total_value,
+        status='OPEN'
+    )
+    
+    # Add items to invoice
+    for item in order.items.all():
+        InvoiceItem.objects.create(
+            invoice=invoice,
+            description=f"Yard Work: {item.service.name}",
+            quantity=item.quantity,
+            unit=item.service.unit,
+            unit_price=item.unit_price or item.service.price_per_unit
+        )
+    
+    # Mark order as completed
+    order.status = 'COMPLETED'
+    order.save()
+    
+    return redirect('invoice_edit', pk=invoice.id)
+
 def work_order_create(request):
     boat_id = request.GET.get('boat_id')
     initial = {}

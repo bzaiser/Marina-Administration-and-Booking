@@ -63,9 +63,15 @@
                         </td>
                         <td class="text-end fw-bold">€{{ order.total_value|floatformat:2 }}</td>
                         <td class="text-end">
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-primary" hx-get="{% url 'work_order_edit' order.id %}" hx-target="#modals-here .modal-content" title="Edit Order">
+                            <div class="btn-group btn-group-sm shadow-sm rounded-pill overflow-hidden">
+                                <a href="{% url 'work_order_checkout' order.id %}" class="btn btn-outline-success border-0 px-3" title="Checkout & Bill">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                </a>
+                                <button class="btn btn-outline-primary border-0 px-3" hx-get="{% url 'work_order_edit' order.id %}" hx-target="#modals-here .modal-content" title="Edit Order">
                                     <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger border-0 px-3" hx-get="{% url 'work_order_delete' order.id %}" hx-target="#modals-here .modal-content" title="Delete Order">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </div>
                         </td>
