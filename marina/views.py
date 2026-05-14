@@ -622,6 +622,7 @@ def dashboard(request):
         'unpaid_count': unpaid_count,
         'unpaid_total': unpaid_total,
         'total_percent': total_percent,
+        'today': today,
     }
     return render(request, 'marina/dashboard.html', context)
 
@@ -661,8 +662,12 @@ def berths_grid(request):
 
 @login_required
 def invoices_list(request):
+    from django.utils import timezone
     invoices = Invoice.objects.all().prefetch_related('items', 'customer').order_by('-date')
-    return render(request, 'marina/invoices_list.html', {'invoices': invoices})
+    return render(request, 'marina/invoices_list.html', {
+        'invoices': invoices,
+        'today': timezone.now().date()
+    })
 
 @login_required
 def bookings_list(request):

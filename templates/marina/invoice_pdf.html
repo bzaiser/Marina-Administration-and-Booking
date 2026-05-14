@@ -137,21 +137,47 @@
             </tbody>
         </table>
 
-        <!-- Summary -->
+        <!-- Summary & myDATA -->
         <div class="total-section">
-            <table style="width: 250px; float: right;">
-                {% if invoice.discount > 0 %}
+            <table style="width: 100%;">
                 <tr>
-                    <td style="text-align: left; padding: 5px;">Discount:</td>
-                    <td style="text-align: right; padding: 5px; color: #e74c3c;">-&euro;{{ invoice.discount|stringformat:".2f" }}</td>
-                </tr>
-                {% endif %}
-                <tr>
-                    <td colspan="2" class="grand-total">
+                    <td style="width: 60%; vertical-align: bottom; text-align: left;">
+                        {% if invoice.mydata_mark %}
+                        <div style="border: 1px solid #eee; padding: 10px; width: 220px; background-color: #fafafa;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 70px;">
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www1.aade.gr/taxisnet/myDATA/qr/v1/invoice?mark={{ invoice.mydata_mark }}%26uid={{ invoice.mydata_uid }}" style="width: 65px; height: 65px;">
+                                    </td>
+                                    <td style="vertical-align: middle; padding-left: 10px;">
+                                        <div style="font-size: 8px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">myDATA certified</div>
+                                        <div style="font-size: 7px; margin-top: 4px;">
+                                            <strong>MARK:</strong> {{ invoice.mydata_mark }}<br>
+                                            <strong>UID:</strong> {{ invoice.mydata_uid|truncatechars:20 }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td style="width: 40%;">
                         <table style="width: 100%;">
+                            {% if invoice.discount > 0 %}
                             <tr>
-                                <td style="text-align: left;">TOTAL AMOUNT</td>
-                                <td style="text-align: right;">&euro;{{ invoice.total_amount|stringformat:".2f" }}</td>
+                                <td style="text-align: left; padding: 5px;">Discount:</td>
+                                <td style="text-align: right; padding: 5px; color: #e74c3c;">-&euro;{{ invoice.discount|stringformat:".2f" }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="2" class="grand-total">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="text-align: left;">TOTAL AMOUNT</td>
+                                            <td style="text-align: right;">&euro;{{ invoice.total_amount|stringformat:".2f" }}</td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                         </table>
                     </td>
@@ -162,7 +188,7 @@
         <!-- Footer -->
         <div id="footerContent">
             Thank you for choosing Ormos Marina. Safe travels!<br>
-            Reception Office: +49 163 3430354 | ormosmarina@aris-samos.com
+            Reception Office: +49 163 3430354 | ormosmarina@aris-samos.com | VAT: 888888888
         </div>
     </div>
 </body>
