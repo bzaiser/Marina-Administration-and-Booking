@@ -427,10 +427,21 @@ def add_service(request, booking_id):
 
 @login_required
 def invoice_pdf(request, invoice_id):
+    import base64
+    import os
     invoice = get_object_or_404(Invoice, id=invoice_id)
     invoice.recalculate_total() # Ensure total is correct
+    
+    # Embed logo as base64 for reliability
+    logo_path = os.path.join(settings.BASE_DIR, 'media', 'logo.jpg')
+    logo_base64 = ""
+    if os.path.exists(logo_path):
+        with open(logo_path, "rb") as image_file:
+            logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+    
     context = {
         'invoice': invoice,
+        'logo_base64': logo_base64,
         'block_color': invoice.booking.berth.block.color if invoice.booking else '#3498db'
     }
     return render_to_pdf('marina/invoice_pdf.html', context)

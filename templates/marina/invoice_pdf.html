@@ -68,7 +68,9 @@
         <table class="header-table">
             <tr>
                 <td class="logo-box">
-                    <img src="/home/bernd/Documents/dev/Marina/media/logo.jpg" class="logo">
+                    {% if logo_base64 %}
+                    <img src="data:image/jpeg;base64,{{ logo_base64 }}" class="logo">
+                    {% endif %}
                 </td>
                 <td class="company-info">
                     <div class="company-name">ORMOS MARINA</div>
@@ -104,6 +106,12 @@
                             <td style="text-align: left; color: #7f8c8d;">Date:</td>
                             <td style="text-align: right;">{{ invoice.date|date:"d.m.Y" }}</td>
                         </tr>
+                        {% if invoice.mydata_mark %}
+                        <tr>
+                            <td style="text-align: left; color: #27ae60; font-weight: bold;">myDATA MARK:</td>
+                            <td style="text-align: right; color: #27ae60;"><strong>{{ invoice.mydata_mark }}</strong></td>
+                        </tr>
+                        {% endif %}
                         <tr>
                             <td style="text-align: left; color: #7f8c8d;">Payment Status:</td>
                             <td style="text-align: right;"><strong>{{ invoice.get_status_display }}</strong></td>
