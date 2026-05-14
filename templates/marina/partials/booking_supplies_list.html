@@ -21,7 +21,8 @@
                     <td class="text-center">
                         <button type="button" class="btn btn-link text-danger p-0" 
                                 hx-post="{% url 'booking_remove_supply' supply.id %}" 
-                                hx-target="#booking-supplies-container">
+                                hx-target="#booking-supplies-container"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>

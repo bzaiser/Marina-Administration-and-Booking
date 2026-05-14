@@ -23,7 +23,8 @@
                     <td class="text-center">
                         <button type="button" class="btn btn-link text-danger p-0" 
                                 hx-post="{% url 'work_order_remove_item' item.id %}" 
-                                hx-target="#work-items-table-container">
+                                hx-target="#work-items-table-container"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                             <i class="bi bi-x-circle"></i>
                         </button>
                     </td>
@@ -51,7 +52,8 @@
                         <button type="button" class="btn btn-sm btn-primary" 
                                 hx-post="{% url 'work_order_add_item' order.id %}" 
                                 hx-include="closest tr" 
-                                hx-target="#work-items-table-container">
+                                hx-target="#work-items-table-container"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                             <i class="bi bi-plus-lg"></i>
                         </button>
                     </td>

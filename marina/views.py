@@ -252,7 +252,13 @@ def work_order_add_item(request, order_id):
     order = get_object_or_404(WorkOrder, id=order_id)
     if request.method == 'POST':
         service_id = request.POST.get('add_service_id')
-        quantity = float(request.POST.get('add_quantity', 1))
+        raw_quantity = request.POST.get('add_quantity', '1')
+        
+        try:
+            quantity = float(raw_quantity) if raw_quantity else 1.0
+        except ValueError:
+            quantity = 1.0
+            
         if service_id:
             service = get_object_or_404(Service, id=service_id)
             WorkOrderItem.objects.create(
