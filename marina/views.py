@@ -121,6 +121,7 @@ def checkout_view(request, berth_id):
             invoice=invoice,
             description=f"Berth Fee: {booking.boat.name} ({booking.boat.length}m) for {booking.duration_days} days",
             quantity=booking.duration_days,
+            unit='DAY',
             unit_price=berth_fee / booking.duration_days if booking.duration_days > 0 else 0
         )
         
@@ -151,14 +152,21 @@ def checkout_view(request, berth_id):
     if not request.htmx:
         template = 'marina/checkout_confirm_full.html'
 
+    # Prepare a combined list of services for the confirmation modal
+    booked_services = []
+    for s in supplies:
+        booked_services.append({'service': s.service, 'quantity': s.quantity, 'total_price': s.total_price})
+    for order in work_orders:
+        for item in order.items.all():
+            booked_services.append({'service': item.service, 'quantity': item.quantity, 'total_price': item.total_price})
+
     return render(request, template, {
         'booking': booking,
         'total_price': total_price,
         'berth_fee': berth_fee,
         'supply_total': supply_total,
         'work_total': work_total,
-        'supplies': supplies,
-        'work_orders': work_orders
+        'booked_services': booked_services
     })
 
 @login_required

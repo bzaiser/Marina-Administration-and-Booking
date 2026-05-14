@@ -17,7 +17,7 @@
                         <div class="fw-bold">{{ item.service.name }}</div>
                         {% if item.notes %}<div class="xx-small text-muted">{{ item.notes }}</div>{% endif %}
                     </td>
-                    <td class="text-end">{{ item.quantity }}</td>
+                    <td class="text-end">{{ item.quantity }} {{ item.service.get_unit_display }}</td>
                     <td class="text-end">€{{ item.unit_price|floatformat:2 }}</td>
                     <td class="text-end fw-bold">€{{ item.total_price|floatformat:2 }}</td>
                     <td class="text-center">
