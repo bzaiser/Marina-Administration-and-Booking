@@ -7,9 +7,9 @@
 </div>
 
 {% if request.htmx %}
-<form hx-post="{% if editing %}{% url 'booking_edit' form.instance.id %}{% else %}{% url 'booking_create' %}{% endif %}" hx-target="#modals-here .modal-content">
+<form id="booking-edit-form" hx-post="{% if editing %}{% url 'booking_edit' form.instance.id %}{% else %}{% url 'booking_create' %}{% endif %}" hx-target="#modals-here .modal-content">
 {% else %}
-<form method="POST" action="{% if editing %}{% url 'booking_edit' form.instance.id %}{% else %}{% url 'booking_create' %}{% endif %}">
+<form id="booking-edit-form" method="POST" action="{% if editing %}{% url 'booking_edit' form.instance.id %}{% else %}{% url 'booking_create' %}{% endif %}">
 {% endif %}
     <div class="modal-body pt-3">
         {% csrf_token %}

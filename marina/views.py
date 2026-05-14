@@ -203,9 +203,15 @@ def booking_edit(request, booking_id):
     })
 
 @login_required
+@login_required
 def booking_add_supply(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     if request.method == 'POST':
+        # Also save header if present in request
+        header_form = BookingForm(request.POST, instance=booking)
+        if header_form.is_valid():
+            header_form.save()
+
         service_id = request.POST.get('service')
         quantity = float(request.POST.get('quantity', 1))
         if service_id:
@@ -215,14 +221,45 @@ def booking_add_supply(request, booking_id):
                 service=service,
                 quantity=quantity
             )
-            return HttpResponse(status=204, headers={'HX-Trigger': 'suppliesChanged'})
-    return HttpResponse(status=400)
+            
+    if request.htmx:
+        form = BookingForm(instance=booking)
+        supplies = booking.supplies.all()
+        all_services = Service.objects.filter(category__is_for_marina=True).order_by('name')
+        return render(request, 'marina/partials/booking_form.html', {
+            'form': form,
+            'supplies': supplies,
+            'all_services': all_services,
+            'editing': True,
+            'booking': booking
+        })
+    return redirect('bookings_list')
 
 @login_required
 def booking_remove_supply(request, supply_id):
     supply = get_object_or_404(BookingSupply, id=supply_id)
+    booking = supply.booking
+    
+    if request.method == 'POST':
+        # Also save header if present in request
+        header_form = BookingForm(request.POST, instance=booking)
+        if header_form.is_valid():
+            header_form.save()
+            
     supply.delete()
-    return HttpResponse(status=204, headers={'HX-Trigger': 'suppliesChanged'})
+    
+    if request.htmx:
+        form = BookingForm(instance=booking)
+        supplies = booking.supplies.all()
+        all_services = Service.objects.filter(category__is_for_marina=True).order_by('name')
+        return render(request, 'marina/partials/booking_form.html', {
+            'form': form,
+            'supplies': supplies,
+            'all_services': all_services,
+            'editing': True,
+            'booking': booking
+        })
+    return redirect('bookings_list')
 
 @login_required
 def work_order_list(request):

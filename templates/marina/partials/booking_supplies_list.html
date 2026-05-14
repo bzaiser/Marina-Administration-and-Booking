@@ -21,7 +21,8 @@
                     <td class="text-center">
                         <button type="button" class="btn btn-link text-danger p-0" 
                                 hx-post="{% url 'booking_remove_supply' supply.id %}" 
-                                hx-target="#booking-supplies-container"
+                                hx-include="#booking-edit-form"
+                                hx-target="#modals-here .modal-content"
                                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                             <i class="bi bi-trash"></i>
                         </button>
@@ -39,7 +40,7 @@
                 <!-- Quick Add Row inside the table footer or bottom -->
                 <tr class="bg-light border-top border-info border-opacity-10">
                     <td class="ps-3">
-                        <select name="service" id="quick-supply-service" class="form-select form-select-sm" form="quick-supply-form" onchange="updateSupplyUnit()">
+                        <select name="service" id="quick-supply-service" class="form-select form-select-sm" onchange="updateSupplyUnit()">
                             <option value="">Quick Add Supply...</option>
                             {% for s in all_services %}
                                 <option value="{{ s.id }}" data-unit="{{ s.get_unit_display }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
@@ -48,18 +49,19 @@
                     </td>
                     <td class="text-end" style="width: 130px;">
                         <div class="input-group input-group-sm">
-                            <input type="number" name="quantity" value="1" step="0.1" class="form-control text-end" form="quick-supply-form">
+                            <input type="number" name="quantity" value="1" step="0.1" class="form-control text-end">
                             <span class="input-group-text xx-small bg-white border-start-0" id="supply-unit-label">-</span>
                         </div>
                     </td>
                     <td></td>
                     <td class="text-center">
-                        <form id="quick-supply-form" hx-post="{% url 'booking_add_supply' booking.id %}" hx-target="#booking-supplies-container">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-info text-white">
-                                <i class="bi bi-plus-lg"></i>
-                            </button>
-                        </form>
+                        <button type="button" 
+                                class="btn btn-sm btn-info text-white"
+                                hx-post="{% url 'booking_add_supply' booking.id %}"
+                                hx-include="#booking-edit-form"
+                                hx-target="#modals-here .modal-content">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
