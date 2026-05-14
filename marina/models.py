@@ -224,7 +224,8 @@ class Service(models.Model):
     provider = models.ForeignKey(ServiceProvider, on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Provider / Supplier"))
 
     def __str__(self):
-        return f"{self.name} ({self.get_service_type_display()})"
+        cat_name = self.category.name if self.category else "No Category"
+        return f"{self.name} ({cat_name})"
 
     class Meta:
         verbose_name = _("Service Catalog")
@@ -232,7 +233,7 @@ class Service(models.Model):
 
 class BookingSupply(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='supplies')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, limit_choices_to={'service_type': 'SUPPLY'})
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     quantity = models.FloatField(_("Quantity / Units"), default=1.0)
     unit_price = models.DecimalField(_("Price per Unit"), max_digits=10, decimal_places=2, blank=True, null=True)
     tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, blank=True, null=True)
