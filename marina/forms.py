@@ -101,7 +101,7 @@ from .models import WorkOrder, WorkOrderItem
 
 class WorkOrderForm(forms.ModelForm):
     initial_service = forms.ModelChoiceField(
-        queryset=Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']), 
+        queryset=Service.objects.filter(category__is_for_yard=True), 
         required=False, 
         label="Add First Service (Optional)",
         widget=forms.Select(attrs={'class': 'form-select select2-search'})
@@ -140,7 +140,7 @@ class WorkOrderItemForm(forms.ModelForm):
 class BookingSupplyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['service'].queryset = Service.objects.exclude(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
+        self.fields['service'].queryset = Service.objects.filter(category__is_for_marina=True).order_by('name')
 
     class Meta:
         model = BookingSupply

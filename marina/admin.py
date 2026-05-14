@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, ServiceCategory, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -69,10 +69,16 @@ class BookingAdmin(admin.ModelAdmin):
     search_fields = ('boat__name', 'notes')
     date_hierarchy = 'start_date'
 
+@admin.register(ServiceCategory)
+class ServiceCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_for_marina', 'is_for_yard')
+    list_filter = ('is_for_marina', 'is_for_yard')
+    search_fields = ('name',)
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'service_type', 'unit', 'price_per_unit', 'tax_rate', 'provider')
-    list_filter = ('service_type', 'provider', 'unit')
+    list_display = ('name', 'category', 'unit', 'price_per_unit', 'tax_rate', 'provider')
+    list_filter = ('category', 'provider', 'unit')
 
 class InvoiceItemInline(admin.TabularInline):
     model = InvoiceItem

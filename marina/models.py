@@ -190,6 +190,19 @@ class ServiceProvider(models.Model):
         verbose_name = _("Service Provider")
         verbose_name_plural = _("Service Providers")
 
+class ServiceCategory(models.Model):
+    name = models.CharField(_("Category Name"), max_length=100)
+    description = models.TextField(_("Description"), blank=True, null=True)
+    is_for_marina = models.BooleanField(_("Available for Marina (Supplies)"), default=True)
+    is_for_yard = models.BooleanField(_("Available for Yard (Work Orders)"), default=False)
+
+    class Meta:
+        verbose_name = _("Service Category")
+        verbose_name_plural = _("Service Categories")
+
+    def __str__(self):
+        return self.name
+
 class Service(models.Model):
     UNIT_CHOICES = [
         ('LITER', 'Liter'),
@@ -199,18 +212,10 @@ class Service(models.Model):
         ('DAY', 'Day(s)'),
         ('PIECE', 'Piece / Unit'),
     ]
-    TYPE_CHOICES = [
-        ('SUPPLY', 'Supply (Water, Electricity, etc.)'),
-        ('MAINTENANCE', 'Maintenance & Repair'),
-        ('PART', 'Spare Part / Material'),
-        ('CLEANING', 'Cleaning'),
-        ('ADMINISTRATIVE', 'Administrative'),
-        ('OTHER', 'Other'),
-    ]
 
     name = models.CharField(_("Service Name"), max_length=255)
     description = models.TextField(_("Description"), blank=True, null=True)
-    service_type = models.CharField(_("Service Type"), max_length=20, choices=TYPE_CHOICES, default='OTHER')
+    category = models.ForeignKey(ServiceCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name="services", verbose_name=_("Category"))
     unit = models.CharField(_("Unit"), max_length=10, choices=UNIT_CHOICES, default='PIECE')
     price_per_unit = models.DecimalField(_("Price per Unit"), max_digits=10, decimal_places=2, default=0.0)
     tax_rate = models.DecimalField(_("Tax Rate (%)"), max_digits=5, decimal_places=2, default=19.00)
