@@ -30,11 +30,19 @@
                             <div class="row g-2">
                                 <div class="col-md-8">
                                     <label class="form-label xx-small fw-bold text-muted text-uppercase">Task / Part</label>
-                                    {{ form.initial_service }}
+                                    <select name="initial_service" id="work-order-initial-service" class="form-select select2-search" onchange="updateWorkOrderUnit()">
+                                        <option value="">Select task or part...</option>
+                                        {% for s in all_services %}
+                                        <option value="{{ s.id }}" data-unit="{{ s.get_unit_display }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label xx-small fw-bold text-muted text-uppercase">Quantity</label>
-                                    {{ form.initial_quantity }}
+                                    <div class="input-group">
+                                        {{ form.initial_quantity }}
+                                        <span class="input-group-text xx-small bg-white" id="work-order-unit-label">-</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -110,6 +118,16 @@
             width: '100%',
             placeholder: 'Select task or part...'
         });
+    }
+
+    function updateWorkOrderUnit() {
+        const select = document.getElementById('work-order-initial-service');
+        const label = document.getElementById('work-order-unit-label');
+        if (select && label) {
+            const selected = select.options[select.selectedIndex];
+            const unit = selected.getAttribute('data-unit') || '-';
+            label.innerText = unit;
+        }
     }
 
     $(document).ready(function() {

@@ -38,17 +38,18 @@
                 <!-- Quick Add Row inside the table footer or bottom -->
                 <tr class="bg-light border-top border-info border-opacity-10">
                     <td class="ps-3">
-                        <select name="service" class="form-select form-select-sm" form="quick-supply-form">
+                        <select name="service" id="quick-supply-service" class="form-select form-select-sm" form="quick-supply-form" onchange="updateSupplyUnit()">
                             <option value="">Quick Add Supply...</option>
                             {% for s in all_services %}
-                                {% if s.service_type == 'SUPPLY' %}
-                                <option value="{{ s.id }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
-                                {% endif %}
+                                <option value="{{ s.id }}" data-unit="{{ s.get_unit_display }}">{{ s.name }} (€{{ s.price_per_unit }})</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="text-end" style="width: 100px;">
-                        <input type="number" name="quantity" value="1" step="0.1" class="form-control form-control-sm text-end" form="quick-supply-form">
+                    <td class="text-end" style="width: 130px;">
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="quantity" value="1" step="0.1" class="form-control text-end" form="quick-supply-form">
+                            <span class="input-group-text xx-small bg-white border-start-0" id="supply-unit-label">-</span>
+                        </div>
                     </td>
                     <td></td>
                     <td class="text-center">
@@ -61,6 +62,18 @@
                     </td>
                 </tr>
             </tbody>
+
+<script>
+    function updateSupplyUnit() {
+        const select = document.getElementById('quick-supply-service');
+        const label = document.getElementById('supply-unit-label');
+        if (select && label) {
+            const selected = select.options[select.selectedIndex];
+            const unit = selected.getAttribute('data-unit') || '-';
+            label.innerText = unit;
+        }
+    }
+</script>
             {% if supplies %}
             <tfoot class="table-light">
                 <tr>

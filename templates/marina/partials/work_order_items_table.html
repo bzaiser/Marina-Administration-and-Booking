@@ -32,15 +32,18 @@
                 <!-- Quick Add Row -->
                 <tr class="bg-white">
                     <td class="ps-3">
-                        <select name="add_service_id" class="form-select form-select-sm select2-search-items">
+                        <select name="add_service_id" id="work-item-quick-add-service" class="form-select form-select-sm select2-search-items" onchange="updateQuickAddUnit()">
                             <option value="">Add new item...</option>
                             {% for service in all_services %}
-                            <option value="{{ service.id }}">{{ service.name }} (€{{ service.price_per_unit }})</option>
+                            <option value="{{ service.id }}" data-unit="{{ service.get_unit_display }}">{{ service.name }} (€{{ service.price_per_unit }})</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td class="text-end" style="width: 100px;">
-                        <input type="number" name="add_quantity" value="1" step="0.1" class="form-control form-control-sm text-end">
+                    <td class="text-end" style="width: 140px;">
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="add_quantity" value="1" step="0.1" class="form-control text-end">
+                            <span class="input-group-text xx-small bg-white" id="quick-add-unit-label">-</span>
+                        </div>
                     </td>
                     <td></td>
                     <td></td>
@@ -54,6 +57,25 @@
                     </td>
                 </tr>
             </tbody>
+
+<script>
+    function updateQuickAddUnit() {
+        const select = document.getElementById('work-item-quick-add-service');
+        const label = document.getElementById('quick-add-unit-label');
+        if (select && label) {
+            const selected = select.options[select.selectedIndex];
+            const unit = selected.getAttribute('data-unit') || '-';
+            label.innerText = unit;
+        }
+    }
+    
+    // Initialize if Select2 is already active
+    $(document).ready(function() {
+        $('#work-item-quick-add-service').on('select2:select', function (e) {
+            updateQuickAddUnit();
+        });
+    });
+</script>
             <tfoot class="table-light">
                 <tr>
                     <td colspan="3" class="text-end fw-bold ps-3">Total Work Order Value</td>
