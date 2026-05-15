@@ -563,8 +563,9 @@ def dashboard(request):
         # It also handles blocks with more than 15 berths.
         total_slots = max(15, max_num)
         
-        # Use the block's 'key' for coordinate lookup, fallback to name if key is missing
-        lookup_key = (berth.block.key or berth.block.name).strip()
+        # Use the block's 'key' or 'name' from the first berth in this group
+        first_berth = b_list[0]
+        lookup_key = (first_berth.block.key or first_berth.block.name).strip()
         
         for idx, berth in enumerate(b_list):
             booking = Booking.objects.filter(
@@ -594,50 +595,50 @@ def dashboard(request):
                 y = start[1] + fraction * (end[1] - start[1])
                 rot = angle
                 
-            # Proportional boat scaling based on length
-            if booking and booking.boat and berth.max_length > 0:
-                # We map the berth's visual height (h) to its maximum allowed boat length
-                # Added a 10% margin for visual padding
-                pixels_per_meter = h / (berth.max_length * 1.1)
-                target_pixel_height = booking.boat.length * pixels_per_meter
-                # The SVG boat icon height is 51 units (from y=2 to y=53)
-                boat_scale = target_pixel_height / 51.0
-            else:
-                # Fallback to standard fitting
-                boat_scale = min(w / 14.0, h / 40.0) * 0.85 if w > 0 else 1
-            
-            # Cap the scale to avoid UI glitches with extreme data
-            boat_scale = max(min(boat_scale, 2.0), 0.2)
-            
-            # Rotation adjustment: Stern to sea.
-            # B, D and E need 0 while A and C need 180 for correct orientation.
-            boat_rot_base = 180
-            if berth.block.name in ['B', 'D', 'E']:
-                boat_rot_base = 0
-            
-            all_berths.append({
-                'obj': berth,
-                'booking': booking,
-                'x': x,
-                'y': y,
-                'rot': rot,
-                'w': w,
-                'h': h,
-                'half_w': w / 2.0,
-                'half_h': h / 2.0,
-                'boat_scale': boat_scale,
-                'boat_rotation': boat_rot_base,
-                'font_size': 5.0 * boat_scale,
-                'empty_font_size': 7.0 * boat_scale,
-                'half_empty_font_size': (7.0 * boat_scale) / 2.0,
-                'boat_name': booking.boat.name if booking else '',
-                'boat_color': booking.boat.color if booking and booking.boat.color else berth.block.color,
-                'owner': booking.boat.owner.name if booking else '',
-                'length': booking.boat.length if booking else '',
-                'start': booking.start_date.strftime('%d.%m.%Y') if booking else '',
-                'end': booking.end_date.strftime('%d.%m.%Y') if booking else '',
-                'flag': booking.boat.flag if booking else '',
-            })
+                # Proportional boat scaling based on length
+                if booking and booking.boat and berth.max_length > 0:
+                    # We map the berth's visual height (h) to its maximum allowed boat length
+                    # Added a 10% margin for visual padding
+                    pixels_per_meter = h / (berth.max_length * 1.1)
+                    target_pixel_height = booking.boat.length * pixels_per_meter
+                    # The SVG boat icon height is 51 units (from y=2 to y=53)
+                    boat_scale = target_pixel_height / 51.0
+                else:
+                    # Fallback to standard fitting
+                    boat_scale = min(w / 14.0, h / 40.0) * 0.85 if w > 0 else 1
+                
+                # Cap the scale to avoid UI glitches with extreme data
+                boat_scale = max(min(boat_scale, 2.0), 0.2)
+                
+                # Rotation adjustment: Stern to sea.
+                # B, D and E need 0 while A and C need 180 for correct orientation.
+                boat_rot_base = 180
+                if berth.block.name in ['B', 'D', 'E']:
+                    boat_rot_base = 0
+                
+                all_berths.append({
+                    'obj': berth,
+                    'booking': booking,
+                    'x': x,
+                    'y': y,
+                    'rot': rot,
+                    'w': w,
+                    'h': h,
+                    'half_w': w / 2.0,
+                    'half_h': h / 2.0,
+                    'boat_scale': boat_scale,
+                    'boat_rotation': boat_rot_base,
+                    'font_size': 5.0 * boat_scale,
+                    'empty_font_size': 7.0 * boat_scale,
+                    'half_empty_font_size': (7.0 * boat_scale) / 2.0,
+                    'boat_name': booking.boat.name if booking else '',
+                    'boat_color': booking.boat.color if booking and booking.boat.color else berth.block.color,
+                    'owner': booking.boat.owner.name if booking else '',
+                    'length': booking.boat.length if booking else '',
+                    'start': booking.start_date.strftime('%d.%m.%Y') if booking else '',
+                    'end': booking.end_date.strftime('%d.%m.%Y') if booking else '',
+                    'flag': booking.boat.flag if booking else '',
+                })
     
     # Extra Dashboard Data for Quick Actions and Overview
     upcoming_arrivals = Booking.objects.filter(
