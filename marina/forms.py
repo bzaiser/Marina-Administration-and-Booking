@@ -10,11 +10,12 @@ class InvoiceForm(forms.ModelForm):
 
     class Meta:
         model = Invoice
-        fields = ['customer', 'status', 'payment_method', 'discount']
+        fields = ['customer', 'status', 'payment_method', 'document_type', 'discount']
         widgets = {
             'customer': forms.Select(attrs={'class': 'form-select select2-search'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'payment_method': forms.Select(attrs={'class': 'form-select'}),
+            'document_type': forms.Select(attrs={'class': 'form-select'}),
             'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
 
@@ -57,11 +58,13 @@ class BookingForm(forms.ModelForm):
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['name', 'email', 'phone', 'nationality', 'language']
+        fields = ['name', 'email', 'phone', 'vat_number', 'tax_office', 'nationality', 'language']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
+            'vat_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VAT Number / AFM (Greece)'}),
+            'tax_office': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tax Office / DOY (Greece)'}),
             'nationality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DE, US, GR...'}),
             'language': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DE, EN, FR...'}),
         }

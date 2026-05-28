@@ -29,23 +29,29 @@ def send_invoice_to_mydata(invoice):
     issuer = Issuer(vat_number=my_vat, country=Country.GR, branch=0)
 
     # 2. Counterpart (The customer)
-    # Note: Customer model needs a vat_number field. For now using a placeholder.
-    # TODO: Add vat_number and address fields to Customer model if needed.
-    customer_vat = getattr(invoice.customer, 'vat_number', '999999999')
-    a = Address(postal_code="00000", city=invoice.customer.city or "Unknown")
-    counterpart = Counterpart(
-        vat_number=customer_vat, 
-        country=Country.GR, 
-        branch=0, 
-        address=a
-    )
+    # Under Greek tax laws, B2C retail receipts (11.2) do NOT require counterpart/client AFM details
+    if invoice.document_type == 'RECEIPT':
+        counterpart = None
+    else:
+        customer_vat = invoice.customer.vat_number or '999999999'
+        customer_city = getattr(invoice.customer, 'city', None) or 'Samos'
+        a = Address(postal_code="00000", city=customer_city)
+        counterpart = Counterpart(
+            vat_number=customer_vat, 
+            country=Country.GR, 
+            branch=0, 
+            address=a
+        )
 
     # 3. Header
     header = InvoiceHeader()
     header.series = "A" # Or from settings
     header.aa = str(invoice.id)
     header.issue_date = invoice.date.isoformat()
-    header.invoice_type = InvoiceType.VALUE_2_1 # 2.1 is Retail Invoice (Appodeixi Lianikis)
+    if invoice.document_type == 'RECEIPT':
+        header.invoice_type = InvoiceType.VALUE_11_2 # 11.2 is Retail Service Receipt (B2C)
+    else:
+        header.invoice_type = InvoiceType.VALUE_2_1 # 2.1 is Service Invoice (B2B)
     header.currency = Currency.EUR
 
     # 4. Payment Method
@@ -84,7 +90,8 @@ def send_invoice_to_mydata(invoice):
     # 6. Construct Final Invoice
     mydata_invoice = MyDataInvoice()
     mydata_invoice.issuer = issuer
-    mydata_invoice.counterpart = counterpart
+    if counterpart:
+        mydata_invoice.counterpart = counterpart
     mydata_invoice.invoice_header = header
     mydata_invoice.invoice_details = rows
     mydata_invoice.add_payment_method(payment)

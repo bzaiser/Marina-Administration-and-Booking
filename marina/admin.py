@@ -35,8 +35,8 @@ class BlockAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone')
-    search_fields = ('name', 'email')
+    list_display = ('name', 'email', 'phone', 'vat_number')
+    search_fields = ('name', 'email', 'vat_number')
 
 @admin.register(Boat)
 class BoatAdmin(admin.ModelAdmin):
@@ -88,7 +88,7 @@ class InvoiceItemInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'customer', 'date', 'status', 'total_amount')
+    list_display = ('id', 'customer', 'document_type', 'date', 'status', 'total_amount')
     list_display_links = ('id', 'customer')
-    list_filter = ('status', 'payment_method')
+    list_filter = ('status', 'document_type', 'payment_method')
     inlines = [InvoiceItemInline]

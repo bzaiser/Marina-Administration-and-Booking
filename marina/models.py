@@ -20,6 +20,8 @@ class Customer(models.Model):
     email = models.EmailField(_("Email"), blank=True, null=True)
     phone = models.CharField(_("Phone"), max_length=50, blank=True, null=True)
     address = models.TextField(_("Address"), blank=True, null=True)
+    vat_number = models.CharField(_("VAT Number / AFM"), max_length=50, blank=True, null=True)
+    tax_office = models.CharField(_("Tax Office / DOY"), max_length=100, blank=True, null=True)
     nationality = models.CharField(_("Nationality"), max_length=2, default='DE', help_text="ISO Country Code (DE, GR, US, etc.)")
     language = models.CharField(_("Preferred Language"), max_length=2, default='DE', help_text="ISO Language Code (DE, EN, etc.)")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -330,11 +332,16 @@ class Invoice(models.Model):
         ('CARD', 'Card'),
         ('TRANSFER', 'Bank Transfer'),
     ]
+    DOCUMENT_TYPES = [
+        ('RECEIPT', 'Retail Sales Receipt (Απόδειξη Λιανικής Πώλησης)'),
+        ('INVOICE', 'Service Invoice (Τιμολόγιο Παροχής Υπηρεσιών)'),
+    ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="invoices")
     booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoices")
     date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='OPEN')
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD, blank=True, null=True)
+    document_type = models.CharField(max_length=10, choices=DOCUMENT_TYPES, default='RECEIPT')
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
