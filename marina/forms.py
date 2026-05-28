@@ -8,6 +8,21 @@ class InvoiceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        doc_type = cleaned_data.get('document_type')
+        customer = cleaned_data.get('customer')
+
+        if doc_type == 'TAXFREE' and customer:
+            if not customer.passport_number:
+                self.add_error('customer', 'Für steuerfreie Belege (Tax-Free) muss beim ausgewählten Kunden eine Reisepassnummer hinterlegt sein!')
+        
+        if doc_type == 'INVOICE' and customer:
+            if not customer.vat_number:
+                self.add_error('customer', 'Für Geschäftsrechnungen (B2B) muss beim ausgewählten Kunden eine Steuernummer (AFM) hinterlegt sein!')
+
+        return cleaned_data
+
     class Meta:
         model = Invoice
         fields = ['customer', 'status', 'payment_method', 'document_type', 'discount']

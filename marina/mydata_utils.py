@@ -30,7 +30,7 @@ def send_invoice_to_mydata(invoice):
 
     # 2. Counterpart (The customer)
     # Under Greek tax laws, B2C retail receipts (11.2) do NOT require counterpart/client AFM details
-    if invoice.document_type == 'RECEIPT':
+    if invoice.document_type in ['RECEIPT', 'TAXFREE']:
         counterpart = None
     else:
         customer_vat = invoice.customer.vat_number or '999999999'
@@ -48,7 +48,7 @@ def send_invoice_to_mydata(invoice):
     header.series = "A" # Or from settings
     header.aa = str(invoice.id)
     header.issue_date = invoice.date.isoformat()
-    if invoice.document_type == 'RECEIPT':
+    if invoice.document_type in ['RECEIPT', 'TAXFREE']:
         header.invoice_type = InvoiceType.VALUE_11_2 # 11.2 is Retail Service Receipt (B2C)
     else:
         header.invoice_type = InvoiceType.VALUE_2_1 # 2.1 is Service Invoice (B2B)

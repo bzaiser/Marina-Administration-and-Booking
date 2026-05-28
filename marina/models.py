@@ -335,6 +335,7 @@ class Invoice(models.Model):
     ]
     DOCUMENT_TYPES = [
         ('RECEIPT', 'Retail Sales Receipt (Απόδειξη Λιανικής Πώλησης)'),
+        ('TAXFREE', 'Retail Receipt - Tax Free (Απόδειξη Λιανικής - Tax Free)'),
         ('INVOICE', 'Service Invoice (Τιμολόγιο Παροχής Υπηρεσιών)'),
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="invoices")

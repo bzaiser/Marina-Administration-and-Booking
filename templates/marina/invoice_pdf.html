@@ -109,6 +109,9 @@
                         {% if invoice.document_type == 'RECEIPT' %}
                             ΑΠΟΔΕΙΞΗ ΛΙΑΝΙΚΗΣ ΠΩΛΗΣΗΣ<br>
                             <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">RETAIL SALES RECEIPT</span>
+                        {% elif invoice.document_type == 'TAXFREE' %}
+                            ΑΠΟΔΕΙΞΗ ΛΙΑΝΙΚΗΣ ΠΩΛΗΣΗΣ (TAX-FREE)<br>
+                            <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">RETAIL SALES RECEIPT (TAX-FREE)</span>
                         {% else %}
                             ΤΙΜΟΛΟΓΙΟ ΠΑΡΟΧΗΣ ΥΠΗΡΕΣΙΩΝ<br>
                             <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">SERVICE INVOICE</span>
@@ -117,7 +120,7 @@
                     <table style="width: 180px; float: right; font-size: 10px;">
                         <tr>
                             <td style="text-align: left; color: #7f8c8d;">
-                                {% if invoice.document_type == 'RECEIPT' %}Receipt No:{% else %}Invoice No:{% endif %}
+                                {% if invoice.document_type == 'RECEIPT' or invoice.document_type == 'TAXFREE' %}Receipt No:{% else %}Invoice No:{% endif %}
                             </td>
                             <td style="text-align: right;"><strong>#{{ invoice.id }}</strong></td>
                         </tr>
