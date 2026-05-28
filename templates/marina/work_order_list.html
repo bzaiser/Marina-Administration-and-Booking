@@ -106,6 +106,15 @@
         }
     });
     
+    // Listen for data changes from modals to automatically close them
+    document.body.addEventListener('planningDataChanged', () => {
+        const modalElement = document.getElementById('modals-here');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        }
+    });
+    
     document.getElementById('modals-here').addEventListener('hidden.bs.modal', function () {
         // Only reload if we are on the list page
         if (window.location.pathname.includes('/service/')) {

@@ -8,7 +8,8 @@
 
 <form hx-post="{% if editing %}{% url 'work_order_edit' order.id %}{% else %}{% url 'work_order_create' %}{% endif %}" 
       hx-target="#modals-here .modal-content"
-      hx-indicator="#form-indicator">
+      hx-indicator="#form-indicator"
+      hx-disabled-elt="find button">
     <div class="modal-body pt-3">
         {% csrf_token %}
         
