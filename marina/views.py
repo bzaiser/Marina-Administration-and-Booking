@@ -388,7 +388,7 @@ def work_order_create(request):
     else:
         form = WorkOrderForm(initial=initial)
     
-    all_services = Service.objects.filter(service_type__in=['MAINTENANCE', 'PART']).order_by('name')
+    all_services = Service.objects.filter(category__is_for_yard=True).order_by('name')
     return render(request, 'marina/modals/work_order_form.html', {
         'form': form,
         'title': 'Create Work Order',
