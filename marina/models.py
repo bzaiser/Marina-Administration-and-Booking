@@ -334,9 +334,9 @@ class Invoice(models.Model):
         ('TRANSFER', 'Bank Transfer'),
     ]
     DOCUMENT_TYPES = [
-        ('RECEIPT', 'Retail Sales Receipt (Απόδειξη Λιανικής Πώλησης)'),
-        ('TAXFREE', 'Retail Receipt - Tax Free (Απόδειξη Λιανικής - Tax Free)'),
-        ('INVOICE', 'Service Invoice (Τιμολόγιο Παροχής Υπηρεσιών)'),
+        ('RECEIPT', 'Retail Sales Receipt'),
+        ('TAXFREE', 'Retail Receipt - Tax Free'),
+        ('INVOICE', 'Service Invoice'),
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="invoices")
     booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoices")
