@@ -15,11 +15,11 @@ class InvoiceForm(forms.ModelForm):
 
         if doc_type == 'TAXFREE' and customer:
             if not customer.passport_number:
-                self.add_error('customer', 'Für steuerfreie Belege (Tax-Free) muss beim ausgewählten Kunden eine Reisepassnummer hinterlegt sein!')
+                self.add_error('customer', 'A passport number is required on the selected customer profile for Tax-Free receipts!')
         
         if doc_type == 'INVOICE' and customer:
             if not customer.vat_number:
-                self.add_error('customer', 'Für Geschäftsrechnungen (B2B) muss beim ausgewählten Kunden eine Steuernummer (AFM) hinterlegt sein!')
+                self.add_error('customer', 'A VAT/AFM number is required on the selected customer profile for B2B Service Invoices!')
 
         return cleaned_data
 
