@@ -377,6 +377,13 @@
             } else if (e.key === 'ArrowRight') {
                 moveWindow(-0.1); // Move 10% forward
                 e.preventDefault();
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                const centerPanel = document.querySelector('#visualization .vis-panel.vis-center');
+                if (centerPanel) {
+                    const scrollAmount = e.key === 'ArrowUp' ? -40 : 40;
+                    centerPanel.scrollTop += scrollAmount;
+                    e.preventDefault();
+                }
             }
         });
     });
