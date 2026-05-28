@@ -1178,7 +1178,7 @@ def api_planning_data(request):
     bookings = Booking.objects.filter(start_date__lte=end_date, end_date__gte=start_date).select_related('boat', 'boat__owner', 'berth')
     items = []
     for b in bookings:
-        flag = (b.boat.flag or 'xx').lower()
+        flag = b.boat.get_flag_code()
         base_color = b.boat.color or '#3498db'
         style = f"background-color: {base_color}; border-color: {base_color}; color: white;"
         if b.is_at_sea:
@@ -1314,7 +1314,7 @@ def api_events(request):
             'type': b.booking_type,
             'is_at_sea': b.is_at_sea,
             'color': b.boat.color,
-            'flag': (b.boat.flag or 'xx').lower(),
+            'flag': b.boat.get_flag_code(),
             'owner': b.boat.owner.name if b.boat.owner else '',
             'phone': b.boat.owner.phone if b.boat.owner else '',
             'image': b.boat.image.url if b.boat.image else '/static/img/no-boat.png',
@@ -1363,7 +1363,7 @@ def api_berths(request):
             'owner': current_booking.boat.owner.name if (current_booking and current_booking.boat and current_booking.boat.owner) else 'None',
             'owner_email': current_booking.boat.owner.email if (current_booking and current_booking.boat and current_booking.boat.owner) else '',
             'phone': current_booking.boat.owner.phone if (current_booking and current_booking.boat and current_booking.boat.owner) else '',
-            'flag': (current_booking.boat.flag or 'xx').lower() if (current_booking and current_booking.boat) else '',
+            'flag': current_booking.boat.get_flag_code() if (current_booking and current_booking.boat) else '',
             'engine': current_booking.boat.engine if (current_booking and current_booking.boat) else '',
             'length': current_booking.boat.length if (current_booking and current_booking.boat) else '',
             'width': current_booking.boat.width if (current_booking and current_booking.boat) else 0,
