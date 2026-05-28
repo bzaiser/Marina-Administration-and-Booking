@@ -390,6 +390,13 @@ def work_order_create(request):
                     quantity=initial_qty
                 )
             
+            action = request.POST.get('action')
+            if action == 'edit':
+                from django.shortcuts import redirect
+                response = redirect('work_order_edit', order_id=order.id)
+                response['HX-Trigger'] = 'planningDataChanged'
+                return response
+                
             return HttpResponse(status=204, headers={'HX-Trigger': 'planningDataChanged'})
     else:
         form = WorkOrderForm(initial=initial)
