@@ -71,6 +71,18 @@ class BookingForm(forms.ModelForm):
         }
 
 class CustomerForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.tax_office:
+            current_val = self.instance.tax_office
+            choices = self.fields['tax_office'].choices
+            # Convert choices generator/list to check keys
+            keys = [c[0] for c in choices]
+            if current_val not in keys:
+                new_choices = list(choices)
+                new_choices.append((current_val, current_val))
+                self.fields['tax_office'].choices = new_choices
+
     class Meta:
         model = Customer
         fields = ['name', 'email', 'phone', 'address', 'vat_number', 'tax_office', 'passport_number', 'nationality', 'language']
