@@ -1012,6 +1012,27 @@ def customer_delete(request, pk):
     return render(request, 'marina/partials/customer_delete_confirm.html', {'customer': customer})
 
 @login_required
+def boat_create(request, customer_id):
+    customer = get_object_or_404(Customer, pk=customer_id)
+    if request.method == 'POST':
+        form = BoatForm(request.POST, request.FILES)
+        if form.is_valid():
+            boat = form.save(commit=False)
+            boat.owner = customer
+            boat.save()
+            if request.headers.get('HX-Request'):
+                from django.http import HttpResponse
+                return HttpResponse('<script>window.location.reload();</script>')
+            return redirect('customers_list')
+    else:
+        form = BoatForm()
+    return render(request, 'marina/partials/boat_form_modal.html', {
+        'form': form,
+        'customer': customer,
+        'editing': False
+    })
+
+@login_required
 def boat_edit(request, pk):
     boat = get_object_or_404(Boat, pk=pk)
     if request.method == 'POST':
@@ -1020,19 +1041,25 @@ def boat_edit(request, pk):
             form.save()
             if request.headers.get('HX-Request'):
                 from django.http import HttpResponse
-                response = HttpResponse()
-                response['HX-Trigger'] = 'boatChanged'
-                return response
+                return HttpResponse('<script>window.location.reload();</script>')
             return redirect('customers_list')
     else:
         form = BoatForm(instance=boat)
-    return render(request, 'marina/partials/boat_form_modal.html', {'form': form, 'boat': boat})
+    return render(request, 'marina/partials/boat_form_modal.html', {
+        'form': form,
+        'boat': boat,
+        'customer': boat.owner,
+        'editing': True
+    })
 
 @login_required
 def boat_delete(request, pk):
     boat = get_object_or_404(Boat, pk=pk)
     if request.method == 'POST':
         boat.delete()
+        if request.headers.get('HX-Request'):
+            from django.http import HttpResponse
+            return HttpResponse('<script>window.location.reload();</script>')
         return redirect('customers_list')
     return render(request, 'marina/partials/boat_delete_confirm.html', {'boat': boat})
 

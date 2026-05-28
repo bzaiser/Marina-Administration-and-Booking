@@ -1,6 +1,6 @@
-<form hx-post="{% url 'boat_edit' boat.id %}" hx-encoding="multipart/form-data" hx-target="this" hx-swap="outerHTML" class="modal-content border-0">
+<form hx-post="{% if editing %}{% url 'boat_edit' boat.id %}{% else %}{% url 'boat_create' customer.id %}{% endif %}" hx-encoding="multipart/form-data" hx-target="this" hx-swap="outerHTML" class="modal-content border-0">
     <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title"><i class="bi bi-water me-2"></i>Edit Boat: {{ boat.name }}</h5>
+        <h5 class="modal-title"><i class="bi bi-water me-2"></i>{% if editing %}Edit Boat: {{ boat.name }}{% else %}Add Boat for {{ customer.name }}{% endif %}</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
@@ -83,6 +83,6 @@
     </div>
     <div class="modal-footer bg-light">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Update Boat Data</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> {% if editing %}Update Boat Data{% else %}Add Boat{% endif %}</button>
     </div>
 </form>
