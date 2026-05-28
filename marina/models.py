@@ -336,7 +336,7 @@ class Invoice(models.Model):
     DOCUMENT_TYPES = [
         ('RECEIPT', 'Retail Sales Receipt'),
         ('TAXFREE', 'Retail Receipt - Tax Free'),
-        ('INVOICE', 'Service Invoice'),
+        ('INVOICE', 'Service Invoice (B2B)'),
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="invoices")
     booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoices")
