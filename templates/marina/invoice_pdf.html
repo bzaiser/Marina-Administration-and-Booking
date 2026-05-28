@@ -97,6 +97,11 @@
                     {% if invoice.document_type == 'INVOICE' %}
                         {% if invoice.customer.vat_number %}<br><strong>VAT / AFM:</strong> {{ invoice.customer.vat_number }}{% endif %}
                         {% if invoice.customer.tax_office %}<br><strong>Tax Office / DOY:</strong> {{ invoice.customer.tax_office }}{% endif %}
+                    {% else %}
+                        {% if invoice.customer.passport_number %}
+                            <br><strong>Passport No:</strong> {{ invoice.customer.passport_number }}
+                            {% if invoice.customer.nationality %} ({{ invoice.customer.nationality }}){% endif %}
+                        {% endif %}
                     {% endif %}
                 </td>
                 <td style="text-align: right;">

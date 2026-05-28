@@ -35,8 +35,8 @@ class BlockAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone', 'vat_number')
-    search_fields = ('name', 'email', 'vat_number')
+    list_display = ('name', 'email', 'phone', 'vat_number', 'passport_number')
+    search_fields = ('name', 'email', 'vat_number', 'passport_number')
 
 @admin.register(Boat)
 class BoatAdmin(admin.ModelAdmin):

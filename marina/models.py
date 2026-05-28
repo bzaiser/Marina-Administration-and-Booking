@@ -22,6 +22,7 @@ class Customer(models.Model):
     address = models.TextField(_("Address"), blank=True, null=True)
     vat_number = models.CharField(_("VAT Number / AFM"), max_length=50, blank=True, null=True)
     tax_office = models.CharField(_("Tax Office / DOY"), max_length=100, blank=True, null=True)
+    passport_number = models.CharField(_("Passport Number"), max_length=50, blank=True, null=True)
     nationality = models.CharField(_("Nationality"), max_length=2, default='DE', help_text="ISO Country Code (DE, GR, US, etc.)")
     language = models.CharField(_("Preferred Language"), max_length=2, default='DE', help_text="ISO Language Code (DE, EN, etc.)")
     created_at = models.DateTimeField(auto_now_add=True)
