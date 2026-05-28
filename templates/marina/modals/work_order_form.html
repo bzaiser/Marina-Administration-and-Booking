@@ -19,7 +19,19 @@
                 <div class="row g-3">
                     <div class="col-md-12">
                         <label class="form-label xx-small fw-bold text-muted text-uppercase">Boat / Customer</label>
-                        {{ form.boat }}
+                        <div class="input-group flex-nowrap">
+                            <div class="flex-grow-1">
+                                {{ form.boat }}
+                            </div>
+                            {% if not editing %}
+                            <button type="button" class="btn btn-primary" 
+                                    hx-get="{% url 'quick_boat_create' %}?next_view=work_order_create" 
+                                    hx-target="#modals-here .modal-content" 
+                                    title="Add New Customer/Boat">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="col-md-6">

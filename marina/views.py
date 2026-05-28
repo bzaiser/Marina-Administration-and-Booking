@@ -15,11 +15,13 @@ def quick_boat_create(request):
     start = request.GET.get('start', '')
     end = request.GET.get('end', '')
     berth = request.GET.get('berth', '')
+    next_view = request.GET.get('next_view', 'booking_create')
     
     if request.method == 'POST':
         start = request.POST.get('orig_start', '')
         end = request.POST.get('orig_end', '')
         berth = request.POST.get('orig_berth', '')
+        next_view = request.POST.get('next_view', 'booking_create')
         c_form = CustomerForm(request.POST, request.FILES, prefix='c')
         b_form = BoatForm(request.POST, request.FILES, prefix='b')
         if c_form.is_valid() and b_form.is_valid():
@@ -29,7 +31,10 @@ def quick_boat_create(request):
             boat.save()
             from django.shortcuts import redirect
             from django.urls import reverse
-            url = f"{reverse('booking_create')}?start={start}&end={end}&resource={berth}&boat={boat.id}"
+            if next_view == 'work_order_create':
+                url = f"{reverse('work_order_create')}?boat_id={boat.id}"
+            else:
+                url = f"{reverse('booking_create')}?start={start}&end={end}&resource={berth}&boat={boat.id}"
             return redirect(url)
     else:
         c_form = CustomerForm(prefix='c')
@@ -45,6 +50,7 @@ def quick_boat_create(request):
         'orig_start': start,
         'orig_end': end,
         'orig_berth': berth,
+        'next_view': next_view,
         'partial_template': 'marina/partials/quick_boat_form.html',
         'title': 'New Boat Registration'
     })

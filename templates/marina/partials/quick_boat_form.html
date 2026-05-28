@@ -12,6 +12,7 @@
         <input type="hidden" name="orig_start" value="{{ orig_start }}">
         <input type="hidden" name="orig_end" value="{{ orig_end }}">
         <input type="hidden" name="orig_berth" value="{{ orig_berth }}">
+        <input type="hidden" name="next_view" value="{{ next_view }}">
 
         {% if c_form.errors or b_form.errors %}
         <div class="alert alert-danger p-2 mb-3 small">
@@ -96,7 +97,11 @@
         </div>
     </div>
     <div class="modal-footer">
+        {% if next_view == 'work_order_create' %}
+        <button type="button" class="btn btn-secondary" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">Cancel & Back</button>
+        {% else %}
         <button type="button" class="btn btn-secondary" hx-get="{% url 'booking_create' %}?start={{ orig_start }}&end={{ orig_end }}&resource={{ orig_berth }}" hx-target="#modals-here .modal-content">Cancel & Back</button>
+        {% endif %}
         <button type="submit" class="btn btn-success">
             <i class="bi bi-check-circle me-1"></i> Create
         </button>
