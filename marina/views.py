@@ -799,7 +799,8 @@ def invoice_edit(request, pk):
         'item_form': item_form,
         'services': services,
         'partial_template': 'marina/partials/invoice_edit_modal.html',
-        'title': f'Edit Invoice #{invoice.id}'
+        'title': f'Edit Invoice #{invoice.id}',
+        'wrapper_class': 'col-lg-10 col-xl-9 col-xxl-8 col-md-12'
     })
 
 @login_required
