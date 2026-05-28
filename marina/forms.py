@@ -80,7 +80,7 @@ class CustomerForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Postal Address', 'rows': 3}),
             'vat_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VAT Number / AFM (Greece)'}),
-            'tax_office': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tax Office / DOY (Greece)'}),
+            'tax_office': forms.Select(attrs={'class': 'form-select select2-search'}),
             'passport_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Passport Number (Non-EU Tax-Free)'}),
             'nationality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DE, US, GR...'}),
             'language': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'DE, EN, FR...'}),

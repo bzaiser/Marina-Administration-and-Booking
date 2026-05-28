@@ -16,12 +16,77 @@ class Country(models.Model):
         ordering = ['iso_code']
 
 class Customer(models.Model):
+    TAX_OFFICE_CHOICES = [
+        ('KEFODE_ATTIKIS', 'KEFODE ATTIKIS (Zentralamt Athen)'),
+        ('KEFODE_THESSALONIKIS', 'KEFODE THESSALONIKIS (Zentralamt)'),
+        ('FAE_ATHINON', 'DOY F.A.E. ATHINON (Großunternehmen)'),
+        ('KATOIKON_EXOTERIKOU', 'DOY KATOIKON EXOTERIKOU (Auslandswohnsitz)'),
+        ('AGIOU_NIKOLAOU', 'DOY AGIOU NIKOLAOU'),
+        ('AGRINIOU', 'DOY AGRINIOU'),
+        ('ALEXANDROUPOLIS', 'DOY ALEXANDROUPOLIS'),
+        ('AMALIADAS', 'DOY AMALIADAS'),
+        ('AMFISAS', 'DOY AMFISAS'),
+        ('ARG0S', 'DOY ARGOS'),
+        ('ARTA', 'DOY ARTAS'),
+        ('CHALKIDAS', 'DOY CHALKIDAS'),
+        ('CHANI0N', 'DOY CHANI0N'),
+        ('CHIOU', 'DOY CHIOU'),
+        ('DRAMAS', 'DOY DRAMAS'),
+        ('EDESSAS', 'DOY EDESSAS'),
+        ('FLORINAS', 'DOY FLORINAS'),
+        ('GREG0RIOU', 'DOY GREG0RIOU'),
+        ('GRETEN0N', 'DOY GREVEN0N'),
+        ('IGOUMENITSAS', 'DOY IGOUMENITSAS'),
+        ('IOANNINON', 'DOY IOANNINON'),
+        ('IRAKLEIOU', 'DOY IRAKLEIOU'),
+        ('KALAMATAS', 'DOY KALAMATAS'),
+        ('KARDITSAS', 'DOY KARDITSAS'),
+        ('KARPENISIOU', 'DOY KARPENISIOU'),
+        ('KASTORIAS', 'DOY KASTORIAS'),
+        ('KATERINIS', 'DOY KATERINIS'),
+        ('KAVALAS', 'DOY KAVALAS'),
+        ('KERKYRAS', 'DOY KERKYRAS'),
+        ('KILKIS', 'DOY KILKIS'),
+        ('K0', 'DOY KO'),
+        ('KOMOTINIS', 'DOY KOMOTINIS'),
+        ('KORINTHOU', 'DOY KORINTHOU'),
+        ('KOZANIS', 'DOY KOZANIS'),
+        ('LAMIAS', 'DOY LAMIAS'),
+        ('LARISAS', 'DOY LARISAS'),
+        ('LEFKADAS', 'DOY LEFKADAS'),
+        ('LIVADEIAS', 'DOY LIVADEIAS'),
+        ('MYKONOU', 'DOY MYKONOU'),
+        ('MYTILINIS', 'DOY MYTILINIS'),
+        ('NAFPLIOU', 'DOY NAFPLIOU'),
+        ('NAXOU', 'DOY NAXOU'),
+        ('ORESTIADAS', 'DOY ORESTIADAS'),
+        ('PAROU', 'DOY PAROU'),
+        ('PATRON', 'DOY PATRON'),
+        ('POLYGYROU', 'DOY POLYGYROU'),
+        ('PREVEZAS', 'DOY PREVEZAS'),
+        ('PYRGOU', 'DOY PYRGOU'),
+        ('RETHYMNOU', 'DOY RETHYMNOU'),
+        ('RODOU', 'DOY RODOU'),
+        ('SAMOU', 'DOY SAMOU'),
+        ('SANTORINIS', 'DOY SANTORINIS'),
+        ('SERR0N', 'DOY SERRON'),
+        ('SPARTIS', 'DOY SPARTIS'),
+        ('SYROU', 'DOY SYROU'),
+        ('TRIKALON', 'DOY TRIKALON'),
+        ('TRIPOLIS', 'DOY TRIPOLIS'),
+        ('VEROIAS', 'DOY VEROIAS'),
+        ('VOLOU', 'DOY VOLOU'),
+        ('XANTHIS', 'DOY XANTHIS'),
+        ('ZAKYNTHOU', 'DOY ZAKYNTHOU'),
+        ('OTHER', 'GRIECHISCHES FINANZAMT (SONSTIGE)'),
+    ]
+
     name = models.CharField(_("Name"), max_length=255)
     email = models.EmailField(_("Email"), blank=True, null=True)
     phone = models.CharField(_("Phone"), max_length=50, blank=True, null=True)
     address = models.TextField(_("Address"), blank=True, null=True)
     vat_number = models.CharField(_("VAT Number / AFM"), max_length=50, blank=True, null=True)
-    tax_office = models.CharField(_("Tax Office / DOY"), max_length=100, blank=True, null=True)
+    tax_office = models.CharField(_("Tax Office / DOY"), max_length=100, choices=TAX_OFFICE_CHOICES, default='OTHER', blank=True, null=True)
     passport_number = models.CharField(_("Passport Number"), max_length=50, blank=True, null=True)
     nationality = models.CharField(_("Nationality"), max_length=2, default='DE', help_text="ISO Country Code (DE, GR, US, etc.)")
     language = models.CharField(_("Preferred Language"), max_length=2, default='DE', help_text="ISO Language Code (DE, EN, etc.)")
