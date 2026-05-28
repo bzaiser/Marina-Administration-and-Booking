@@ -53,9 +53,17 @@
                         <label class="form-label small fw-bold text-muted text-uppercase">Postal Address</label>
                         {{ form.address }}
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">VAT Number / AFM</label>
+                        {{ form.vat_number }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Tax Office / DOY</label>
+                        {{ form.tax_office }}
+                    </div>
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Tax / VAT Number</label>
-                        {{ form.tax_number }}
+                        <label class="form-label small fw-bold text-muted text-uppercase">Passport Number (Non-EU Tax-Free)</label>
+                        {{ form.passport_number }}
                     </div>
                 </div>
             </div>

@@ -73,11 +73,12 @@ class BookingForm(forms.ModelForm):
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ['name', 'email', 'phone', 'vat_number', 'tax_office', 'passport_number', 'nationality', 'language']
+        fields = ['name', 'email', 'phone', 'address', 'vat_number', 'tax_office', 'passport_number', 'nationality', 'language']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Postal Address', 'rows': 3}),
             'vat_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VAT Number / AFM (Greece)'}),
             'tax_office': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tax Office / DOY (Greece)'}),
             'passport_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Passport Number (Non-EU Tax-Free)'}),

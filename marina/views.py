@@ -1004,18 +1004,6 @@ def provider_delete(request, pk):
     return render(request, 'marina/partials/provider_delete_confirm.html', {'provider': provider})
 
 @login_required
-def customer_edit(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, instance=customer)
-        if form.is_valid():
-            form.save()
-            return redirect('customers_list')
-    else:
-        form = CustomerForm(instance=customer)
-    return render(request, 'marina/partials/customer_form_modal.html', {'form': form, 'customer': customer})
-
-@login_required
 def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
