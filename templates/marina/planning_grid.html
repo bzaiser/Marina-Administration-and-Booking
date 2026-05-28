@@ -379,9 +379,11 @@
                 e.preventDefault();
             } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                 const centerPanel = document.querySelector('#visualization .vis-panel.vis-center');
-                if (centerPanel) {
+                const leftPanel = document.querySelector('#visualization .vis-panel.vis-left');
+                if (centerPanel || leftPanel) {
                     const scrollAmount = e.key === 'ArrowUp' ? -40 : 40;
-                    centerPanel.scrollTop += scrollAmount;
+                    if (centerPanel) centerPanel.scrollTop += scrollAmount;
+                    if (leftPanel) leftPanel.scrollTop += scrollAmount;
                     e.preventDefault();
                 }
             }
