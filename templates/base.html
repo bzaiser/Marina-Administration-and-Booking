@@ -177,6 +177,16 @@
             initSelect2();
         });
 
+        // Global focus fix for Select2 search input
+        $(document).on('select2:open', function(e) {
+            setTimeout(function() {
+                const searchField = document.querySelector('.select2-container--open .select2-search__field');
+                if (searchField) {
+                    searchField.focus();
+                }
+            }, 50);
+        });
+
         document.addEventListener('htmx:afterSwap', function(e) {
             initSelect2(e.detail.target);
         });
