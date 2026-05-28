@@ -865,8 +865,20 @@ def customers_list(request):
     # Helper to map flags
     def get_flag_code(code):
         if not code: return 'un'
-        mapping = {'UK': 'GB', 'EL': 'GR', 'US': 'US'}
-        return mapping.get(code.upper(), code.lower())
+        code_str = str(code).strip().upper()
+        mapping = {
+            'UK': 'gb',
+            'GB': 'gb',
+            'GBR': 'gb',
+            'EL': 'gr',
+            'GR': 'gr',
+            'GRC': 'gr',
+            'US': 'us',
+            'USA': 'us',
+        }
+        if code_str in mapping:
+            return mapping[code_str]
+        return code_str.lower()[:2]
 
     customers = Customer.objects.all().prefetch_related('boats').order_by('name')
     data = []

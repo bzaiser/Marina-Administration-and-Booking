@@ -133,12 +133,20 @@ class Boat(models.Model):
         """Returns the correct ISO code for flag-icons library."""
         if not self.flag:
             return "xx"
-        code = self.flag.lower().strip()
+        code_str = str(self.flag).strip().upper()
         mapping = {
-            'uk': 'gb',
-            'el': 'gr',
+            'UK': 'gb',
+            'GB': 'gb',
+            'GBR': 'gb',
+            'EL': 'gr',
+            'GR': 'gr',
+            'GRC': 'gr',
+            'US': 'us',
+            'USA': 'us',
         }
-        return mapping.get(code, code)
+        if code_str in mapping:
+            return mapping[code_str]
+        return code_str.lower()[:2]
 
     class Meta:
         verbose_name = _("Boat")
