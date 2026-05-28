@@ -35,6 +35,12 @@
     .vis-label .vis-inner { padding: 8px 10px !important; display: block; }
     .vis-label.vis-nested .vis-inner { padding-left: 25px !important; background-color: white !important; }
     .vis-group-level-unknown-but-gte1 { border: 1px solid #ddd !important; background-color: #f5f5f5 !important; }
+    body {
+        overflow: hidden;
+    }
+    main.container-fluid {
+        padding-bottom: 0 !important;
+    }
 </style>
 {% endblock %}
 
@@ -53,7 +59,7 @@
         </div>
     </div>
     <div class="card-body p-0">
-        <div id="visualization" style="height: 600px;"></div>
+        <div id="visualization" style="height: calc(100vh - 210px);"></div>
     </div>
 </div>
 
@@ -71,6 +77,8 @@
             stack: true, // Allow multiple bookings in one row
             groupOrder: 'order',
             horizontalScroll: true,
+            verticalScroll: true,
+            maxHeight: 'calc(100vh - 210px)',
             zoomKey: 'ctrlKey',
             orientation: 'top',
             start: new Date(),
