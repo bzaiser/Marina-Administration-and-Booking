@@ -758,11 +758,6 @@ def invoices_list(request):
     if status:
         qs = qs.filter(status=status)
 
-    # Payment method filter
-    payment = request.GET.get('payment', '')
-    if payment:
-        qs = qs.filter(payment_method=payment)
-
     # Document type filter
     doc_type = request.GET.get('doc_type', '')
     if doc_type:
@@ -793,17 +788,28 @@ def invoices_list(request):
         sort = '-date'
     qs = qs.order_by(sort)
 
+    from django.db.models import Sum
+    today_date = timezone.now().date()
+    all_qs = Invoice.objects.all()
+    kpi_total   = all_qs.count()
+    kpi_open    = all_qs.filter(status='OPEN').count()
+    kpi_paid    = all_qs.filter(status='PAID').count()
+    kpi_overdue = all_qs.filter(mydata_mark__isnull=True, date__lt=today_date).count()
+
     return render(request, 'marina/invoices_list.html', {
         'invoices': qs,
-        'today': timezone.now().date(),
+        'today': today_date,
         'q': q,
         'status': status,
-        'payment': payment,
         'doc_type': doc_type,
         'mydata': mydata,
         'date_from': date_from,
         'date_to': date_to,
         'sort': sort,
+        'kpi_total':   kpi_total,
+        'kpi_open':    kpi_open,
+        'kpi_paid':    kpi_paid,
+        'kpi_overdue': kpi_overdue,
     })
 
 @login_required

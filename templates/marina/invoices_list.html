@@ -5,12 +5,11 @@
 {% block content %}
 
 {# ── Helper macro: sortable column header ────────────────────────────────── #}
-{% with base_params="q="|add:q|add:"&status="|add:status|add:"&payment="|add:payment|add:"&doc_type="|add:doc_type|add:"&mydata="|add:mydata|add:"&date_from="|add:date_from|add:"&date_to="|add:date_to %}
+{% with base_params="q="|add:q|add:"&status="|add:status|add:"&doc_type="|add:doc_type|add:"&mydata="|add:mydata|add:"&date_from="|add:date_from|add:"&date_to="|add:date_to %}
 
 {# ── Summary KPI bar ─────────────────────────────────────────────────────── #}
 <div class="row g-3 mb-4">
-    {% with all_invoices=invoices %}
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-6 col-lg-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3 py-3">
                 <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
@@ -18,12 +17,12 @@
                 </div>
                 <div>
                     <div class="xx-small text-muted text-uppercase fw-bold">Total Invoices</div>
-                    <div class="fw-bold fs-5">{{ invoices|length }}</div>
+                    <div class="fw-bold fs-5">{{ kpi_total }}</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-lg-3">
+    <div class="col-6 col-lg-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body d-flex align-items-center gap-3 py-3">
                 <div class="rounded-circle bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
@@ -31,14 +30,37 @@
                 </div>
                 <div>
                     <div class="xx-small text-muted text-uppercase fw-bold">Open</div>
-                    <div class="fw-bold fs-5">{{ invoices|length }}
-                        {# count done via JS below #}
-                    </div>
+                    <div class="fw-bold fs-5">{{ kpi_open }}</div>
                 </div>
             </div>
         </div>
     </div>
-    {% endwith %}
+    <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3 py-3">
+                <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
+                    <i class="bi bi-check-circle text-success fs-5"></i>
+                </div>
+                <div>
+                    <div class="xx-small text-muted text-uppercase fw-bold">Paid</div>
+                    <div class="fw-bold fs-5">{{ kpi_paid }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-0 shadow-sm h-100{% if kpi_overdue %} border-danger border-opacity-25{% endif %}">
+            <div class="card-body d-flex align-items-center gap-3 py-3">
+                <div class="rounded-circle {% if kpi_overdue %}bg-danger{% else %}bg-secondary{% endif %} bg-opacity-10 d-flex align-items-center justify-content-center" style="width:44px;height:44px;">
+                    <i class="bi bi-cloud-slash {% if kpi_overdue %}text-danger animate-pulse{% else %}text-secondary{% endif %} fs-5"></i>
+                </div>
+                <div>
+                    <div class="xx-small text-muted text-uppercase fw-bold">myDATA Overdue</div>
+                    <div class="fw-bold fs-5 {% if kpi_overdue %}text-danger{% endif %}">{{ kpi_overdue }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {# ── Main card ───────────────────────────────────────────────────────────── #}
@@ -80,15 +102,6 @@
                 </select>
             </div>
 
-            {# Payment method #}
-            <div class="col-6 col-md-2">
-                <select name="payment" class="form-select form-select-sm" onchange="this.form.submit()">
-                    <option value="">All Payments</option>
-                    <option value="CASH"     {% if payment == 'CASH' %}selected{% endif %}>Cash</option>
-                    <option value="CARD"     {% if payment == 'CARD' %}selected{% endif %}>Card</option>
-                    <option value="TRANSFER" {% if payment == 'TRANSFER' %}selected{% endif %}>Transfer</option>
-                </select>
-            </div>
 
             {# Document type #}
             <div class="col-6 col-md-2">
@@ -131,7 +144,7 @@
         </form>
 
         {# Active filter badges #}
-        {% if q or status or payment or doc_type or mydata or date_from or date_to %}
+        {% if q or status or doc_type or mydata or date_from or date_to %}
         <div class="d-flex flex-wrap gap-1 mt-2">
             <small class="text-muted align-self-center me-1">Active:</small>
 
@@ -146,17 +159,8 @@
             <span class="badge {% if status == 'PAID' %}bg-success{% elif status == 'OPEN' %}bg-warning text-dark{% else %}bg-info text-white{% endif %} fw-normal">
                 <i class="bi bi-flag me-1"></i>
                 {% if status == 'PAID' %}Paid{% elif status == 'OPEN' %}Open{% elif status == 'PARTIAL' %}Partial{% else %}{{ status }}{% endif %}
-                <a href="?q={{ q }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                <a href="?q={{ q }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="{% if status == 'OPEN' %}text-dark{% else %}text-white{% endif %} ms-1 text-decoration-none fw-bold">×</a>
-            </span>
-            {% endif %}
-
-            {% if payment %}
-            <span class="badge bg-dark text-white fw-normal">
-                <i class="bi bi-credit-card me-1"></i>
-                {% if payment == 'CASH' %}Cash{% elif payment == 'CARD' %}Card{% elif payment == 'TRANSFER' %}Bank Transfer{% else %}{{ payment }}{% endif %}
-                <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
-                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
 
@@ -164,7 +168,7 @@
             <span class="badge bg-secondary text-white fw-normal">
                 <i class="bi bi-file-text me-1"></i>
                 {% if doc_type == 'RECEIPT' %}Receipt{% elif doc_type == 'TAXFREE' %}Tax Free{% elif doc_type == 'INVOICE' %}B2B Invoice{% else %}{{ doc_type }}{% endif %}
-                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                <a href="?q={{ q }}&status={{ status }}&mydata={{ mydata }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
@@ -172,7 +176,7 @@
             {% if date_from %}
             <span class="badge bg-success text-white fw-normal">
                 <i class="bi bi-calendar-event me-1"></i>From {{ date_from }}
-                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_to={{ date_to }}&sort={{ sort }}"
+                <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
@@ -180,7 +184,7 @@
             {% if date_to %}
             <span class="badge bg-success text-white fw-normal">
                 <i class="bi bi-calendar-event me-1"></i>To {{ date_to }}
-                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&sort={{ sort }}"
+                <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
@@ -189,7 +193,7 @@
             <span class="badge {% if mydata == 'submitted' %}bg-success{% elif mydata == 'overdue' %}bg-danger{% else %}bg-secondary{% endif %} text-white fw-normal">
                 <i class="bi bi-cloud me-1"></i>
                 {% if mydata == 'submitted' %}myDATA: Submitted{% elif mydata == 'pending' %}myDATA: Pending{% elif mydata == 'overdue' %}myDATA: Overdue{% endif %}
-                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
