@@ -69,6 +69,8 @@
     let timeline = null;
     let items = new vis.DataSet();
     let groups = new vis.DataSet();
+    let allGroups = [];
+    let allItems = [];
 
     function initTimeline() {
         const container = document.getElementById('visualization');
@@ -166,18 +168,16 @@
             fetch(`/api/resources/?t=${t}`).then(r => r.json()),
             fetch(`/api/events/?t=${t}`).then(r => r.json())
         ]).then(([resData, evData]) => {
-            groups.clear();
-            groups.add(resData.map(r => ({
+            allGroups = resData.map(r => ({
                 id: r.id,
                 content: `<div>${r.content}</div>`,
                 nestedGroups: r.nestedGroups || null,
                 showNested: true,
                 className: r.className || '',
                 order: r.order || 0
-            })));
+            }));
 
-            items.clear();
-            items.add(evData.map(e => {
+            allItems = evData.map(e => {
                 let statusLabel = '';
                 let badgeClass = '';
                 let statusText = '';
@@ -219,13 +219,23 @@
                     start: e.start,
                     end: e.end,
                     boat_name: e.text,
+                    owner: e.owner,
                     flag: e.flag || 'xx',
                     status_label: statusLabel,
                     popover_content: popoverContent,
                     style: `background-color: ${e.color}22; border-color: ${e.color}; color: #222;`,
                     className: `${e.type === 'LONG' ? 'long-term' : ''} ${e.is_at_sea ? 'at-sea' : ''}`
                 };
-            }));
+            });
+
+            groups.clear();
+            groups.add(allGroups);
+
+            items.clear();
+            items.add(allItems);
+
+            // Re-apply filter if query is present
+            filterByBoat();
         });
     }
 
@@ -274,17 +284,41 @@
         });
     });
 
-    // Search filter
-    document.getElementById('searchBoat').addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
-        const filteredItems = items.get({
-            filter: function (item) {
-                return !query || item.content.toLowerCase().includes(query);
+    function filterByBoat() {
+        const query = document.getElementById('searchBoat').value.toLowerCase();
+        if (!query) {
+            groups.clear();
+            groups.add(allGroups);
+            return;
+        }
+
+        // Find group IDs matching boat name or owner name
+        const matchingGroupIds = allItems
+            .filter(item => 
+                (item.boat_name && item.boat_name.toLowerCase().includes(query)) ||
+                (item.owner && item.owner.toLowerCase().includes(query))
+            )
+            .map(item => String(item.group));
+
+        const uniqueMatchingGroupIds = [...new Set(matchingGroupIds)];
+
+        const filteredGroups = allGroups.filter(g => {
+            // Match berth
+            if (uniqueMatchingGroupIds.includes(String(g.id))) return true;
+
+            // Match block that has matching berths
+            if (g.nestedGroups) {
+                return g.nestedGroups.some(childId => uniqueMatchingGroupIds.includes(String(childId)));
             }
+            return false;
         });
-        // vis.js doesn't have a simple visible flag for items in DataSet easily without re-adding
-        // but for now we just log it or we could filter the view
-    });
+
+        groups.clear();
+        groups.add(filteredGroups);
+    }
+
+    // Search filter
+    document.getElementById('searchBoat').addEventListener('input', filterByBoat);
 </script>
 
 <!-- Modal for new booking -->
