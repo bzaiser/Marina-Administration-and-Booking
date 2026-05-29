@@ -13,8 +13,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Marina Admin">
-    <link rel="apple-touch-icon" href="/media/logo.jpg">
+    <meta name="apple-mobile-web-app-title" content="{{ tenant_config.company_name|default:"Marina Admin" }}">
+    <link rel="apple-touch-icon" href="{% if tenant_config.logo %}{{ tenant_config.logo.url }}{% else %}/media/logo.jpg{% endif %}">
     
     <!-- Bootstrap 5 CSS -->
     <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
@@ -56,7 +56,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/media/logo.jpg" alt="Ormos Marina Logo" height="40" class="rounded shadow-sm">
+                <img src="{% if tenant_config.logo %}{{ tenant_config.logo.url }}{% else %}/media/logo.jpg{% endif %}" alt="{{ tenant_config.company_name|default:"Ormos Marina" }} Logo" height="40" class="rounded shadow-sm">
+                <span class="ms-2 fw-semibold d-none d-sm-inline">{{ tenant_config.company_name|default:"Ormos Marina" }}</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

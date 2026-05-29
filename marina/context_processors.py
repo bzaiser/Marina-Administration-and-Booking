@@ -1,4 +1,4 @@
-from .models import UserMenuPreference
+from .models import UserMenuPreference, TenantConfig
 
 def menu_preferences(request):
     if hasattr(request, 'user') and request.user and request.user.is_authenticated:
@@ -23,3 +23,12 @@ def menu_preferences(request):
             'menu_prefs': prefs
         }
     return {}
+
+def tenant_config(request):
+    # Fetch active tenant configuration from the current isolated database
+    config = TenantConfig.objects.first()
+    if not config:
+        config = TenantConfig.objects.create()
+    return {
+        'tenant_config': config
+    }

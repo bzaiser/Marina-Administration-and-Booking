@@ -80,6 +80,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'marina.context_processors.menu_preferences',
+                'marina.context_processors.tenant_config',
             ],
         },
     },
