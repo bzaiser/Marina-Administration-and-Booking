@@ -477,6 +477,7 @@ def add_service(request, booking_id):
 
 @login_required
 def invoice_pdf(request, invoice_id):
+    from django.conf import settings
     import base64
     import os
     invoice = get_object_or_404(Invoice, id=invoice_id)
