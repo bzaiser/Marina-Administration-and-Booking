@@ -117,25 +117,45 @@
                     </li>
                     {% endif %}
                 </ul>
-                <div class="d-flex align-items-center gap-2">
+                <ul class="navbar-nav">
                     {% if request.user.is_authenticated %}
-                    <button class="btn btn-outline-light btn-sm" 
-                            hx-get="{% url 'menu_preferences_modal' %}" 
-                            hx-target="#modals-here .modal-content" 
-                            onclick="new bootstrap.Modal(document.getElementById('modals-here')).show()">
-                        <i class="bi bi-sliders me-1"></i> Menu
-                    </button>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle btn btn-outline-light btn-sm text-white px-3 d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: rgba(255, 255, 255, 0.25); background: transparent;">
+                            <i class="bi bi-person-circle fs-6"></i>
+                            <span>{{ request.user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-light-subtle mt-2" aria-labelledby="userDropdown">
+                            {% if not menu_prefs or menu_prefs.allow_admin %}
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center py-2" href="/admin/">
+                                    <i class="bi bi-gear me-2 text-primary"></i> Admin Panel
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center py-2" 
+                                        hx-get="{% url 'menu_preferences_modal' %}" 
+                                        hx-target="#modals-here .modal-content" 
+                                        onclick="new bootstrap.Modal(document.getElementById('modals-here')).show()">
+                                    <i class="bi bi-sliders me-2 text-success"></i> Menu Settings
+                                </button>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item d-flex align-items-center py-2 text-danger w-100 border-0 bg-transparent text-start">
+                                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
                     {% endif %}
-                    
-                    {% if not menu_prefs or menu_prefs.allow_admin %}
-                    <a href="/admin/" class="btn btn-outline-light btn-sm"><i class="bi bi-gear me-1"></i> Admin</a>
-                    {% endif %}
-                    
-                    <form action="{% url 'logout' %}" method="post" class="m-0">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-box-arrow-right me-1"></i> Logout</button>
-                    </form>
-                </div>
+                </ul>
             </div>
         </div>
     </nav>
