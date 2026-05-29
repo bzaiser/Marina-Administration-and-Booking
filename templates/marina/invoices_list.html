@@ -5,7 +5,7 @@
 {% block content %}
 
 {# ── Helper macro: sortable column header ────────────────────────────────── #}
-{% with base_params="q="|add:q|add:"&status="|add:status|add:"&payment="|add:payment|add:"&doc_type="|add:doc_type|add:"&date_from="|add:date_from|add:"&date_to="|add:date_to %}
+{% with base_params="q="|add:q|add:"&status="|add:status|add:"&payment="|add:payment|add:"&doc_type="|add:doc_type|add:"&mydata="|add:mydata|add:"&date_from="|add:date_from|add:"&date_to="|add:date_to %}
 
 {# ── Summary KPI bar ─────────────────────────────────────────────────────── #}
 <div class="row g-3 mb-4">
@@ -126,9 +126,8 @@
                 <a href="{% url 'invoices_list' %}" class="btn btn-outline-secondary btn-sm" title="Clear filters"><i class="bi bi-x-lg"></i></a>
             </div>
 
-            {# preserve sort and mydata in filter form #}
+            {# preserve sort in filter form — mydata is already handled by the select above #}
             <input type="hidden" name="sort" value="{{ sort }}">
-            <input type="hidden" name="mydata" value="{{ mydata }}">
         </form>
 
         {# Active filter badges #}
