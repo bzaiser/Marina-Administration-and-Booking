@@ -187,7 +187,13 @@
         const qtyField = modal.querySelector('input[name="quantity"]');
         const unitField = modal.querySelector('select[name="unit"]');
         
-        if (descField) descField.value = name;
+        if (descField) {
+            const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+            const currentDate = new Date();
+            const currentMonthName = months[currentDate.getMonth()];
+            const currentYear = currentDate.getFullYear();
+            descField.value = name + ` (Rendered ${currentMonthName} ${currentYear})`;
+        }
         if (priceField) priceField.value = price;
         if (qtyField) qtyField.value = "1.0";
         if (unitField) unitField.value = unit;
