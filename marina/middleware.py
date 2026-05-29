@@ -9,8 +9,14 @@ class TenantMiddleware:
     def __call__(self, request):
         host = request.get_host().split(':')[0].lower()
         
-        # 1. Determine subdomain slug
-        tenant_slug = self.get_subdomain(host)
+        # 1. Direct production domain mappings
+        if host == 'marina.zaisers.myds.me':
+            tenant_slug = 'ormos'
+        elif host == 'shipyard.zaisers.myds.me':
+            tenant_slug = 'karlovasi'
+        else:
+            # Determine subdomain slug
+            tenant_slug = self.get_subdomain(host)
         
         if tenant_slug:
             # 2. Check if the tenant exists in the registry DB

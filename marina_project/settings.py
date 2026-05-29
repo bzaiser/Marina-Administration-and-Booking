@@ -31,10 +31,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-w8(2-)_et!e#43)#g4k3sjsd+(
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
-ALLOWED_HOSTS += ['.localhost', '.marina.zaisers.myds.me', 'ormos.localhost', 'karlovasi.localhost']
+ALLOWED_HOSTS += ['.localhost', '.marina.zaisers.myds.me', '.zaisers.myds.me', 'ormos.localhost', 'karlovasi.localhost', 'shipyard.zaisers.myds.me']
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1,http://localhost').split(',')
-CSRF_TRUSTED_ORIGINS += ['http://*.localhost', 'https://*.marina.zaisers.myds.me', 'http://ormos.localhost:8004', 'http://karlovasi.localhost:8004']
+CSRF_TRUSTED_ORIGINS += ['http://*.localhost', 'https://*.marina.zaisers.myds.me', 'https://*.zaisers.myds.me', 'http://ormos.localhost:8004', 'http://karlovasi.localhost:8004', 'https://shipyard.zaisers.myds.me', 'https://marina.zaisers.myds.me']
 
 
 # Application definition
