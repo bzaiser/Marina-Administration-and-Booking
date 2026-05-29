@@ -135,7 +135,7 @@ def checkout_view(request, berth_id):
         for supply in supplies:
             InvoiceItem.objects.create(
                 invoice=invoice,
-                description=f"Supply: {supply.service.name}",
+                description=supply.service.name,
                 quantity=supply.quantity,
                 unit=supply.service.unit,
                 unit_price=supply.unit_price or supply.service.price_per_unit
@@ -146,7 +146,7 @@ def checkout_view(request, berth_id):
             for item in order.items.all():
                 InvoiceItem.objects.create(
                     invoice=invoice,
-                    description=f"Yard Work: {item.service.name}",
+                    description=item.service.name,
                     quantity=item.quantity,
                     unit=item.service.unit,
                     unit_price=item.unit_price or item.service.price_per_unit
@@ -354,7 +354,7 @@ def work_order_checkout(request, order_id):
     for item in order.items.all():
         InvoiceItem.objects.create(
             invoice=invoice,
-            description=f"Yard Work: {item.service.name}",
+            description=item.service.name,
             quantity=item.quantity,
             unit=item.service.unit,
             unit_price=item.unit_price or item.service.price_per_unit
