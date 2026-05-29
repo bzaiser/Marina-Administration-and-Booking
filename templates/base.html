@@ -57,7 +57,9 @@
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/">
                 <img src="{% if tenant_config.logo %}{{ tenant_config.logo.url }}{% else %}/media/logo.jpg{% endif %}" alt="{{ tenant_config.company_name|default:"Ormos Marina" }} Logo" height="40" class="rounded shadow-sm">
+                {% if not menu_prefs or menu_prefs.show_company_name %}
                 <span class="ms-2 fw-semibold d-none d-sm-inline">{{ tenant_config.company_name|default:"Ormos Marina" }}</span>
+                {% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

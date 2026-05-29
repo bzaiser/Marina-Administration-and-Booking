@@ -133,6 +133,21 @@ else:
 
 DATABASE_ROUTERS = ['marina.router.TenantRouter']
 
+# Auto-discover and register active tenant databases at startup
+if DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3':
+    import glob
+    default_db_path = str(DATABASES['default']['NAME'])
+    db_dir = os.path.dirname(default_db_path)
+    if os.path.exists(db_dir):
+        for path in glob.glob(os.path.join(db_dir, 'db_tenant_*.sqlite3')):
+            filename = os.path.basename(path)
+            tenant_slug = filename.replace('db_tenant_', '').replace('.sqlite3', '')
+            db_alias = f"tenant_{tenant_slug}"
+            DATABASES[db_alias] = {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': Path(path),
+            }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

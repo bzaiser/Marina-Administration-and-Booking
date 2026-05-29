@@ -109,7 +109,14 @@
                     </label>
                 </div>
             </div>
-            {% endif %}
+            <div class="col-12 mt-3 pt-3 border-top">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_company_name" name="show_company_name" {% if prefs.show_company_name %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_company_name">
+                        <i class="bi bi-tag text-primary me-2"></i> Show Company Name in Header
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer bg-light border-top">

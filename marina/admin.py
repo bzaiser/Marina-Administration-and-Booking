@@ -115,7 +115,7 @@ class TenantConfigAdmin(admin.ModelAdmin):
 
 @admin.register(UserMenuPreference)
 class UserMenuPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('user', 'show_dashboard', 'allow_dashboard', 'show_calendar', 'allow_calendar', 'allow_admin')
+    list_display = ('user', 'show_company_name', 'show_dashboard', 'allow_dashboard', 'show_calendar', 'allow_calendar', 'allow_admin')
     list_filter = ('allow_admin', 'show_dashboard', 'allow_dashboard')
     search_fields = ('user__username', 'user__email')
 

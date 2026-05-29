@@ -1505,6 +1505,8 @@ def menu_preferences_modal(request):
             if allow_flag:
                 val = request.POST.get(f"show_{name}") == 'on'
                 setattr(prefs, f"show_{name}", val)
+        # Handle company name visibility preference
+        prefs.show_company_name = request.POST.get("show_company_name") == 'on'
         prefs.save()
         
         response = HttpResponse(status=204)

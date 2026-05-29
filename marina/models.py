@@ -489,6 +489,7 @@ class UserMenuPreference(models.Model):
     show_service = models.BooleanField(default=True, verbose_name="Show Service")
     show_invoices = models.BooleanField(default=True, verbose_name="Show Invoices")
     show_reports = models.BooleanField(default=True, verbose_name="Show Reports")
+    show_company_name = models.BooleanField(default=True, verbose_name="Show Company Name in Header")
     
     # Admin-restricted permissions (set by superuser/admin only)
     allow_dashboard = models.BooleanField(default=True, verbose_name="Allow Dashboard")
