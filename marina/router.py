@@ -26,6 +26,16 @@ def register_tenant_db(tenant_slug):
         # Build path for this tenant's SQLite file
         tenant_db_path = os.path.join(db_dir, f"db_tenant_{tenant_slug}.sqlite3")
         
+        # Auto-initialize database for deployment (e.g. on NAS):
+        # If the tenant SQLite file does not exist, copy the default DB (with all live data) to it.
+        if not os.path.exists(tenant_db_path):
+            import shutil
+            try:
+                shutil.copy2(default_db_path, tenant_db_path)
+            except Exception as e:
+                # Fallback in case of permissions or missing source file
+                pass
+        
         # Duplicate the default connection settings and update the file path
         db_config = settings.DATABASES['default'].copy()
         db_config['NAME'] = tenant_db_path
