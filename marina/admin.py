@@ -99,6 +99,16 @@ class TenantConfigAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'email', 'phone', 'vat_number')
     search_fields = ('company_name', 'email')
 
+    def has_add_permission(self, request):
+        # Limit to exactly one configuration record per tenant database
+        if TenantConfig.objects.exists():
+            return False
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        # Prevent deletion of the active configuration
+        return False
+
 
 @admin.register(UserMenuPreference)
 class UserMenuPreferenceAdmin(admin.ModelAdmin):
