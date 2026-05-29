@@ -740,10 +740,60 @@ def berths_grid(request):
 @login_required
 def invoices_list(request):
     from django.utils import timezone
-    invoices = Invoice.objects.all().prefetch_related('items', 'customer').order_by('-date')
+    from django.db.models import Q
+
+    qs = Invoice.objects.all().prefetch_related('items', 'customer').select_related('customer')
+
+    # Search
+    q = request.GET.get('q', '').strip()
+    if q:
+        qs = qs.filter(
+            Q(customer__name__icontains=q) |
+            Q(id__icontains=q) |
+            Q(items__description__icontains=q)
+        ).distinct()
+
+    # Status filter
+    status = request.GET.get('status', '')
+    if status:
+        qs = qs.filter(status=status)
+
+    # Payment method filter
+    payment = request.GET.get('payment', '')
+    if payment:
+        qs = qs.filter(payment_method=payment)
+
+    # Document type filter
+    doc_type = request.GET.get('doc_type', '')
+    if doc_type:
+        qs = qs.filter(document_type=doc_type)
+
+    # Date range
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
+    if date_from:
+        qs = qs.filter(date__gte=date_from)
+    if date_to:
+        qs = qs.filter(date__lte=date_to)
+
+    # Sorting
+    sort = request.GET.get('sort', '-date')
+    allowed_sorts = ['id', '-id', 'date', '-date', 'customer__name', '-customer__name',
+                     'total_amount', '-total_amount', 'status', '-status']
+    if sort not in allowed_sorts:
+        sort = '-date'
+    qs = qs.order_by(sort)
+
     return render(request, 'marina/invoices_list.html', {
-        'invoices': invoices,
-        'today': timezone.now().date()
+        'invoices': qs,
+        'today': timezone.now().date(),
+        'q': q,
+        'status': status,
+        'payment': payment,
+        'doc_type': doc_type,
+        'date_from': date_from,
+        'date_to': date_to,
+        'sort': sort,
     })
 
 @login_required
