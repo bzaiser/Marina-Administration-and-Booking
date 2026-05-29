@@ -1,7 +1,7 @@
 from .models import UserMenuPreference
 
 def menu_preferences(request):
-    if request.user and request.user.is_authenticated:
+    if hasattr(request, 'user') and request.user and request.user.is_authenticated:
         # Get or create the preferences for the user
         prefs, created = UserMenuPreference.objects.get_or_create(user=request.user)
         
