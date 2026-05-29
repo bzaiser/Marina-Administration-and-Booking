@@ -9,6 +9,8 @@ python_portable/
 # Django
 db.sqlite3
 db.sqlite3-journal
+*.sqlite3
+data/
 media/
 staticfiles/
 .env

@@ -31,7 +31,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-w8(2-)_et!e#43)#g4k3sjsd+(
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS += ['.localhost', '.marina.zaisers.myds.me', 'ormos.localhost', 'karlovasi.localhost']
+
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1,http://localhost').split(',')
+CSRF_TRUSTED_ORIGINS += ['http://*.localhost', 'https://*.marina.zaisers.myds.me', 'http://ormos.localhost:8004', 'http://karlovasi.localhost:8004']
 
 
 # Application definition
@@ -51,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'marina.middleware.TenantMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -124,6 +128,9 @@ else:
             'PORT': os.getenv('DB_PORT', '3306'),
         }
     }
+
+
+DATABASE_ROUTERS = ['marina.router.TenantRouter']
 
 
 # Password validation

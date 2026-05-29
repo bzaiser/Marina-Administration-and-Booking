@@ -508,3 +508,18 @@ class UserMenuPreference(models.Model):
 
     def __str__(self):
         return f"Menu Settings for {self.user.username}"
+
+
+class Tenant(models.Model):
+    slug = models.SlugField(unique=True, verbose_name="Subdomain Slug")
+    name = models.CharField(max_length=255, verbose_name="Instance Name")
+    owner_email = models.EmailField(verbose_name="Owner Email")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+
+    def __str__(self):
+        return f"{self.name} ({self.slug})"
+
+    class Meta:
+        verbose_name = "Tenant"
+        verbose_name_plural = "Tenants"
