@@ -1,5 +1,5 @@
 <div class="modal-header bg-primary text-white">
-    <h5 class="modal-title"><i class="bi bi-sliders me-2"></i>Menü anpassen</h5>
+    <h5 class="modal-title"><i class="bi bi-sliders me-2"></i>Customize Menu</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 </div>
 <form hx-post="{% url 'menu_preferences_modal' %}" class="m-0">
@@ -7,8 +7,8 @@
     <div class="modal-body py-4">
         <p class="text-muted small mb-4">
             <i class="bi bi-info-circle me-1 text-primary"></i>
-            Wählen Sie aus, welche Menüpunkte Sie in Ihrer Kopfzeile sehen möchten. 
-            Vom Admin gesperrte Seiten werden hier nicht angezeigt.
+            Choose which menu items you would like to display in your navigation header. 
+            Pages disabled by the administrator will not be listed.
         </p>
         
         <div class="row g-3">
@@ -28,7 +28,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_calendar" name="show_calendar" {% if prefs.show_calendar %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_calendar">
-                        <i class="bi bi-calendar3 text-success me-2"></i> Kalender
+                        <i class="bi bi-calendar3 text-success me-2"></i> Calendar
                     </label>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_berths" name="show_berths" {% if prefs.show_berths %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_berths">
-                        <i class="bi bi-grid-3x3-gap text-info me-2"></i> Liegeplätze
+                        <i class="bi bi-grid-3x3-gap text-info me-2"></i> Berths
                     </label>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_customers" name="show_customers" {% if prefs.show_customers %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_customers">
-                        <i class="bi bi-people text-warning me-2"></i> Kunden
+                        <i class="bi bi-people text-warning me-2"></i> Customers
                     </label>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_bookings" name="show_bookings" {% if prefs.show_bookings %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_bookings">
-                        <i class="bi bi-calendar-check text-danger me-2"></i> Buchungen
+                        <i class="bi bi-calendar-check text-danger me-2"></i> Bookings
                     </label>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_planning" name="show_planning" {% if prefs.show_planning %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_planning">
-                        <i class="bi bi-list-check text-secondary me-2"></i> Belegungsplan
+                        <i class="bi bi-list-check text-secondary me-2"></i> Planning
                     </label>
                 </div>
             </div>
@@ -94,7 +94,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_invoices" name="show_invoices" {% if prefs.show_invoices %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_invoices">
-                        <i class="bi bi-receipt text-success me-2"></i> Rechnungen
+                        <i class="bi bi-receipt text-success me-2"></i> Invoices
                     </label>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                 <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
                     <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_reports" name="show_reports" {% if prefs.show_reports %}checked{% endif %}>
                     <label class="form-check-label fw-bold text-dark" for="show_reports">
-                        <i class="bi bi-graph-up text-info me-2"></i> Berichte
+                        <i class="bi bi-graph-up text-info me-2"></i> Reports
                     </label>
                 </div>
             </div>
@@ -113,8 +113,8 @@
         </div>
     </div>
     <div class="modal-footer bg-light border-top">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-1"></i> Speichern</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-1"></i> Save Changes</button>
     </div>
 </form>
 
