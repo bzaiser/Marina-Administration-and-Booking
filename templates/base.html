@@ -210,8 +210,8 @@
     </div>
     
     <!-- Global Modal Container for HTMX -->
-    <div id="modals-here" class="modal modal-blur fade" style="display: none" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 95vw; width: 95vw;" role="document">
+    <div id="modals-here" class="modal modal-blur fade" style="display: none; --bs-modal-margin: 2.5vw;" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 95vw; width: 95vw; margin: auto;" role="document">
             <div class="modal-content"></div>
         </div>
     </div>
@@ -278,5 +278,15 @@
         }
     </script>
     -->
+
+<style>
+    /* Force the global HTMX modal to fill 95% of the viewport */
+    #modals-here .modal-dialog {
+        max-width: 95vw !important;
+        width: 95vw !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+</style>
 </body>
 </html>
