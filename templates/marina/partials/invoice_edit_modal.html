@@ -171,11 +171,11 @@
             </div>
             <div class="card-body p-3">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <label class="form-label xx-small text-muted fw-bold mb-1">Description</label>
                         {{ item_form.description }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <label class="form-label xx-small text-muted fw-bold mb-1">Qty</label>
                         {{ item_form.quantity }}
                     </div>
@@ -330,3 +330,12 @@
         }
     });
 </script>
+
+<style>
+    @media (min-width: 1200px) {
+        #modals-here .modal-dialog {
+            max-width: 95% !important;
+            width: 95% !important;
+        }
+    }
+</style>
