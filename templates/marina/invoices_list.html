@@ -124,12 +124,56 @@
         {% if q or status or payment or doc_type or date_from or date_to %}
         <div class="d-flex flex-wrap gap-1 mt-2">
             <small class="text-muted align-self-center me-1">Active:</small>
-            {% if q %}<span class="badge bg-primary bg-opacity-15 text-primary border border-primary border-opacity-25">Search: "{{ q }}" <a href="?{{ base_params }}&sort={{ sort }}" class="text-primary ms-1 text-decoration-none">×</a></span>{% endif %}
-            {% if status %}<span class="badge bg-warning bg-opacity-15 text-warning-emphasis border border-warning border-opacity-25">Status: {{ status }} <a href="?q={{ q }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}" class="text-warning-emphasis ms-1 text-decoration-none">×</a></span>{% endif %}
-            {% if payment %}<span class="badge bg-info bg-opacity-15 text-info border border-info border-opacity-25">Payment: {{ payment }} <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}" class="text-info ms-1 text-decoration-none">×</a></span>{% endif %}
-            {% if doc_type %}<span class="badge bg-secondary bg-opacity-15 text-secondary border border-secondary border-opacity-25">Type: {{ doc_type }} <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}" class="text-secondary ms-1 text-decoration-none">×</a></span>{% endif %}
-            {% if date_from %}<span class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25">From: {{ date_from }} <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_to={{ date_to }}&sort={{ sort }}" class="text-success ms-1 text-decoration-none">×</a></span>{% endif %}
-            {% if date_to %}<span class="badge bg-success bg-opacity-15 text-success border border-success border-opacity-25">To: {{ date_to }} <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&sort={{ sort }}" class="text-success ms-1 text-decoration-none">×</a></span>{% endif %}
+
+            {% if q %}
+            <span class="badge bg-primary text-white fw-normal">
+                <i class="bi bi-search me-1"></i>„{{ q }}"
+                <a href="?{{ base_params }}&sort={{ sort }}" class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if status %}
+            <span class="badge {% if status == 'PAID' %}bg-success{% elif status == 'OPEN' %}bg-warning text-dark{% else %}bg-info text-white{% endif %} fw-normal">
+                <i class="bi bi-flag me-1"></i>
+                {% if status == 'PAID' %}Paid{% elif status == 'OPEN' %}Open{% elif status == 'PARTIAL' %}Partial{% else %}{{ status }}{% endif %}
+                <a href="?q={{ q }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                   class="{% if status == 'OPEN' %}text-dark{% else %}text-white{% endif %} ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if payment %}
+            <span class="badge bg-dark text-white fw-normal">
+                <i class="bi bi-credit-card me-1"></i>
+                {% if payment == 'CASH' %}Cash{% elif payment == 'CARD' %}Card{% elif payment == 'TRANSFER' %}Bank Transfer{% else %}{{ payment }}{% endif %}
+                <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if doc_type %}
+            <span class="badge bg-secondary text-white fw-normal">
+                <i class="bi bi-file-text me-1"></i>
+                {% if doc_type == 'RECEIPT' %}Receipt{% elif doc_type == 'TAXFREE' %}Tax Free{% elif doc_type == 'INVOICE' %}B2B Invoice{% else %}{{ doc_type }}{% endif %}
+                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
+                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if date_from %}
+            <span class="badge bg-success text-white fw-normal">
+                <i class="bi bi-calendar-event me-1"></i>From {{ date_from }}
+                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_to={{ date_to }}&sort={{ sort }}"
+                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if date_to %}
+            <span class="badge bg-success text-white fw-normal">
+                <i class="bi bi-calendar-event me-1"></i>To {{ date_to }}
+                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&sort={{ sort }}"
+                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
         </div>
         {% endif %}
     </div>
