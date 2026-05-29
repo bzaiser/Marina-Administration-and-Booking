@@ -785,12 +785,34 @@ def invoice_delete(request, pk):
         return redirect('invoices_list')
     return render(request, 'marina/partials/invoice_delete_confirm.html', {'invoice': invoice})
 
+def _save_inline_items(request, invoice):
+    for key, value in request.POST.items():
+        if key.startswith('item_') and key.endswith('_description'):
+            parts = key.split('_')
+            item_id = parts[1]
+            try:
+                item = InvoiceItem.objects.get(pk=item_id, invoice=invoice)
+                item.description = value
+                try:
+                    item.quantity = float(request.POST.get(f"item_{item_id}_quantity", item.quantity))
+                except (ValueError, TypeError):
+                    pass
+                item.unit = request.POST.get(f"item_{item_id}_unit", item.unit)
+                try:
+                    item.unit_price = float(request.POST.get(f"item_{item_id}_unit_price", item.unit_price))
+                except (ValueError, TypeError):
+                    pass
+                item.save()
+            except Exception:
+                pass
+
 def invoice_edit(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     if request.method == 'POST':
         form = InvoiceForm(request.POST, instance=invoice)
         if form.is_valid():
             form.save()
+            _save_inline_items(request, invoice)
             invoice.recalculate_total()
             if request.htmx:
                 response = HttpResponse()
@@ -826,6 +848,7 @@ def invoice_add_item(request, pk):
         header_form = InvoiceForm(request.POST, instance=invoice)
         if header_form.is_valid():
             header_form.save()
+        _save_inline_items(request, invoice)
 
         form = InvoiceItemForm(request.POST)
         if form.is_valid():
@@ -858,6 +881,7 @@ def invoice_remove_item(request, pk):
         header_form = InvoiceForm(request.POST, instance=invoice)
         if header_form.is_valid():
             header_form.save()
+        _save_inline_items(request, invoice)
             
     item.delete()
     invoice.recalculate_total()
