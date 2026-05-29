@@ -768,6 +768,15 @@ def invoices_list(request):
     if doc_type:
         qs = qs.filter(document_type=doc_type)
 
+    # myDATA status filter
+    mydata = request.GET.get('mydata', '')
+    if mydata == 'submitted':
+        qs = qs.filter(mydata_mark__isnull=False)
+    elif mydata == 'pending':
+        qs = qs.filter(mydata_mark__isnull=True)
+    elif mydata == 'overdue':
+        qs = qs.filter(mydata_mark__isnull=True, date__lt=timezone.now().date())
+
     # Date range
     date_from = request.GET.get('date_from', '')
     date_to = request.GET.get('date_to', '')
@@ -791,6 +800,7 @@ def invoices_list(request):
         'status': status,
         'payment': payment,
         'doc_type': doc_type,
+        'mydata': mydata,
         'date_from': date_from,
         'date_to': date_to,
         'sort': sort,

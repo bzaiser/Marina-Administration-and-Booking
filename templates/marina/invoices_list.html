@@ -100,6 +100,16 @@
                 </select>
             </div>
 
+            {# myDATA status #}
+            <div class="col-6 col-md-2">
+                <select name="mydata" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">All myDATA</option>
+                    <option value="submitted" {% if mydata == 'submitted' %}selected{% endif %}>✅ Submitted</option>
+                    <option value="pending"   {% if mydata == 'pending'   %}selected{% endif %}>⏳ Pending</option>
+                    <option value="overdue"   {% if mydata == 'overdue'   %}selected{% endif %}>🔴 Overdue</option>
+                </select>
+            </div>
+
             {# Date from #}
             <div class="col-6 col-md-1">
                 <input type="date" name="date_from" value="{{ date_from }}" class="form-control form-control-sm" title="From date" onchange="this.form.submit()">
@@ -116,12 +126,13 @@
                 <a href="{% url 'invoices_list' %}" class="btn btn-outline-secondary btn-sm" title="Clear filters"><i class="bi bi-x-lg"></i></a>
             </div>
 
-            {# preserve sort in filter form #}
+            {# preserve sort and mydata in filter form #}
             <input type="hidden" name="sort" value="{{ sort }}">
+            <input type="hidden" name="mydata" value="{{ mydata }}">
         </form>
 
         {# Active filter badges #}
-        {% if q or status or payment or doc_type or date_from or date_to %}
+        {% if q or status or payment or doc_type or mydata or date_from or date_to %}
         <div class="d-flex flex-wrap gap-1 mt-2">
             <small class="text-muted align-self-center me-1">Active:</small>
 
@@ -170,7 +181,16 @@
             {% if date_to %}
             <span class="badge bg-success text-white fw-normal">
                 <i class="bi bi-calendar-event me-1"></i>To {{ date_to }}
-                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&sort={{ sort }}"
+                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&sort={{ sort }}"
+                   class="text-white ms-1 text-decoration-none fw-bold">×</a>
+            </span>
+            {% endif %}
+
+            {% if mydata %}
+            <span class="badge {% if mydata == 'submitted' %}bg-success{% elif mydata == 'overdue' %}bg-danger{% else %}bg-secondary{% endif %} text-white fw-normal">
+                <i class="bi bi-cloud me-1"></i>
+                {% if mydata == 'submitted' %}myDATA: Submitted{% elif mydata == 'pending' %}myDATA: Pending{% elif mydata == 'overdue' %}myDATA: Overdue{% endif %}
+                <a href="?q={{ q }}&status={{ status }}&payment={{ payment }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
             {% endif %}
@@ -364,7 +384,7 @@
                     <tr>
                         <td colspan="7" class="text-center py-5 text-muted">
                             <i class="bi bi-receipt fs-1 d-block mb-2"></i>
-                            No invoices found{% if q or status or payment or doc_type or date_from or date_to %} matching your filters{% endif %}.
+                            No invoices found{% if q or status or payment or doc_type or mydata or date_from or date_to %} matching your filters{% endif %}.
                             {% if q or status or payment or doc_type or date_from or date_to %}
                             <div class="mt-2"><a href="{% url 'invoices_list' %}" class="btn btn-sm btn-outline-primary">Clear filters</a></div>
                             {% endif %}
