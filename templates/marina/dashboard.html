@@ -186,6 +186,9 @@
                     </div>
 
                     <!-- SVG Map -->
+                    {% if config and config.marina_svg %}
+                        {{ config.marina_svg|safe }}
+                    {% else %}
                     <svg id="marina-svg" viewBox="0 0 961 880" class="w-100 h-100" style="background-color: #f0f7ff; cursor: grab;"
                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -220,7 +223,6 @@
                          <path style="fill:none;stroke:#ff00ff;stroke-width:3;stroke-dasharray:none" d="m 293.43247,400.49566 406.44361,-137.7943 -26.76579,-88.228 -406.44362,137.79431 z" id="path15" inkscape:label="Berth B" />
                          <path style="display:inline;fill:none;stroke:#00ffff;stroke-width:3;stroke-dasharray:none" d="m 233.95291,115.98513 4.95664,94.17597 426.27012,-37.67039 -6.93927,-92.193312 z" id="path14" inkscape:label="Berth A" />
                        </g>
-
                        
                         <!-- Block Labels (Subtle & Rotated) -->
                         <g id="block-labels" style="font-family: 'Inter', sans-serif; font-weight: 600; pointer-events: none; opacity: 0.8;">
@@ -230,7 +232,7 @@
                             <text x="300" y="770" fill="#89a02c" font-size="14" text-anchor="start" transform="rotate(-18, 300, 770)">Block D</text>
                             <text x="895" y="450" fill="#ff0000" font-size="14" text-anchor="start" transform="rotate(90, 895, 450)">Block E</text>
                         </g>
-
+   
                         <g id="berths-layer">
                          {% for item in all_berths %}
                              <g transform="translate({{ item.x }}, {{ item.y }}) rotate({{ item.rot }})" 
@@ -268,6 +270,7 @@
                          {% endfor %}
                        </g>
                     </svg>
+                    {% endif %}
                 </div>
             </div>
         </div>

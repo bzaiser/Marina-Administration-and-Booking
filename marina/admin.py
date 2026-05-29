@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, ServiceCategory, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, ServiceCategory, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply, TenantConfig, UserMenuPreference
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -92,3 +92,16 @@ class InvoiceAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'customer')
     list_filter = ('status', 'document_type', 'payment_method')
     inlines = [InvoiceItemInline]
+
+
+@admin.register(TenantConfig)
+class TenantConfigAdmin(admin.ModelAdmin):
+    list_display = ('company_name', 'email', 'phone', 'vat_number')
+    search_fields = ('company_name', 'email')
+
+
+@admin.register(UserMenuPreference)
+class UserMenuPreferenceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'show_dashboard', 'allow_dashboard', 'show_calendar', 'allow_calendar', 'allow_admin')
+    list_filter = ('allow_admin', 'show_dashboard', 'allow_dashboard')
+    search_fields = ('user__username', 'user__email')

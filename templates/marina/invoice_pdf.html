@@ -73,14 +73,13 @@
                     {% endif %}
                 </td>
                 <td class="company-info">
-                    <div class="company-name">ORMOS MARINA</div>
+                    <div class="company-name">{{ config.company_name }}</div>
                     <strong>Reception Office</strong><br>
-                    Ormos Marathokampou Marina,<br>
-                    Samos Island, 81002, Greece<br>
+                    {{ config.address|linebreaksbr }}<br>
                     <br>
-                    <strong>Hours:</strong> 08:00 - 20:00<br>
-                    <strong>Email:</strong> ormosmarina@aris-samos.com<br>
-                    <strong>Phone:</strong> +49 163 3430354
+                    <strong>Hours:</strong> {{ config.opening_hours }}<br>
+                    <strong>Email:</strong> {{ config.email }}<br>
+                    <strong>Phone:</strong> {{ config.phone }}
                 </td>
             </tr>
         </table>
@@ -215,10 +214,9 @@
             </table>
         </div>
 
-        <!-- Footer -->
         <div id="footerContent">
-            Thank you for choosing Ormos Marina. Safe travels!<br>
-            Reception Office: +49 163 3430354 | ormosmarina@aris-samos.com | VAT: 888888888
+            {{ config.invoice_footer|linebreaksbr }}<br>
+            Reception Office: {{ config.phone }} | {{ config.email }} | VAT: {{ config.vat_number }}
         </div>
     </div>
 </body>

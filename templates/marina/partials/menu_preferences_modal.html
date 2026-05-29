@@ -1,0 +1,130 @@
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title"><i class="bi bi-sliders me-2"></i>Menü anpassen</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+</div>
+<form hx-post="{% url 'menu_preferences_modal' %}" class="m-0">
+    {% csrf_token %}
+    <div class="modal-body py-4">
+        <p class="text-muted small mb-4">
+            <i class="bi bi-info-circle me-1 text-primary"></i>
+            Wählen Sie aus, welche Menüpunkte Sie in Ihrer Kopfzeile sehen möchten. 
+            Vom Admin gesperrte Seiten werden hier nicht angezeigt.
+        </p>
+        
+        <div class="row g-3">
+            {% if prefs.allow_dashboard %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_dashboard" name="show_dashboard" {% if prefs.show_dashboard %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_dashboard">
+                        <i class="bi bi-speedometer2 text-primary me-2"></i> Dashboard
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_calendar %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_calendar" name="show_calendar" {% if prefs.show_calendar %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_calendar">
+                        <i class="bi bi-calendar3 text-success me-2"></i> Kalender
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_berths %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_berths" name="show_berths" {% if prefs.show_berths %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_berths">
+                        <i class="bi bi-grid-3x3-gap text-info me-2"></i> Liegeplätze
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_customers %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_customers" name="show_customers" {% if prefs.show_customers %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_customers">
+                        <i class="bi bi-people text-warning me-2"></i> Kunden
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_bookings %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_bookings" name="show_bookings" {% if prefs.show_bookings %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_bookings">
+                        <i class="bi bi-calendar-check text-danger me-2"></i> Buchungen
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_planning %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_planning" name="show_planning" {% if prefs.show_planning %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_planning">
+                        <i class="bi bi-list-check text-secondary me-2"></i> Belegungsplan
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_service %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_service" name="show_service" {% if prefs.show_service %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_service">
+                        <i class="bi bi-tools text-primary me-2"></i> Service
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_invoices %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_invoices" name="show_invoices" {% if prefs.show_invoices %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_invoices">
+                        <i class="bi bi-receipt text-success me-2"></i> Rechnungen
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if prefs.allow_reports %}
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 bg-light rounded border border-light-subtle shadow-sm hover-elevate">
+                    <input class="form-check-input ms-0 me-3 float-start" type="checkbox" role="switch" id="show_reports" name="show_reports" {% if prefs.show_reports %}checked{% endif %}>
+                    <label class="form-check-label fw-bold text-dark" for="show_reports">
+                        <i class="bi bi-graph-up text-info me-2"></i> Berichte
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="modal-footer bg-light border-top">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-1"></i> Speichern</button>
+    </div>
+</form>
+
+<style>
+    .hover-elevate {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-elevate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08) !important;
+        background-color: #fff !important;
+    }
+</style>

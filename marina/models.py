@@ -445,3 +445,66 @@ class InvoiceItem(models.Model):
 
     def __str__(self):
         return f"{self.description} ({self.quantity} {self.get_unit_display()})"
+
+
+class TenantConfig(models.Model):
+    company_name = models.CharField(max_length=150, default="ORMOS MARINA")
+    logo = models.ImageField(upload_to="tenant_logos/", blank=True, null=True)
+    address = models.TextField(default="Ormos Marathokampou Marina,\nSamos Island, 81002, Greece")
+    opening_hours = models.CharField(max_length=100, default="08:00 - 20:00")
+    email = models.EmailField(default="ormosmarina@aris-samos.com")
+    phone = models.CharField(max_length=50, default="+49 163 3430354")
+    vat_number = models.CharField(max_length=50, default="888888888")
+    tax_office = models.CharField(max_length=100, default="Samos", help_text="e.g. DOY Samos")
+    invoice_footer = models.TextField(
+        default="Thank you for choosing Ormos Marina. Safe travels!",
+        help_text="Custom thank-you message on the bottom of invoices"
+    )
+    marina_svg = models.TextField(
+        blank=True, 
+        null=True, 
+        help_text="Paste raw SVG map code here to dynamically render berths. If empty, the default static SVG will be used."
+    )
+
+    class Meta:
+        verbose_name = "Tenant Configuration"
+        verbose_name_plural = "Tenant Configurations"
+
+    def __str__(self):
+        return f"Configuration: {self.company_name}"
+
+
+from django.conf import settings
+
+class UserMenuPreference(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="menu_preferences")
+    
+    # Visible menu items for the individual user
+    show_dashboard = models.BooleanField(default=True, verbose_name="Show Dashboard")
+    show_calendar = models.BooleanField(default=True, verbose_name="Show Calendar")
+    show_berths = models.BooleanField(default=True, verbose_name="Show Berths")
+    show_customers = models.BooleanField(default=True, verbose_name="Show Customers")
+    show_bookings = models.BooleanField(default=True, verbose_name="Show Bookings")
+    show_planning = models.BooleanField(default=True, verbose_name="Show Planning")
+    show_service = models.BooleanField(default=True, verbose_name="Show Service")
+    show_invoices = models.BooleanField(default=True, verbose_name="Show Invoices")
+    show_reports = models.BooleanField(default=True, verbose_name="Show Reports")
+    
+    # Admin-restricted permissions (set by superuser/admin only)
+    allow_dashboard = models.BooleanField(default=True, verbose_name="Allow Dashboard")
+    allow_calendar = models.BooleanField(default=True, verbose_name="Allow Calendar")
+    allow_berths = models.BooleanField(default=True, verbose_name="Allow Berths")
+    allow_customers = models.BooleanField(default=True, verbose_name="Allow Customers")
+    allow_bookings = models.BooleanField(default=True, verbose_name="Allow Bookings")
+    allow_planning = models.BooleanField(default=True, verbose_name="Allow Planning")
+    allow_service = models.BooleanField(default=True, verbose_name="Allow Service")
+    allow_invoices = models.BooleanField(default=True, verbose_name="Allow Invoices")
+    allow_reports = models.BooleanField(default=True, verbose_name="Allow Reports")
+    allow_admin = models.BooleanField(default=False, verbose_name="Allow Admin Link")
+
+    class Meta:
+        verbose_name = "User Menu Preference"
+        verbose_name_plural = "User Menu Preferences"
+
+    def __str__(self):
+        return f"Menu Settings for {self.user.username}"

@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, WorkOrder, WorkOrderItem, BookingSupply
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, WorkOrder, WorkOrderItem, BookingSupply, TenantConfig, UserMenuPreference
 from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, WorkOrderForm, WorkOrderItemForm, BookingSupplyForm
 from .mydata_utils import send_invoice_to_mydata
 from django.contrib import messages
@@ -483,17 +483,26 @@ def invoice_pdf(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
     invoice.recalculate_total() # Ensure total is correct
     
+    config = TenantConfig.objects.first()
+    if not config:
+        config = TenantConfig.objects.create()
+    
     # Embed logo as base64 for reliability
-    logo_path = os.path.join(settings.BASE_DIR, 'media', 'logo.jpg')
     logo_base64 = ""
-    if os.path.exists(logo_path):
-        with open(logo_path, "rb") as image_file:
+    if config.logo and os.path.exists(config.logo.path):
+        with open(config.logo.path, "rb") as image_file:
             logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+    else:
+        logo_path = os.path.join(settings.BASE_DIR, 'media', 'logo.jpg')
+        if os.path.exists(logo_path):
+            with open(logo_path, "rb") as image_file:
+                logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
     
     context = {
         'invoice': invoice,
         'logo_base64': logo_base64,
-        'block_color': invoice.booking.berth.block.color if invoice.booking else '#3498db'
+        'block_color': invoice.booking.berth.block.color if invoice.booking else '#3498db',
+        'config': config,
     }
     return render_to_pdf('marina/invoice_pdf.html', context)
 
@@ -670,6 +679,10 @@ def dashboard(request):
     unpaid_count = Invoice.objects.filter(status='OPEN').count()
     unpaid_total = Invoice.objects.filter(status='OPEN').aggregate(total=models.Sum('total_amount'))['total'] or 0
 
+    config = TenantConfig.objects.first()
+    if not config:
+        config = TenantConfig.objects.create()
+
     context = {
         'berths_count': berths_count,
         'active_bookings': active_bookings,
@@ -686,6 +699,7 @@ def dashboard(request):
         'unpaid_total': unpaid_total,
         'total_percent': total_percent,
         'today': today,
+        'config': config,
     }
     return render(request, 'marina/dashboard.html', context)
 
@@ -1478,3 +1492,26 @@ def invoice_submit_mydata(request, pk):
     else:
         messages.error(request, f'myDATA Submission Failed: {message}')
     return redirect('invoices_list')
+
+
+@login_required
+def menu_preferences_modal(request):
+    from django.http import HttpResponse
+    prefs, created = UserMenuPreference.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        for name in ['dashboard', 'calendar', 'berths', 'customers', 'bookings', 'planning', 'service', 'invoices', 'reports']:
+            allow_flag = getattr(prefs, f"allow_{name}")
+            if allow_flag:
+                val = request.POST.get(f"show_{name}") == 'on'
+                setattr(prefs, f"show_{name}", val)
+        prefs.save()
+        
+        response = HttpResponse(status=204)
+        response['HX-Refresh'] = 'true'
+        return response
+        
+    context = {
+        'prefs': prefs,
+    }
+    return render(request, 'marina/partials/menu_preferences_modal.html', context)
