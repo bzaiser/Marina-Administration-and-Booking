@@ -106,7 +106,10 @@ class TenantConfigAdmin(admin.ModelAdmin):
         return True
 
     def has_delete_permission(self, request, obj=None):
-        # Prevent deletion of the active configuration
+        # Allow deleting redundant configurations if there are multiple,
+        # but prevent deleting the last remaining configuration.
+        if TenantConfig.objects.count() > 1:
+            return True
         return False
 
 
