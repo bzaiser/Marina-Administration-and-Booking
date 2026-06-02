@@ -4,7 +4,7 @@
 </div>
 
 <!-- Main Invoice Form (Wraps Header and Footer) -->
-<form id="main-invoice-form" hx-post="{% url 'invoice_edit' invoice.id %}" hx-target="#modals-here .modal-content" hx-indicator="#invoice-save-indicator">
+<form id="main-invoice-form" novalidate hx-post="{% url 'invoice_edit' invoice.id %}" hx-target="#modals-here .modal-content" hx-indicator="#invoice-save-indicator">
     {% csrf_token %}
     
     <div class="modal-body pt-3">
