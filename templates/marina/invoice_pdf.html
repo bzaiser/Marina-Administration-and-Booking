@@ -156,34 +156,33 @@
         <td>{{ item.get_unit_display }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.unit_price|floatformat:2 }}</td>
-        <td>{% widthratio item.quantity 1 item.unit_price %}</td>
-        <td>{% if item.discount_pct %}{{ item.discount_pct|floatformat:2 }}%{% else %}0,00{% endif %}</td>
+        <td>{{ item.item_total_before_discount|floatformat:2 }}</td>
+        <td>{% if item.discount_pct %}{{ item.discount_pct|floatformat:2 }}%{% else %}0.00%{% endif %}</td>
         <td>{{ item.subtotal|floatformat:2 }}</td>
-        <td>{{ item.tax_rate|floatformat:0 }}</td>
+        <td>{{ item.tax_rate|floatformat:0 }}%</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 
   <!-- ═══════════════════════════════════════════════════ VAT ANALYSIS + TOTALS -->
-  {% with net_total=invoice.total_amount vat_total=0 %}
   <div class="footer-block">
     <div class="vat-analysis">
       <div class="section-title" style="margin:0; padding: 2px 5px; text-align:left; font-size:7.5pt">{% if invoice.language == 'EL' %}ΑΝΑΛΥΣΗ ΥΠΟΛΟΓΙΣΜΟΥ ΦΠΑ{% elif invoice.language == 'DE' %}MEHRWERTSTEUERAUFSTELLUNG{% else %}VAT BREAKDOWN{% endif %}</div>
       <table>
         <thead>
           <tr>
+            <th style="text-align:left;">{% if invoice.language == 'EL' %}% Φ.Π.Α.{% elif invoice.language == 'DE' %}MwSt %{% else %}VAT %{% endif %}</th>
             <th>{% if invoice.language == 'EL' %}ΚΑΘΑΡΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}NETTOWERT{% else %}NET VALUE{% endif %}</th>
-            <th>{% if invoice.language == 'EL' %}% Φ.Π.Α.{% elif invoice.language == 'DE' %}MwSt %{% else %}VAT %{% endif %}</th>
             <th>{% if invoice.language == 'EL' %}ΑΞΙΑ Φ.Π.Α.{% elif invoice.language == 'DE' %}MwSt BETRAG{% else %}VAT AMOUNT{% endif %}</th>
           </tr>
         </thead>
         <tbody>
-          {% for item in invoice.items.all %}
+          {% for entry in invoice.vat_breakdown %}
           <tr>
-            <td>{{ item.subtotal|floatformat:2 }}</td>
-            <td>{{ item.tax_rate|floatformat:0 }}</td>
-            <td>{{ item.tax_amount|floatformat:2 }}</td>
+            <td style="text-align:left;">{{ entry.rate|floatformat:0 }}%</td>
+            <td>{{ entry.net|floatformat:2 }}</td>
+            <td>{{ entry.tax|floatformat:2 }}</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -191,18 +190,17 @@
     </div>
     <div class="totals-box">
       <table>
-        <tr><td>{% if invoice.language == 'EL' %}ΑΞΙΑ ΠΡΟ ΕΚΠΤ.{% elif invoice.language == 'DE' %}BRUTTO VOR RABATT{% else %}VALUE BEFORE DISC.{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΑΞΙΑ ΠΡΟ ΕΚΠΤ.{% elif invoice.language == 'DE' %}BRUTTO VOR RABATT{% else %}VALUE BEFORE DISC.{% endif %}</td><td>{{ invoice.net_total_before_header_discount|floatformat:2 }}</td></tr>
         <tr><td>{% if invoice.language == 'EL' %}ΕΚΠΤΩΣΗ{% elif invoice.language == 'DE' %}RABATT{% else %}DISCOUNT{% endif %}</td><td>{{ invoice.discount|floatformat:2 }}</td></tr>
         <tr><td>{% if invoice.language == 'EL' %}ΚΑΘΑΡΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}NETTOWERT{% else %}NET VALUE{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
-        <tr><td>{% if invoice.language == 'EL' %}ΧΡΕΩΣΕΙΣ{% elif invoice.language == 'DE' %}GEBÜHREN{% else %}CHARGES{% endif %}</td><td>0,00</td></tr>
-        <tr><td>{% if invoice.language == 'EL' %}ΦΟΡΟΙ{% elif invoice.language == 'DE' %}STEUERN{% else %}TAXES{% endif %}</td><td>0,00</td></tr>
-        <tr class="grand-total"><td>{% if invoice.language == 'EL' %}ΤΕΛΙΚΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}GESAMTBETRAG{% else %}TOTAL AMOUNT{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
-        <tr><td>{% if invoice.language == 'EL' %}ΚΡΑΤΗΣΕΙΣ{% elif invoice.language == 'DE' %}EINBEHALTE{% else %}WITHHOLDINGS{% endif %}</td><td>0,00</td></tr>
-        <tr class="payable"><td>{% if invoice.language == 'EL' %}ΠΛΗΡΩΤΕΟ{% elif invoice.language == 'DE' %}ZU ZAHLEN{% else %}PAYABLE{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΧΡΕΩΣΕΙΣ{% elif invoice.language == 'DE' %}GEBÜHREN{% else %}CHARGES{% endif %}</td><td>0.00</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΦΟΡΟΙ{% elif invoice.language == 'DE' %}STEUERN{% else %}TAXES (VAT){% endif %}</td><td>{{ invoice.total_tax|floatformat:2 }}</td></tr>
+        <tr class="grand-total"><td>{% if invoice.language == 'EL' %}ΤΕΛΙΚΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}GESAMTBETRAG{% else %}TOTAL AMOUNT{% endif %}</td><td>{{ invoice.grand_total|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΚΡΑΤΗΣΕΙΣ{% elif invoice.language == 'DE' %}EINBEHALTE{% else %}WITHHOLDINGS{% endif %}</td><td>0.00</td></tr>
+        <tr class="payable"><td>{% if invoice.language == 'EL' %}ΠΛΗΡΩΤΕΟ{% elif invoice.language == 'DE' %}ZU ZAHLEN{% else %}PAYABLE{% endif %}</td><td>{{ invoice.grand_total|floatformat:2 }}</td></tr>
       </table>
     </div>
   </div>
-  {% endwith %}
 
   <!-- ═══════════════════════════════════════════════════ NOTES -->
   {% if invoice.notes %}
