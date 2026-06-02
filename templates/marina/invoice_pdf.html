@@ -1,223 +1,250 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ invoice.language|lower }}">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        @page {
-            size: a4 portrait;
-            margin: 1.5cm;
-            @frame footer {
-                -pdf-frame-content: footerContent;
-                bottom: 1.5cm;
-                margin-left: 1.5cm;
-                margin-right: 1.5cm;
-                height: 1.5cm;
-            }
-        }
-        body { font-family: Helvetica, sans-serif; font-size: 10px; color: #333; line-height: 1.5; }
-        
-        .header-table { width: 100%; border-bottom: 2px solid {{ block_color }}; padding-bottom: 20px; margin-bottom: 30px; }
-        .logo-box { width: 300px; }
-        .logo { width: 180px; height: auto; }
-        
-        .company-info { text-align: right; font-size: 9px; color: #555; }
-        .company-name { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
-        
-        .info-table { width: 100%; margin-bottom: 40px; }
-        .info-table td { vertical-align: top; width: 50%; }
-        
-        .section-title { font-size: 9px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #eee; }
-        
-        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-        .items-table th { 
-            background-color: #fcfcfc; 
-            border-bottom: 1px solid #ccc; 
-            padding: 8px; 
-            text-align: left;
-            text-transform: uppercase;
-            font-size: 8px;
-            color: #444;
-        }
-        .items-table td { 
-            padding: 10px 8px; 
-            border-bottom: 1px solid #f0f0f0; 
-        }
-        
-        .total-section { text-align: right; margin-top: 20px; }
-        .grand-total { 
-            font-size: 15px; 
-            font-weight: bold; 
-            color: #2c3e50; 
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-top: 2px solid {{ block_color }};
-        }
-        
-        #footerContent { 
-            text-align: center; 
-            color: #95a5a6; 
-            font-size: 8px; 
-            border-top: 1px solid #eee; 
-            padding-top: 10px; 
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Invoice #{{ invoice.id }}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', 'DejaVu Sans', Arial, sans-serif; font-size: 9pt; color: #1a1a1a; background: #fff; }
+  .page { padding: 18mm 16mm 14mm 16mm; }
+
+  /* ── Header ── */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8mm; border-bottom: 2px solid #1a5276; padding-bottom: 6mm; }
+  .header-logo img { max-height: 28mm; max-width: 60mm; }
+  .header-logo .logo-placeholder { font-size: 18pt; font-weight: 700; color: #1a5276; }
+  .header-company { text-align: right; font-size: 8.5pt; line-height: 1.55; }
+  .header-company .company-name { font-size: 12pt; font-weight: 700; color: #1a5276; margin-bottom: 2mm; }
+
+  /* ── Document meta table ── */
+  .doc-meta { width: 100%; border-collapse: collapse; margin-bottom: 6mm; }
+  .doc-meta th { background: #1a5276; color: #fff; font-size: 8pt; font-weight: 600; text-align: center; padding: 3px 6px; border: 1px solid #1a5276; text-transform: uppercase; }
+  .doc-meta td { border: 1px solid #bdc3c7; text-align: center; padding: 4px 6px; font-size: 9pt; }
+
+  /* ── Two-column section ── */
+  .two-col { display: flex; gap: 6mm; margin-bottom: 6mm; }
+  .col-customer { flex: 2; border: 1px solid #bdc3c7; padding: 4mm; }
+  .col-related { flex: 1; border: 1px solid #bdc3c7; padding: 4mm; }
+  .section-title { background: #2e86c1; color: #fff; font-size: 7.5pt; font-weight: 700; text-align: center; padding: 2px 0; margin: -4mm -4mm 3mm -4mm; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field-row { font-size: 8.5pt; margin-bottom: 1.5mm; }
+  .field-label { font-weight: 700; color: #444; }
+
+  /* ── Items table ── */
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 6mm; font-size: 8.5pt; }
+  .items-table thead tr { background: #1a5276; color: #fff; }
+  .items-table thead th { padding: 4px 5px; border: 1px solid #1a5276; font-size: 7.5pt; text-transform: uppercase; text-align: center; }
+  .items-table thead th.left { text-align: left; }
+  .items-table tbody tr { border-bottom: 1px solid #e8e8e8; }
+  .items-table tbody tr:nth-child(even) { background: #f9fbff; }
+  .items-table tbody td { padding: 4px 5px; border: 1px solid #dde; text-align: right; vertical-align: top; }
+  .items-table tbody td.left { text-align: left; }
+  .items-table tfoot tr { background: #eaf2ff; }
+  .items-table tfoot td { padding: 4px 5px; border: 1px solid #bdc3c7; font-weight: 700; }
+
+  /* ── Footer totals ── */
+  .footer-block { display: flex; gap: 6mm; margin-bottom: 6mm; }
+  .vat-analysis { flex: 2; border: 1px solid #bdc3c7; }
+  .vat-analysis table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+  .vat-analysis table th { background: #2e86c1; color: #fff; padding: 3px 5px; border: 1px solid #2e86c1; text-align: center; font-size: 7.5pt; }
+  .vat-analysis table td { padding: 3px 5px; border: 1px solid #dde; text-align: right; }
+  .totals-box { flex: 1.3; border: 1px solid #bdc3c7; }
+  .totals-box table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  .totals-box table td { padding: 3px 8px; border-bottom: 1px solid #eee; }
+  .totals-box table td:first-child { color: #444; }
+  .totals-box table td:last-child { text-align: right; font-weight: 600; }
+  .totals-box .grand-total { background: #1a5276; color: #fff; font-size: 10pt; font-weight: 700; }
+  .totals-box .grand-total td { color: #fff !important; border-color: #1a5276; }
+  .totals-box .payable { background: #eaf8ea; }
+  .totals-box .payable td { font-weight: 700; font-size: 10pt; color: #1a7a1a !important; }
+
+  /* ── IBAN & signatures ── */
+  .iban-block { font-size: 8pt; margin-bottom: 5mm; color: #333; line-height: 1.8; }
+  .notes-block { font-size: 8pt; color: #555; margin-bottom: 4mm; border-left: 3px solid #2e86c1; padding-left: 4mm; }
+  .sig-row { display: flex; justify-content: space-between; margin-top: 8mm; }
+  .sig-col { text-align: center; width: 30%; }
+  .sig-line { border-top: 1px solid #333; margin-bottom: 2mm; }
+  .sig-label { font-size: 7.5pt; color: #555; text-transform: uppercase; }
+  .mydata-hash { font-size: 6.5pt; color: #888; margin-top: 4mm; word-break: break-all; }
+  .page-label { font-size: 7.5pt; color: #666; }
+  .stamp-box { border: 1px solid #ccc; height: 18mm; width: 40%; display: inline-block; margin-top: 3mm; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header with Logo and Company Data -->
-        <table class="header-table">
-            <tr>
-                <td class="logo-box">
-                    {% if logo_base64 %}
-                    <img src="data:image/jpeg;base64,{{ logo_base64 }}" class="logo">
-                    {% endif %}
-                </td>
-                <td class="company-info">
-                    <div class="company-name">{{ config.company_name }}</div>
-                    <strong>Reception Office</strong><br>
-                    {{ config.address|linebreaksbr }}<br>
-                    <br>
-                    <strong>Hours:</strong> {{ config.opening_hours }}<br>
-                    <strong>Email:</strong> {{ config.email }}<br>
-                    <strong>Phone:</strong> {{ config.phone }}
-                </td>
-            </tr>
-        </table>
+<div class="page">
 
-        <!-- Invoice Details -->
-        <table class="info-table">
-            <tr>
-                <td>
-                    <div class="section-title">Bill To</div>
-                    <div style="font-size: 12px; margin-bottom: 3px;"><strong>{{ invoice.customer.name }}</strong></div>
-                    {% if invoice.customer.email %}{{ invoice.customer.email }}<br>{% endif %}
-                    {% if invoice.customer.phone %}{{ invoice.customer.phone }}<br>{% endif %}
-                    {{ invoice.customer.address|default:""|linebreaksbr }}
-                    {% if invoice.document_type == 'INVOICE' %}
-                        {% if invoice.customer.vat_number %}<br><strong>VAT / AFM:</strong> {{ invoice.customer.vat_number }}{% endif %}
-                        {% if invoice.customer.tax_office %}<br><strong>Tax Office / DOY:</strong> {{ invoice.customer.tax_office }}{% endif %}
-                    {% else %}
-                        {% if invoice.customer.passport_number %}
-                            <br><strong>Passport No:</strong> {{ invoice.customer.passport_number }}
-                            {% if invoice.customer.nationality %} ({{ invoice.customer.nationality }}){% endif %}
-                        {% endif %}
-                    {% endif %}
-                </td>
-                <td style="text-align: right;">
-                    <div style="font-size: 14px; font-weight: bold; color: {{ block_color }}; margin-bottom: 10px; line-height: 1.2;">
-                        {% if invoice.document_type == 'RECEIPT' %}
-                            ΑΠΟΔΕΙΞΗ ΛΙΑΝΙΚΗΣ ΠΩΛΗΣΗΣ<br>
-                            <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">RETAIL SALES RECEIPT</span>
-                        {% elif invoice.document_type == 'TAXFREE' %}
-                            ΑΠΟΔΕΙΞΗ ΛΙΑΝΙΚΗΣ ΠΩΛΗΣΗΣ (TAX-FREE)<br>
-                            <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">RETAIL SALES RECEIPT (TAX-FREE)</span>
-                        {% else %}
-                            ΤΙΜΟΛΟΓΙΟ ΠΑΡΟΧΗΣ ΥΠΗΡΕΣΙΩΝ<br>
-                            <span style="font-size: 9px; font-weight: normal; color: #7f8c8d;">SERVICE INVOICE</span>
-                        {% endif %}
-                    </div>
-                    <table style="width: 180px; float: right; font-size: 10px;">
-                        <tr>
-                            <td style="text-align: left; color: #7f8c8d;">
-                                {% if invoice.document_type == 'RECEIPT' or invoice.document_type == 'TAXFREE' %}Receipt No:{% else %}Invoice No:{% endif %}
-                            </td>
-                            <td style="text-align: right;"><strong>#{{ invoice.id }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: left; color: #7f8c8d;">Date:</td>
-                            <td style="text-align: right;">{{ invoice.date|date:"d.m.Y" }}</td>
-                        </tr>
-                        {% if invoice.mydata_mark %}
-                        <tr>
-                            <td style="text-align: left; color: #27ae60; font-weight: bold;">myDATA MARK:</td>
-                            <td style="text-align: right; color: #27ae60;"><strong>{{ invoice.mydata_mark }}</strong></td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td style="text-align: left; color: #7f8c8d;">Payment Status:</td>
-                            <td style="text-align: right;"><strong>{{ invoice.get_status_display }}</strong></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <!-- Service Items -->
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th style="width: 45%;">Description</th>
-                    <th style="text-align: center; width: 10%;">Qty</th>
-                    <th style="text-align: center; width: 10%;">Unit</th>
-                    <th style="text-align: right; width: 15%;">Price</th>
-                    <th style="text-align: right; width: 20%;">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in invoice.items.all %}
-                <tr>
-                    <td>{{ item.description }}</td>
-                    <td style="text-align: center;">{{ item.quantity }}</td>
-                    <td style="text-align: center; color: #7f8c8d;">{{ item.get_unit_display|default:"-" }}</td>
-                    <td style="text-align: right;">&euro;{{ item.unit_price|stringformat:".2f" }}</td>
-                    <td style="text-align: right;"><strong>&euro;{{ item.subtotal|stringformat:".2f" }}</strong></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Summary & myDATA -->
-        <div class="total-section">
-            <table style="width: 100%;">
-                <tr>
-                    <td style="width: 60%; vertical-align: bottom; text-align: left;">
-                        {% if invoice.mydata_mark %}
-                        <div style="border: 1px solid #eee; padding: 10px; width: 220px; background-color: #fafafa;">
-                            <table style="width: 100%;">
-                                <tr>
-                                    <td style="width: 70px;">
-                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www1.aade.gr/taxisnet/myDATA/qr/v1/invoice?mark={{ invoice.mydata_mark }}%26uid={{ invoice.mydata_uid }}" style="width: 65px; height: 65px;">
-                                    </td>
-                                    <td style="vertical-align: middle; padding-left: 10px;">
-                                        <div style="font-size: 8px; font-weight: bold; color: #7f8c8d; text-transform: uppercase;">myDATA certified</div>
-                                        <div style="font-size: 7px; margin-top: 4px;">
-                                            <strong>MARK:</strong> {{ invoice.mydata_mark }}<br>
-                                            <strong>UID:</strong> {{ invoice.mydata_uid|truncatechars:20 }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        {% endif %}
-                    </td>
-                    <td style="width: 40%;">
-                        <table style="width: 100%;">
-                            {% if invoice.discount > 0 %}
-                            <tr>
-                                <td style="text-align: left; padding: 5px;">Discount:</td>
-                                <td style="text-align: right; padding: 5px; color: #e74c3c;">-&euro;{{ invoice.discount|stringformat:".2f" }}</td>
-                            </tr>
-                            {% endif %}
-                            <tr>
-                                <td colspan="2" class="grand-total">
-                                    <table style="width: 100%;">
-                                        <tr>
-                                            <td style="text-align: left;">TOTAL AMOUNT</td>
-                                            <td style="text-align: right;">&euro;{{ invoice.total_amount|stringformat:".2f" }}</td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div id="footerContent">
-            {{ config.invoice_footer|linebreaksbr }}<br>
-            Reception Office: {{ config.phone }} | {{ config.email }} | VAT: {{ config.vat_number }}
-        </div>
+  <!-- ═══════════════════════════════════════════════════ HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      {% if logo_base64 %}<img src="data:image/jpeg;base64,{{ logo_base64 }}" alt="Logo">{% else %}<div class="logo-placeholder">{{ config.company_name }}</div>{% endif %}
     </div>
+    <div class="header-company">
+      <div class="company-name">{% if config.owner_name %}{{ config.owner_name }}{% else %}{{ config.company_name }}{% endif %}</div>
+      {% if config.vat_number %}<div>{% if invoice.language == 'EL' %}Α.Φ.Μ.{% elif invoice.language == 'DE' %}Steuer-Nr.{% else %}VAT No.{% endif %}: {{ config.vat_number }} &nbsp; {% if invoice.language == 'EL' %}Δ.Ο.Υ.{% else %}Tax Office{% endif %}: {{ config.tax_office }}</div>{% endif %}
+      <div>{{ config.company_name }}</div>
+      {% if config.address %}<div>{{ config.address }}</div>{% endif %}
+      <div>
+        {% if invoice.language == 'EL' %}ΤΗΛ{% else %}Tel{% endif %}: {{ config.phone }}{% if config.mobile %} &nbsp; KIN: {{ config.mobile }}{% endif %}
+      </div>
+      {% if config.email %}<div>Email: {{ config.email }}</div>{% endif %}
+      {% if config.website %}<div>Web: {{ config.website }}</div>{% endif %}
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ DOCUMENT META -->
+  <table class="doc-meta">
+    <thead>
+      <tr>
+        <th style="width:40%">{% if invoice.language == 'EL' %}ΕΙΔΟΣ ΠΑΡΑΣΤΑΤΙΚΟΥ{% elif invoice.language == 'DE' %}DOKUMENTART{% else %}DOCUMENT TYPE{% endif %}</th>
+        <th style="width:12%">{% if invoice.language == 'EL' %}ΣΕΙΡΑ{% elif invoice.language == 'DE' %}SERIE{% else %}SERIES{% endif %}</th>
+        <th style="width:12%">{% if invoice.language == 'EL' %}ΑΡΙΘΜΟΣ{% elif invoice.language == 'DE' %}NR.{% else %}NUMBER{% endif %}</th>
+        <th style="width:18%">{% if invoice.language == 'EL' %}ΗΜΕΡΟΜΗΝΙΑ{% elif invoice.language == 'DE' %}DATUM{% else %}DATE{% endif %}</th>
+        <th style="width:18%">{% if invoice.language == 'EL' %}ΩΡΑ ΑΠΟΣΤΟΛΗΣ{% elif invoice.language == 'DE' %}UHRZEIT{% else %}TIME{% endif %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ invoice.get_document_type_display }}</td>
+        <td>{% if invoice.series %}{{ invoice.series }}{% else %}—{% endif %}</td>
+        <td>{{ invoice.id }}</td>
+        <td>{{ invoice.date|date:"d.m.Y" }}</td>
+        <td>{% if invoice.issued_at %}{{ invoice.issued_at|time:"H:i" }}{% else %}—{% endif %}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════ CUSTOMER + RELATED -->
+  <div class="two-col">
+    <div class="col-customer">
+      <div class="section-title">{% if invoice.language == 'EL' %}ΣΤΟΙΧΕΙΑ ΣΥΜΒΑΛΛΟΜΕΝΟΥ{% elif invoice.language == 'DE' %}KUNDENDATEN{% else %}CUSTOMER DETAILS{% endif %}</div>
+      <div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΚΩΔΙΚΟΣ{% elif invoice.language == 'DE' %}CODE{% else %}CODE{% endif %}:</span> {{ invoice.customer.id }}</div>
+      <div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΕΠΩΝΥΜΙΑ{% elif invoice.language == 'DE' %}NAME{% else %}NAME{% endif %}:</span> {{ invoice.customer.name }}</div>
+      {% if invoice.customer.profession %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΕΠΑΓΓΕΛΜΑ{% elif invoice.language == 'DE' %}BERUF{% else %}PROFESSION{% endif %}:</span> {{ invoice.customer.profession }}</div>{% endif %}
+      {% if invoice.customer.address %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΔΙΕΥΘΥΝΣΗ{% elif invoice.language == 'DE' %}ADRESSE{% else %}ADDRESS{% endif %}:</span> {{ invoice.customer.address }}</div>{% endif %}
+      {% if invoice.customer.city %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΠΟΛΗ - Τ.Κ.{% elif invoice.language == 'DE' %}ORT - PLZ{% else %}CITY - P.C.{% endif %}:</span> {{ invoice.customer.city }}</div>{% endif %}
+      {% if invoice.customer.phone %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΤΗΛ{% elif invoice.language == 'DE' %}TEL{% else %}TEL{% endif %}:</span> {{ invoice.customer.phone }}</div>{% endif %}
+      {% if invoice.customer.vat_number %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}Α.Φ.Μ.{% elif invoice.language == 'DE' %}USt-IdNr.{% else %}VAT No.{% endif %}:</span> {{ invoice.customer.vat_number }}</div>{% endif %}
+      {% if invoice.customer.tax_office and invoice.customer.tax_office != 'OTHER' %}<div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}Δ.Ο.Υ.{% else %}Tax Office{% endif %}:</span> {{ invoice.customer.get_tax_office_display }}</div>{% endif %}
+    </div>
+    <div class="col-related">
+      <div class="section-title">{% if invoice.language == 'EL' %}ΣΧΕΤΙΚΑ / ΠΛΗΡΩΜΗ{% elif invoice.language == 'DE' %}ZAHLUNG{% else %}PAYMENT{% endif %}</div>
+      <div class="field-row"><span class="field-label">{% if invoice.language == 'EL' %}ΤΡΟΠΟΣ ΠΛΗΡΩΜΗΣ{% elif invoice.language == 'DE' %}ZAHLUNGSART{% else %}PAYMENT METHOD{% endif %}:</span> {% if invoice.payment_method %}{{ invoice.get_payment_method_display }}{% else %}—{% endif %}</div>
+      {% if invoice.purpose %}<div class="field-row" style="margin-top:3mm"><span class="field-label">{% if invoice.language == 'EL' %}ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ{% elif invoice.language == 'DE' %}ZWECK{% else %}PURPOSE{% endif %}:</span> {{ invoice.purpose }}</div>{% endif %}
+      {% if invoice.booking %}<div class="field-row" style="margin-top:3mm"><span class="field-label">Booking:</span> #{{ invoice.booking.id }}</div>{% endif %}
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ ITEMS TABLE -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:8%">{% if invoice.language == 'EL' %}ΚΩΔΙΚΟΣ{% elif invoice.language == 'DE' %}CODE{% else %}CODE{% endif %}</th>
+        <th class="left" style="width:32%">{% if invoice.language == 'EL' %}ΠΕΡΙΓΡΑΦΗ{% elif invoice.language == 'DE' %}BESCHREIBUNG{% else %}DESCRIPTION{% endif %}</th>
+        <th style="width:7%">{% if invoice.language == 'EL' %}ΜΜ{% elif invoice.language == 'DE' %}EINH.{% else %}UNIT{% endif %}</th>
+        <th style="width:7%">{% if invoice.language == 'EL' %}ΠΟΣ.{% elif invoice.language == 'DE' %}MENGE{% else %}QTY{% endif %}</th>
+        <th style="width:11%">{% if invoice.language == 'EL' %}ΤΙΜΗ ΜΟΝ.{% elif invoice.language == 'DE' %}EINZEL€{% else %}UNIT PRICE{% endif %}</th>
+        <th style="width:11%">{% if invoice.language == 'EL' %}ΑΞΙΑ{% elif invoice.language == 'DE' %}NETTO€{% else %}NET VALUE{% endif %}</th>
+        <th style="width:8%">{% if invoice.language == 'EL' %}ΕΚΠΤΩΣΗ{% elif invoice.language == 'DE' %}RABATT%{% else %}DISCOUNT%{% endif %}</th>
+        <th style="width:11%">{% if invoice.language == 'EL' %}ΑΞΙΑ ΜΕΤΑ ΕΚΠΤ.{% elif invoice.language == 'DE' %}N. RABATT{% else %}AFTER DISC.{% endif %}</th>
+        <th style="width:5%">{% if invoice.language == 'EL' %}ΦΠΑ%{% elif invoice.language == 'DE' %}MwSt%{% else %}VAT%{% endif %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in invoice.items.all %}
+      <tr>
+        <td>{% if item.item_code %}{{ item.item_code }}{% else %}—{% endif %}</td>
+        <td class="left">{{ item.description }}</td>
+        <td>{{ item.get_unit_display }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.unit_price|floatformat:2 }}</td>
+        <td>{% widthratio item.quantity 1 item.unit_price %}</td>
+        <td>{% if item.discount_pct %}{{ item.discount_pct|floatformat:2 }}%{% else %}0,00{% endif %}</td>
+        <td>{{ item.subtotal|floatformat:2 }}</td>
+        <td>{{ item.tax_rate|floatformat:0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════ VAT ANALYSIS + TOTALS -->
+  {% with net_total=invoice.total_amount vat_total=0 %}
+  <div class="footer-block">
+    <div class="vat-analysis">
+      <div class="section-title" style="margin:0; padding: 2px 5px; text-align:left; font-size:7.5pt">{% if invoice.language == 'EL' %}ΑΝΑΛΥΣΗ ΥΠΟΛΟΓΙΣΜΟΥ ΦΠΑ{% elif invoice.language == 'DE' %}MEHRWERTSTEUERAUFSTELLUNG{% else %}VAT BREAKDOWN{% endif %}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>{% if invoice.language == 'EL' %}ΚΑΘΑΡΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}NETTOWERT{% else %}NET VALUE{% endif %}</th>
+            <th>{% if invoice.language == 'EL' %}% Φ.Π.Α.{% elif invoice.language == 'DE' %}MwSt %{% else %}VAT %{% endif %}</th>
+            <th>{% if invoice.language == 'EL' %}ΑΞΙΑ Φ.Π.Α.{% elif invoice.language == 'DE' %}MwSt BETRAG{% else %}VAT AMOUNT{% endif %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in invoice.items.all %}
+          <tr>
+            <td>{{ item.subtotal|floatformat:2 }}</td>
+            <td>{{ item.tax_rate|floatformat:0 }}</td>
+            <td>{{ item.tax_amount|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="totals-box">
+      <table>
+        <tr><td>{% if invoice.language == 'EL' %}ΑΞΙΑ ΠΡΟ ΕΚΠΤ.{% elif invoice.language == 'DE' %}BRUTTO VOR RABATT{% else %}VALUE BEFORE DISC.{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΕΚΠΤΩΣΗ{% elif invoice.language == 'DE' %}RABATT{% else %}DISCOUNT{% endif %}</td><td>{{ invoice.discount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΚΑΘΑΡΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}NETTOWERT{% else %}NET VALUE{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΧΡΕΩΣΕΙΣ{% elif invoice.language == 'DE' %}GEBÜHREN{% else %}CHARGES{% endif %}</td><td>0,00</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΦΟΡΟΙ{% elif invoice.language == 'DE' %}STEUERN{% else %}TAXES{% endif %}</td><td>0,00</td></tr>
+        <tr class="grand-total"><td>{% if invoice.language == 'EL' %}ΤΕΛΙΚΗ ΑΞΙΑ{% elif invoice.language == 'DE' %}GESAMTBETRAG{% else %}TOTAL AMOUNT{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+        <tr><td>{% if invoice.language == 'EL' %}ΚΡΑΤΗΣΕΙΣ{% elif invoice.language == 'DE' %}EINBEHALTE{% else %}WITHHOLDINGS{% endif %}</td><td>0,00</td></tr>
+        <tr class="payable"><td>{% if invoice.language == 'EL' %}ΠΛΗΡΩΤΕΟ{% elif invoice.language == 'DE' %}ZU ZAHLEN{% else %}PAYABLE{% endif %}</td><td>{{ invoice.total_amount|floatformat:2 }}</td></tr>
+      </table>
+    </div>
+  </div>
+  {% endwith %}
+
+  <!-- ═══════════════════════════════════════════════════ NOTES -->
+  {% if invoice.notes %}
+  <div class="notes-block"><strong>{% if invoice.language == 'EL' %}ΠΑΡΑΤΗΡΗΣΕΙΣ{% elif invoice.language == 'DE' %}ANMERKUNGEN{% else %}REMARKS{% endif %}:</strong> {{ invoice.notes }}</div>
+  {% endif %}
+
+  <!-- ═══════════════════════════════════════════════════ IBAN -->
+  {% if config.iban_1 or config.iban_2 %}
+  <div class="iban-block">
+    {% if config.iban_1 %}IBAN {{ config.iban_1_bank|default:"" }} &nbsp; {{ config.iban_1 }}<br>{% endif %}
+    {% if config.iban_2 %}IBAN {{ config.iban_2_bank|default:"" }} &nbsp; {{ config.iban_2 }}{% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ═══════════════════════════════════════════════════ FOOTER / SIGNATURES -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <div class="page-label">{% if invoice.language == 'EL' %}ΣΕΛΙΔΑ{% elif invoice.language == 'DE' %}SEITE{% else %}PAGE{% endif %} :1/1 &nbsp;|&nbsp; {% if invoice.language == 'EL' %}ΕΝΙΑΙΟ ΜΗΧΑΝΟΓΡΑΦΙΚΟ ΕΝΤΥΠΟ ΠΟΛΛΑΠΛΗΣ ΧΡΗΣΗΣ{% elif invoice.language == 'DE' %}EINHEITLICHES BELEG-FORMULAR{% else %}UNIFIED MULTI-USE DOCUMENT{% endif %}</div>
+    <div style="font-size:8pt; color:#555;">{{ config.invoice_footer }}</div>
+  </div>
+  <div class="sig-row">
+    <div class="sig-col">
+      <div class="stamp-box"></div><br>
+      <div class="sig-line"></div>
+      <div class="sig-label">{% if invoice.language == 'EL' %}ΕΚΔΟΣΗ{% elif invoice.language == 'DE' %}AUSGESTELLT{% else %}ISSUED BY{% endif %}</div>
+    </div>
+    <div class="sig-col">
+      <div class="stamp-box"></div><br>
+      <div class="sig-line"></div>
+      <div class="sig-label">{% if invoice.language == 'EL' %}ΕΛΕΓΧΟΣ{% elif invoice.language == 'DE' %}GEPRÜFT{% else %}CHECKED{% endif %}</div>
+    </div>
+    <div class="sig-col">
+      <div class="stamp-box"></div><br>
+      <div class="sig-line"></div>
+      <div class="sig-label">{% if invoice.language == 'EL' %}ΠΑΡΑΛΑΒΗ{% elif invoice.language == 'DE' %}EMPFANGEN{% else %}RECEIVED{% endif %}</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ myDATA HASH -->
+  {% if invoice.mydata_mark %}
+  <div class="mydata-hash">myDATA MARK: {{ invoice.mydata_mark }}{% if invoice.mydata_uid %} &nbsp;|&nbsp; UID: {{ invoice.mydata_uid }}{% endif %}</div>
+  {% endif %}
+
+</div>
 </body>
 </html>

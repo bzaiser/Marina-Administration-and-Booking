@@ -25,13 +25,17 @@ class InvoiceForm(forms.ModelForm):
 
     class Meta:
         model = Invoice
-        fields = ['customer', 'status', 'payment_method', 'document_type', 'discount']
+        fields = ['customer', 'status', 'payment_method', 'document_type', 'series', 'language', 'discount', 'notes', 'purpose']
         widgets = {
             'customer': forms.Select(attrs={'class': 'form-select select2-search'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'payment_method': forms.Select(attrs={'class': 'form-select'}),
             'document_type': forms.Select(attrs={'class': 'form-select'}),
+            'series': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 2ΑΠΥ'}),
+            'language': forms.Select(attrs={'class': 'form-select'}),
             'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Παρατηρήσεις / Remarks...'}),
+            'purpose': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ / Purpose...'}),
         }
 
 class InvoiceItemForm(forms.ModelForm):
@@ -85,12 +89,14 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = ['name', 'email', 'phone', 'address', 'vat_number', 'tax_office', 'passport_number', 'nationality', 'language']
+        fields = ['name', 'email', 'phone', 'address', 'city', 'profession', 'vat_number', 'tax_office', 'passport_number', 'nationality', 'language']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Postal Address', 'rows': 3}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Postal Address', 'rows': 2}),
+            'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City / Postal Code'}),
+            'profession': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Profession / ΕΠΑΓΓΕΛΜΑ'}),
             'vat_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'VAT Number / AFM (Greece)'}),
             'tax_office': forms.Select(attrs={'class': 'form-select select2-search'}),
             'passport_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Passport Number (Non-EU Tax-Free)'}),

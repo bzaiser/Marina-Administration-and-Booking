@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.conf.urls.i18n import i18n_patterns
 from marina import views
 
 urlpatterns = [
@@ -52,6 +53,8 @@ urlpatterns = [
     path('invoice/delete/<int:pk>/', views.invoice_delete, name='invoice_delete'),
     path('invoice/submit-mydata/<int:pk>/', views.invoice_submit_mydata, name='invoice_submit_mydata'),
     
+    # i18n language switcher
+    path('i18n/', include('django.conf.urls.i18n')),
     # Auth
     path('accounts/', include('django.contrib.auth.urls')),
     

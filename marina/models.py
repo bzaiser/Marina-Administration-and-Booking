@@ -85,6 +85,8 @@ class Customer(models.Model):
     email = models.EmailField(_("Email"), blank=True, null=True)
     phone = models.CharField(_("Phone"), max_length=50, blank=True, null=True)
     address = models.TextField(_("Address"), blank=True, null=True)
+    city = models.CharField(_("City / Postal Code"), max_length=150, blank=True, null=True)
+    profession = models.CharField(_("Profession"), max_length=150, blank=True, null=True)
     vat_number = models.CharField(_("VAT Number / AFM"), max_length=50, blank=True, null=True)
     tax_office = models.CharField(_("Tax Office / DOY"), max_length=100, choices=TAX_OFFICE_CHOICES, default='OTHER', blank=True, null=True)
     passport_number = models.CharField(_("Passport Number"), max_length=50, blank=True, null=True)
@@ -411,15 +413,25 @@ class Invoice(models.Model):
         ('TAXFREE', 'Retail Receipt - Tax Free'),
         ('INVOICE', 'Service Invoice (B2B)'),
     ]
+    LANGUAGE_CHOICES = [
+        ('EN', 'English'),
+        ('EL', 'Ελληνικά (Greek)'),
+        ('DE', 'Deutsch (German)'),
+    ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="invoices")
     booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoices")
     date = models.DateField(auto_now_add=True)
+    issued_at = models.TimeField(null=True, blank=True, help_text="Time of issue (ΩΡΑ ΑΠΟΣΤΟΛΗΣ)")
     status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='OPEN')
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD, blank=True, null=True)
     document_type = models.CharField(max_length=10, choices=DOCUMENT_TYPES, default='RECEIPT')
+    series = models.CharField(max_length=20, blank=True, null=True, help_text="Document series (ΣΕΙΡΑ), e.g. 2ΑΠΥ")
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='EN', help_text="Invoice PDF language")
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    
+    notes = models.TextField(blank=True, null=True, help_text="ΠΑΡΑΤΗΡΗΣΕΙΣ – visible on invoice")
+    purpose = models.CharField(max_length=255, blank=True, null=True, help_text="ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ")
+
     # myDATA (Greece) Fields
     mydata_mark = models.CharField(max_length=100, null=True, blank=True)
     mydata_uid = models.CharField(max_length=100, null=True, blank=True)
@@ -434,14 +446,29 @@ class Invoice(models.Model):
 
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="items")
+    item_code = models.CharField(max_length=50, blank=True, null=True, help_text="ΚΩΔΙΚΟΣ service code")
     description = models.CharField(max_length=255)
     quantity = models.FloatField(default=1.0)
     unit = models.CharField(max_length=10, choices=Service.UNIT_CHOICES, default='PIECE')
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    
+    discount_pct = models.DecimalField(max_digits=5, decimal_places=2, default=0.0, help_text="ΕΚΠΤΩΣΗ %")
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=24.0, help_text="ΦΠΑ % (Greece default 24%, Samos 17%)")
+
+    @property
+    def net_price(self):
+        return float(self.unit_price) * (1 - float(self.discount_pct) / 100)
+
     @property
     def subtotal(self):
-        return float(self.quantity) * float(self.unit_price)
+        return round(float(self.quantity) * self.net_price, 2)
+
+    @property
+    def tax_amount(self):
+        return round(self.subtotal * float(self.tax_rate) / 100, 2)
+
+    @property
+    def total_with_tax(self):
+        return round(self.subtotal + self.tax_amount, 2)
 
     def __str__(self):
         return f"{self.description} ({self.quantity} {self.get_unit_display()})"
@@ -449,22 +476,22 @@ class InvoiceItem(models.Model):
 
 class TenantConfig(models.Model):
     company_name = models.CharField(max_length=150, default="ORMOS MARINA")
+    owner_name = models.CharField(max_length=150, blank=True, null=True, help_text="Full legal owner name for invoice header")
     logo = models.ImageField(upload_to="tenant_logos/", blank=True, null=True)
     address = models.TextField(default="Ormos Marathokampou Marina,\nSamos Island, 81002, Greece")
     opening_hours = models.CharField(max_length=100, default="08:00 - 20:00")
     email = models.EmailField(default="ormosmarina@aris-samos.com")
     phone = models.CharField(max_length=50, default="+49 163 3430354")
+    mobile = models.CharField(max_length=50, blank=True, null=True, help_text="Mobile / KIN number")
+    website = models.CharField(max_length=200, blank=True, null=True, help_text="e.g. www.aris-samos.com")
     vat_number = models.CharField(max_length=50, default="888888888")
     tax_office = models.CharField(max_length=100, default="Samos", help_text="e.g. DOY Samos")
-    invoice_footer = models.TextField(
-        default="Thank you for choosing Ormos Marina. Safe travels!",
-        help_text="Custom thank-you message on the bottom of invoices"
-    )
-    marina_svg = models.TextField(
-        blank=True, 
-        null=True, 
-        help_text="Paste raw SVG map code here to dynamically render berths. If empty, the default static SVG will be used."
-    )
+    iban_1 = models.CharField(max_length=34, blank=True, null=True, help_text="Primary IBAN")
+    iban_1_bank = models.CharField(max_length=100, blank=True, null=True, help_text="Primary bank name, e.g. Alpha Bank")
+    iban_2 = models.CharField(max_length=34, blank=True, null=True, help_text="Secondary IBAN")
+    iban_2_bank = models.CharField(max_length=100, blank=True, null=True, help_text="Secondary bank name, e.g. Piraeus Bank")
+    invoice_footer = models.TextField(default="Thank you for choosing Ormos Marina. Safe travels!", help_text="Custom thank-you message on the bottom of invoices")
+    marina_svg = models.TextField(blank=True, null=True, help_text="Paste raw SVG map code here to dynamically render berths. If empty, the default static SVG will be used.")
 
     class Meta:
         verbose_name = "Tenant Configuration"
