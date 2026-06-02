@@ -96,18 +96,23 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 @admin.register(TenantConfig)
 class TenantConfigAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'email', 'phone', 'vat_number')
+    list_display = ('company_name', 'owner_name', 'email', 'phone', 'vat_number')
     search_fields = ('company_name', 'email')
+    fieldsets = (
+        ('Company Identity', {'fields': ('company_name', 'owner_name', 'logo')}),
+        ('Contact', {'fields': ('address', 'phone', 'mobile', 'email', 'website', 'opening_hours')}),
+        ('Tax & Legal', {'fields': ('vat_number', 'tax_office')}),
+        ('Bank Accounts (IBAN)', {'fields': ('iban_1_bank', 'iban_1', 'iban_2_bank', 'iban_2')}),
+        ('Invoice', {'fields': ('invoice_footer',)}),
+        ('Marina Map', {'fields': ('marina_svg',), 'classes': ('collapse',)}),
+    )
 
     def has_add_permission(self, request):
-        # Limit to exactly one configuration record per tenant database
         if TenantConfig.objects.exists():
             return False
         return True
 
     def has_delete_permission(self, request, obj=None):
-        # Allow deleting redundant configurations if there are multiple,
-        # but prevent deleting the last remaining configuration.
         if TenantConfig.objects.count() > 1:
             return True
         return False
