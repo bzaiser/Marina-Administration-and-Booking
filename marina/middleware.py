@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from marina.router import set_active_tenant
 from marina.models import Tenant
@@ -9,10 +10,13 @@ class TenantMiddleware:
     def __call__(self, request):
         host = request.get_host().split(':')[0].lower()
         
-        # 1. Direct production domain mappings
-        if host == 'marina.zaisers.myds.me':
+        # 1. Direct production domain mappings (configurable via environment variables)
+        ormos_domain = os.getenv('TENANT_ORMOS_DOMAIN', 'marina.zaisers.myds.me').lower()
+        karlovasi_domain = os.getenv('TENANT_KARLOVASI_DOMAIN', 'shipyard.zaisers.myds.me').lower()
+        
+        if host == ormos_domain:
             tenant_slug = 'ormos'
-        elif host == 'shipyard.zaisers.myds.me':
+        elif host == karlovasi_domain:
             tenant_slug = 'karlovasi'
         else:
             # Determine subdomain slug
@@ -71,9 +75,11 @@ class TenantMiddleware:
                 return parts[0]
             return None
 
-        # Wildcard recognition for *.marina.zaisers.myds.me
-        if host.endswith('marina.zaisers.myds.me'):
-            if len(parts) > 4:
+        # Wildcard recognition for *.marina.zaisers.myds.me (configurable)
+        ormos_domain = os.getenv('TENANT_ORMOS_DOMAIN', 'marina.zaisers.myds.me').lower()
+        if host.endswith(ormos_domain):
+            domain_parts_len = len(ormos_domain.split('.'))
+            if len(parts) > domain_parts_len:
                 return parts[0]
             return None
 
