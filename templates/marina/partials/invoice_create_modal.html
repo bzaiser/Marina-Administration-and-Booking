@@ -1,38 +1,26 @@
 <div class="modal-header border-0 pb-0">
-    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus text-success me-2"></i>New Manual Invoice</h5>
+    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-plus text-success me-2"></i>New Invoice</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
-{% if request.htmx %}
-<form hx-post="{% url 'invoice_create' %}" hx-target="#modals-here .modal-content">
-{% else %}
-<form method="POST" action="{% url 'invoice_create' %}">
-{% endif %}
+{% if request.htmx %}<form hx-post="{% url 'invoice_create' %}" hx-target="#modals-here .modal-content">{% else %}<form method="POST" action="{% url 'invoice_create' %}">{% endif %}
     <div class="modal-body pt-3">
         <div class="alert alert-success border-0 rounded-3 mb-4 d-flex align-items-center">
             <i class="bi bi-info-circle-fill me-3 fs-4"></i>
-            <div>
-                Step 1: Define the customer and invoice status. <br>
-                <small class="opacity-75">You will be able to add line items in the next step.</small>
-            </div>
+            <div>Step 1: Set customer, type and language. <br><small class="opacity-75">Line items are added in the next step.</small></div>
         </div>
 
         {% csrf_token %}
-        
+
         {% if form.errors %}
         <div class="alert alert-danger border-0 rounded-3 mb-4">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            Please correct the errors below.
-            <ul class="mb-0 mt-2 small">
-                {% for field, errors in form.errors.items %}
-                <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
-                {% endfor %}
-            </ul>
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Please correct the errors below.
+            <ul class="mb-0 mt-2 small">{% for field, errors in form.errors.items %}<li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>{% endfor %}</ul>
         </div>
         {% endif %}
 
         <div class="row g-3">
-            <div class="col-md-12">
+            <div class="col-12">
                 <label class="form-label fw-bold small text-muted text-uppercase">Customer</label>
                 {{ form.customer }}
             </div>
@@ -41,20 +29,38 @@
                 {{ form.document_type }}
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-bold small text-muted text-uppercase">Initial Status</label>
-                {{ form.status }}
+                <label class="form-label fw-bold small text-muted text-uppercase">PDF Language</label>
+                {{ form.language }}
             </div>
             <div class="col-md-3">
+                <label class="form-label fw-bold small text-muted text-uppercase">Series</label>
+                {{ form.series }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">Status</label>
+                {{ form.status }}
+            </div>
+            <div class="col-md-4">
                 <label class="form-label fw-bold small text-muted text-uppercase">Payment Method</label>
                 {{ form.payment_method }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold small text-muted text-uppercase">Discount (€)</label>
+                {{ form.discount }}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Purpose <span class="text-muted fw-normal">(ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)</span></label>
+                {{ form.purpose }}
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold small text-muted text-uppercase">Remarks <span class="text-muted fw-normal">(ΠΑΡΑΤΗΡΗΣΕΙΣ)</span></label>
+                {{ form.notes }}
             </div>
         </div>
     </div>
     <div class="modal-footer border-0 pt-0 pb-4 justify-content-center">
         <div class="d-grid gap-2 w-100 px-3">
-            <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold py-3 shadow-sm">
-                Next: Add Line Items <i class="bi bi-arrow-right ms-2"></i>
-            </button>
+            <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold py-3 shadow-sm">Next: Add Line Items <i class="bi bi-arrow-right ms-2"></i></button>
             <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancel</button>
         </div>
     </div>
