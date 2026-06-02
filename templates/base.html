@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,6 +121,18 @@
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
+                    {# ── Language switcher ── #}
+                    <li class="nav-item dropdown me-1">
+                        <a class="nav-link dropdown-toggle btn btn-outline-light btn-sm text-white px-2 d-flex align-items-center gap-1" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color:rgba(255,255,255,0.25);background:transparent;">
+                            {% get_current_language as CURRENT_LANG %}
+                            {% if CURRENT_LANG == 'el' %}<span class="fi fi-gr"></span> EL{% elif CURRENT_LANG == 'de' %}<span class="fi fi-de"></span> DE{% else %}<span class="fi fi-gb"></span> EN{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-light-subtle mt-2" aria-labelledby="langDropdown">
+                            <li><form action="{% url 'set_language' %}" method="post" class="m-0">{% csrf_token %}<input name="next" type="hidden" value="{{ request.path }}"><button name="language" value="en" type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2"><span class="fi fi-gb"></span> English</button></form></li>
+                            <li><form action="{% url 'set_language' %}" method="post" class="m-0">{% csrf_token %}<input name="next" type="hidden" value="{{ request.path }}"><button name="language" value="el" type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2"><span class="fi fi-gr"></span> Ελληνικά</button></form></li>
+                            <li><form action="{% url 'set_language' %}" method="post" class="m-0">{% csrf_token %}<input name="next" type="hidden" value="{{ request.path }}"><button name="language" value="de" type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2"><span class="fi fi-de"></span> Deutsch</button></form></li>
+                        </ul>
+                    </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn btn-outline-light btn-sm text-white px-3 d-flex align-items-center gap-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: rgba(255, 255, 255, 0.25); background: transparent;">
