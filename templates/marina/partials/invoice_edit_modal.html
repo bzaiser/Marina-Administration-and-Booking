@@ -4,10 +4,7 @@
 </div>
 
 <!-- Main Invoice Form (Wraps Header and Footer) -->
-<form id="main-invoice-form" 
-      hx-post="{% url 'invoice_edit' invoice.id %}" 
-      hx-target="#modals-here .modal-content"
-      hx-indicator="#invoice-save-indicator">
+<form id="main-invoice-form" hx-post="{% url 'invoice_edit' invoice.id %}" hx-target="#modals-here .modal-content" hx-indicator="#invoice-save-indicator">
     {% csrf_token %}
     
     <div class="modal-body pt-3">
@@ -23,17 +20,33 @@
                         <label class="form-label xx-small fw-bold text-muted text-uppercase">Document Type</label>
                         {{ form.document_type }}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label xx-small fw-bold text-muted text-uppercase">Invoice Status</label>
                         {{ form.status }}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label xx-small fw-bold text-muted text-uppercase">Payment Method</label>
                         {{ form.payment_method }}
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Total Discount (€)</label>
+                    <div class="col-md-2">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Discount (€)</label>
                         {{ form.discount }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Language</label>
+                        {{ form.language }}
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Series (ΣΕΙΡΑ)</label>
+                        {{ form.series }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Purpose (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)</label>
+                        {{ form.purpose }}
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Remarks / Notes (ΠΑΡΑΤΗΡΗΣΕΙΣ)</label>
+                        {{ form.notes }}
                     </div>
                 </div>
             </div>
@@ -51,22 +64,28 @@
             <table class="table table-sm align-middle">
                 <thead class="table-light xx-small text-uppercase text-muted">
                     <tr>
-                        <th class="ps-3" style="min-width: 250px;">Description</th>
-                        <th class="text-end" style="width: 90px;">Qty</th>
-                        <th class="text-end" style="width: 140px;">Unit</th>
-                        <th class="text-end" style="width: 140px;">Unit Price</th>
-                        <th class="text-end" style="width: 120px;">Total</th>
-                        <th class="text-end pe-3" style="width: 60px;">Action</th>
+                        <th class="ps-3" style="width: 100px;">Code</th>
+                        <th style="min-width: 180px;">Description</th>
+                        <th class="text-end" style="width: 70px;">Qty</th>
+                        <th class="text-end" style="width: 110px;">Unit</th>
+                        <th class="text-end" style="width: 110px;">Price</th>
+                        <th class="text-end" style="width: 80px;">Disc %</th>
+                        <th class="text-end" style="width: 80px;">VAT %</th>
+                        <th class="text-end" style="width: 100px;">Subtotal</th>
+                        <th class="text-end pe-3" style="width: 50px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in invoice.items.all %}
                     <tr class="small" id="invoice-item-row-{{ item.id }}">
                         <td class="ps-3">
+                            <input type="text" class="form-control form-control-sm" name="item_{{ item.id }}_item_code" value="{{ item.item_code|default:'' }}" placeholder="Code">
+                        </td>
+                        <td>
                             <input type="text" class="form-control form-control-sm" name="item_{{ item.id }}_description" value="{{ item.description }}" required>
                         </td>
                         <td class="text-end">
-                            <input type="number" step="0.01" class="form-control form-control-sm text-end" name="item_{{ item.id }}_quantity" value="{{ item.quantity|stringformat:".2f" }}" required oninput="calculateRowTotal({{ item.id }})">
+                            <input type="number" step="0.1" class="form-control form-control-sm text-end" name="item_{{ item.id }}_quantity" value="{{ item.quantity|stringformat:".2f" }}" required oninput="calculateRowTotal({{ item.id }})">
                         </td>
                         <td class="text-end">
                             <select class="form-select form-select-sm" name="item_{{ item.id }}_unit">
@@ -75,44 +94,45 @@
                                 <option value="KWH" {% if item.unit == 'KWH' %}selected{% endif %}>kWh</option>
                                 <option value="HOUR" {% if item.unit == 'HOUR' %}selected{% endif %}>Hour</option>
                                 <option value="DAY" {% if item.unit == 'DAY' %}selected{% endif %}>Day(s)</option>
-                                <option value="PIECE" {% if item.unit == 'PIECE' %}selected{% endif %}>Piece / Unit</option>
+                                <option value="PIECE" {% if item.unit == 'PIECE' %}selected{% endif %}>Piece</option>
                             </select>
                         </td>
                         <td class="text-end">
                             <div class="input-group input-group-sm">
-                                <span class="input-group-text bg-light border-end-0">€</span>
+                                <span class="input-group-text bg-light border-end-0 p-1">€</span>
                                 <input type="number" step="0.01" class="form-control form-control-sm text-end" name="item_{{ item.id }}_unit_price" value="{{ item.unit_price|stringformat:".2f" }}" required oninput="calculateRowTotal({{ item.id }})">
                             </div>
+                        </td>
+                        <td class="text-end">
+                            <input type="number" step="0.1" class="form-control form-control-sm text-end" name="item_{{ item.id }}_discount_pct" value="{{ item.discount_pct|stringformat:".2f" }}" oninput="calculateRowTotal({{ item.id }})">
+                        </td>
+                        <td class="text-end">
+                            <input type="number" step="0.1" class="form-control form-control-sm text-end" name="item_{{ item.id }}_tax_rate" value="{{ item.tax_rate|stringformat:".1f" }}" oninput="calculateRowTotal({{ item.id }})">
                         </td>
                         <td class="text-end fw-bold text-dark pt-3" id="item-total-{{ item.id }}">
                             €{{ item.subtotal|floatformat:2 }}
                         </td>
                         <td class="text-end pe-3">
-                            <button type="button" 
-                                    class="btn btn-sm btn-link text-danger p-0"
-                                    hx-post="{% url 'invoice_remove_item' item.id %}" 
-                                    hx-include="#main-invoice-form"
-                                    hx-target="#modals-here .modal-content"
-                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                            <button type="button" class="btn btn-sm btn-link text-danger p-0" hx-post="{% url 'invoice_remove_item' item.id %}" hx-include="#main-invoice-form" hx-target="#modals-here .modal-content" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>
                     {% endfor %}
                     <tr class="table-info border-top-2">
-                        <td colspan="4" class="text-end fw-bold">Subtotal</td>
+                        <td colspan="7" class="text-end fw-bold">Subtotal (Net)</td>
                         <td class="text-end fw-bold">€{{ invoice.total_amount|add:invoice.discount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
                     {% if invoice.discount > 0 %}
                     <tr class="table-warning">
-                        <td colspan="4" class="text-end text-muted small">Applied Discount</td>
+                        <td colspan="7" class="text-end text-muted small">Applied Header Discount</td>
                         <td class="text-end text-danger fw-bold">- €{{ invoice.discount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
                     {% endif %}
                     <tr class="table-primary fw-bold fs-6">
-                        <td colspan="4" class="text-end py-3">Total Amount Due</td>
+                        <td colspan="7" class="text-end py-3">Total Amount Due</td>
                         <td class="text-end py-3">€{{ invoice.total_amount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
@@ -146,13 +166,7 @@
                                 </thead>
                                 <tbody id="catalogSearchResultsBody">
                                     {% for s in services %}
-                                    <tr class="catalog-service-row" 
-                                        style="cursor: pointer;"
-                                        data-name="{{ s.name }}" 
-                                        data-category="{{ s.category.name|default:'General' }}" 
-                                        data-description="{{ s.description|default:'' }}" 
-                                        data-price="{{ s.price_per_unit|stringformat:".2f" }}" 
-                                        data-unit="{{ s.unit }}">
+                                    <tr class="catalog-service-row" style="cursor: pointer;" data-name="{{ s.name }}" data-category="{{ s.category.name|default:'General' }}" data-description="{{ s.description|default:'' }}" data-price="{{ s.price_per_unit|stringformat:".2f" }}" data-unit="{{ s.unit }}" data-code="{{ s.id }}">
                                         <td class="ps-3 fw-bold text-primary">{{ s.name }}</td>
                                         <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ s.category.name|default:'General' }}</span></td>
                                         <td class="text-muted text-truncate" style="max-width: 180px;">{{ s.description|default:'-' }}</td>
@@ -171,7 +185,11 @@
             </div>
             <div class="card-body p-3">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-5">
+                    <div class="col-md-2">
+                        <label class="form-label xx-small text-muted fw-bold mb-1">Code</label>
+                        {{ item_form.item_code }}
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label xx-small text-muted fw-bold mb-1">Description</label>
                         {{ item_form.description }}
                     </div>
@@ -179,7 +197,7 @@
                         <label class="form-label xx-small text-muted fw-bold mb-1">Qty</label>
                         {{ item_form.quantity }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1.5">
                         <label class="form-label xx-small text-muted fw-bold mb-1">Unit</label>
                         {{ item_form.unit }}
                     </div>
@@ -190,16 +208,20 @@
                             {{ item_form.unit_price }}
                         </div>
                     </div>
+                    <div class="col-md-1">
+                        <label class="form-label xx-small text-muted fw-bold mb-1">Disc%</label>
+                        {{ item_form.discount_pct }}
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label xx-small text-muted fw-bold mb-1">VAT%</label>
+                        {{ item_form.tax_rate }}
+                    </div>
                     <div class="col-md-1 text-center">
                         <label class="form-label xx-small text-muted fw-bold mb-1">Total</label>
                         <div id="item-preview-total" class="fw-bold text-primary small pt-1">€0.00</div>
                     </div>
                     <div class="col-md-1 text-end">
-                        <button type="button" 
-                                class="btn btn-sm btn-success w-100 shadow-sm"
-                                hx-post="{% url 'invoice_add_item' invoice.id %}"
-                                hx-include="#main-invoice-form"
-                                hx-target="#modals-here .modal-content">
+                        <button type="button" class="btn btn-sm btn-success w-100 shadow-sm" hx-post="{% url 'invoice_add_item' invoice.id %}" hx-include="#main-invoice-form" hx-target="#modals-here .modal-content">
                             <i class="bi bi-plus-lg"></i>
                         </button>
                     </div>
@@ -228,7 +250,8 @@
         if (!row) return;
         const qty = parseFloat(row.querySelector('input[name="item_' + id + '_quantity"]').value) || 0;
         const price = parseFloat(row.querySelector('input[name="item_' + id + '_unit_price"]').value) || 0;
-        const total = qty * price;
+        const discPct = parseFloat(row.querySelector('input[name="item_' + id + '_discount_pct"]').value) || 0;
+        const total = qty * price * (1 - (discPct / 100));
         document.getElementById('item-total-' + id).innerText = '€' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 
@@ -236,23 +259,29 @@
         const modal = document.querySelector('#modals-here');
         const priceField = modal.querySelector('#main-invoice-form input[name="unit_price"]');
         const qtyField = modal.querySelector('#main-invoice-form input[name="quantity"]');
+        const discField = modal.querySelector('#main-invoice-form input[name="discount_pct"]');
         const previewDisplay = modal.querySelector('#item-preview-total');
         
         if (priceField && qtyField && previewDisplay) {
             const price = parseFloat(priceField.value) || 0;
             const qty = parseFloat(qtyField.value) || 0;
-            const total = price * qty;
+            const discPct = discField ? (parseFloat(discField.value) || 0) : 0;
+            const total = price * qty * (1 - (discPct / 100));
             previewDisplay.innerText = '€' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
     }
 
-    function fillInvoiceItem(name, price, unit) {
+    function fillInvoiceItem(name, price, unit, code) {
         const modal = document.querySelector('#modals-here');
+        const codeField = modal.querySelector('#main-invoice-form input[name="item_code"]');
         const descField = modal.querySelector('#main-invoice-form input[name="description"]');
         const priceField = modal.querySelector('#main-invoice-form input[name="unit_price"]');
         const qtyField = modal.querySelector('#main-invoice-form input[name="quantity"]');
         const unitField = modal.querySelector('#main-invoice-form select[name="unit"]');
+        const discField = modal.querySelector('#main-invoice-form input[name="discount_pct"]');
+        const vatField = modal.querySelector('#main-invoice-form input[name="tax_rate"]');
         
+        if (codeField && code) codeField.value = code;
         if (descField) {
             const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
             const currentDate = new Date();
@@ -263,6 +292,8 @@
         if (priceField) priceField.value = price;
         if (qtyField) qtyField.value = "1.0";
         if (unitField) unitField.value = unit;
+        if (discField) discField.value = "0.0";
+        if (vatField) vatField.value = "24.0"; // Default Greek VAT
         
         updatePreviewTotal();
         
@@ -314,8 +345,9 @@
                     const name = this.getAttribute('data-name');
                     const price = this.getAttribute('data-price');
                     const unit = this.getAttribute('data-unit');
+                    const code = this.getAttribute('data-code');
                     
-                    fillInvoiceItem(name, price, unit);
+                    fillInvoiceItem(name, price, unit, code);
                     resultsDiv.style.display = 'none';
                     searchInput.value = ""; // Clear search input
                 });
@@ -325,7 +357,7 @@
 
     // Dynamic price calculation for quick add
     document.addEventListener('input', function(e) {
-        if (e.target.name === 'unit_price' || e.target.name === 'quantity') {
+        if (e.target.name === 'unit_price' || e.target.name === 'quantity' || e.target.name === 'discount_pct') {
             updatePreviewTotal();
         }
     });

@@ -859,6 +859,7 @@ def _save_inline_items(request, invoice):
             try:
                 item = InvoiceItem.objects.get(pk=item_id, invoice=invoice)
                 item.description = value
+                item.item_code = request.POST.get(f"item_{item_id}_item_code", item.item_code)
                 try:
                     item.quantity = float(request.POST.get(f"item_{item_id}_quantity", item.quantity))
                 except (ValueError, TypeError):
@@ -866,6 +867,14 @@ def _save_inline_items(request, invoice):
                 item.unit = request.POST.get(f"item_{item_id}_unit", item.unit)
                 try:
                     item.unit_price = float(request.POST.get(f"item_{item_id}_unit_price", item.unit_price))
+                except (ValueError, TypeError):
+                    pass
+                try:
+                    item.discount_pct = float(request.POST.get(f"item_{item_id}_discount_pct", item.discount_pct))
+                except (ValueError, TypeError):
+                    pass
+                try:
+                    item.tax_rate = float(request.POST.get(f"item_{item_id}_tax_rate", item.tax_rate))
                 except (ValueError, TypeError):
                     pass
                 item.save()

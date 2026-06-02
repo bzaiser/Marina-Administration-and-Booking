@@ -41,12 +41,15 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceItemForm(forms.ModelForm):
     class Meta:
         model = InvoiceItem
-        fields = ['description', 'quantity', 'unit', 'unit_price']
+        fields = ['item_code', 'description', 'quantity', 'unit', 'unit_price', 'discount_pct', 'tax_rate']
         widgets = {
+            'item_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Code...'}),
             'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Item description...'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'unit': forms.Select(attrs={'class': 'form-select'}),
             'unit_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'discount_pct': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00%'}),
+            'tax_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '24.00%'}),
         }
 
 class ServiceProviderForm(forms.ModelForm):
