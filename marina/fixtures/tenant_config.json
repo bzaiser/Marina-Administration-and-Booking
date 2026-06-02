@@ -1,0 +1,32 @@
+[
+{
+    "model": "marina.tenantconfig",
+    "pk": 1,
+    "fields": {
+        "company_name": "SHIPYARD KARLOVASI SAMOS",
+        "company_name_el": "ΣΠΑΝΟΓΙΑΝΝΗΣ ΑΡΙΣΤΕΙΔΗΣ",
+        "owner_name": "SPANOGIANNIS ARISTEIDIS",
+        "owner_name_el": "ΣΠΑΝΟΓΙΑΝΝΗΣ ΑΡΙΣΤΕΙΔΗΣ",
+        "logo": "",
+        "address": "Limani Karlovasi,\nSamos, 83200, Greece",
+        "address_el": "Λιμάνι Καρλοβάσου,\nΣάμος, ΤΚ: 83200",
+        "opening_hours": "08:00 - 20:00",
+        "email": "aris@aris-samos.com",
+        "phone": "22730 35740",
+        "mobile": "6972879323",
+        "website": "www.aris-samos.com",
+        "vat_number": "041481329",
+        "tax_office": "Samos",
+        "tax_office_el": "ΣΑΜΟΥ",
+        "iban_1": "GR5201406020602002330000737",
+        "iban_1_bank": "Alpha Bank",
+        "iban_1_bank_el": "ALPHA BANK",
+        "iban_2": "GR1901727080005708090734041",
+        "iban_2_bank": "Piraeus Bank",
+        "iban_2_bank_el": "PIRAEUS BANK",
+        "invoice_footer": "Thank you for choosing Shipyard Karlovasi Samos. Safe travels!",
+        "invoice_footer_el": "Ευχαριστούμε για την προτίμησή σας στο Ναυπηγείο Καρλοβάσου Σάμου!",
+        "marina_svg": null
+    }
+}
+]
