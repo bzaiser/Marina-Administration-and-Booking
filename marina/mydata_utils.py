@@ -14,10 +14,27 @@ def send_invoice_to_mydata(invoice):
     """
     Sends a Marina Invoice to the Greek myDATA platform.
     """
-    user_id = os.getenv("MYDATA_USER")
-    sub_key = os.getenv("MYDATA_SUBSCRIPTION_KEY")
-    env = os.getenv("MYDATA_ENVIRONMENT", "sandbox")
-    my_vat = os.getenv("MYDATA_VAT_NUMBER", "888888888")
+    from marina.router import get_active_tenant
+    from marina.models import TenantConfig
+
+    tenant_slug = get_active_tenant()
+    if tenant_slug:
+        prefix = f"TENANT_{tenant_slug.upper()}_"
+        user_id = os.getenv(f"{prefix}MYDATA_USER") or os.getenv("MYDATA_USER")
+        sub_key = os.getenv(f"{prefix}MYDATA_SUBSCRIPTION_KEY") or os.getenv("MYDATA_SUBSCRIPTION_KEY")
+        env = os.getenv(f"{prefix}MYDATA_ENVIRONMENT") or os.getenv("MYDATA_ENVIRONMENT", "sandbox")
+        my_vat = os.getenv(f"{prefix}MYDATA_VAT_NUMBER") or os.getenv("MYDATA_VAT_NUMBER")
+        if not my_vat:
+            db_config = TenantConfig.objects.first()
+            my_vat = db_config.vat_number if db_config else "888888888"
+    else:
+        user_id = os.getenv("MYDATA_USER")
+        sub_key = os.getenv("MYDATA_SUBSCRIPTION_KEY")
+        env = os.getenv("MYDATA_ENVIRONMENT", "sandbox")
+        my_vat = os.getenv("MYDATA_VAT_NUMBER")
+        if not my_vat:
+            db_config = TenantConfig.objects.first()
+            my_vat = db_config.vat_number if db_config else "888888888"
 
     if not user_id or not sub_key:
         return False, "myDATA credentials missing in .env"
