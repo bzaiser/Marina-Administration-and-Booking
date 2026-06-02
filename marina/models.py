@@ -444,6 +444,37 @@ class Invoice(models.Model):
         self.total_amount = float(item_total) - float(self.discount)
         self.save()
 
+    @property
+    def items_subtotal_before_discount(self):
+        return sum(float(item.quantity) * float(item.unit_price) for item in self.items.all())
+
+    @property
+    def items_discount_total(self):
+        return sum((float(item.quantity) * float(item.unit_price)) - float(item.subtotal) for item in self.items.all())
+
+    @property
+    def net_total_before_header_discount(self):
+        return sum(float(item.subtotal) for item in self.items.all())
+
+    @property
+    def total_tax(self):
+        return sum(float(item.tax_amount) for item in self.items.all())
+
+    @property
+    def grand_total(self):
+        return float(self.net_total_before_header_discount) - float(self.discount) + float(self.total_tax)
+
+    @property
+    def vat_breakdown(self):
+        breakdown = {}
+        for item in self.items.all():
+            rate = float(item.tax_rate)
+            if rate not in breakdown:
+                breakdown[rate] = {'net': 0.0, 'tax': 0.0}
+            breakdown[rate]['net'] += float(item.subtotal)
+            breakdown[rate]['tax'] += float(item.tax_amount)
+        return sorted([{'rate': k, 'net': v['net'], 'tax': v['tax']} for k, v in breakdown.items()], key=lambda x: x['rate'])
+
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="items")
     item_code = models.CharField(max_length=50, blank=True, null=True, help_text="ΚΩΔΙΚΟΣ service code")
