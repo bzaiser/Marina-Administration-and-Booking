@@ -1,252 +1,463 @@
 # German translations for Marina Management
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-02 10:58+0300\n"
+"Language: de\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 
+#: marina/models.py:7
 msgid "ISO Code"
 msgstr "ISO-Code"
 
+#: marina/models.py:8
 msgid "Country Name"
 msgstr "Ländername"
 
+#: marina/models.py:14
 msgid "Country"
 msgstr "Land"
 
+#: marina/models.py:15
 msgid "Countries"
 msgstr "Länder"
 
+#: marina/models.py:84
 msgid "Name"
 msgstr "Name"
 
+#: marina/models.py:85 marina/models.py:262
 msgid "Email"
 msgstr "E-Mail"
 
+#: marina/models.py:86 marina/models.py:261
 msgid "Phone"
 msgstr "Telefon"
 
+#: marina/models.py:87
 msgid "Address"
 msgstr "Adresse"
 
+#: marina/models.py:88
 msgid "City / Postal Code"
 msgstr "Stadt / PLZ"
 
+#: marina/models.py:89
 msgid "Profession"
 msgstr "Beruf"
 
+#: marina/models.py:90
 msgid "VAT Number / AFM"
 msgstr "USt-IdNr. / AFM"
 
+#: marina/models.py:91
 msgid "Tax Office / DOY"
 msgstr "Finanzamt / DOY"
 
+#: marina/models.py:92
 msgid "Passport Number"
 msgstr "Passnummer"
 
+#: marina/models.py:93
 msgid "Nationality"
 msgstr "Nationalität"
 
+#: marina/models.py:94
 msgid "Preferred Language"
 msgstr "Bevorzugte Sprache"
 
+#: marina/models.py:101
 msgid "Customer"
 msgstr "Kunde"
 
+#: marina/models.py:102 templates/base.html:89
 msgid "Customers"
 msgstr "Kunden"
 
+#: marina/models.py:113
 msgid "Boat Name"
 msgstr "Bootsname"
 
+#: marina/models.py:115 marina/models.py:225
 msgid "Type"
 msgstr "Typ"
 
+#: marina/models.py:116
 msgid "Weight (tons)"
 msgstr "Gewicht (Tonnen)"
 
+#: marina/models.py:117
 msgid "Length (meters)"
 msgstr "Länge (Meter)"
 
+#: marina/models.py:118
 msgid "Width (meters)"
 msgstr "Breite (Meter)"
 
+#: marina/models.py:119
 msgid "Draft (meters)"
 msgstr "Tiefgang (Meter)"
 
+#: marina/models.py:120
 msgid "Engine"
 msgstr "Motor"
 
+#: marina/models.py:121
 msgid "Flag"
 msgstr "Flagge"
 
+#: marina/models.py:122 marina/models.py:301
 msgid "Color"
 msgstr "Farbe"
 
+#: marina/models.py:123
 msgid "Boat Photo"
 msgstr "Bootsfoto"
 
+#: marina/models.py:124
 msgid "Year Built"
 msgstr "Baujahr"
 
+#: marina/models.py:125
 msgid "Last Maintenance"
 msgstr "Letzte Wartung"
 
+#: marina/models.py:126
 msgid "Diesel Tank (L)"
 msgstr "Dieseltank (L)"
 
+#: marina/models.py:127
 msgid "Water Tank (L)"
 msgstr "Wassertank (L)"
 
+#: marina/models.py:128
 msgid "Technical Notes"
 msgstr "Technische Notizen"
 
+#: marina/models.py:154
 msgid "Boat"
 msgstr "Boot"
 
+#: marina/models.py:155
 msgid "Boats"
 msgstr "Boote"
 
+#: marina/models.py:176
 msgid "Number"
 msgstr "Nummer"
 
+#: marina/models.py:177
 msgid "Max Length (m)"
 msgstr "Max. Länge (m)"
 
+#: marina/models.py:178
 msgid "Max Weight (t)"
 msgstr "Max. Gewicht (t)"
 
+#: marina/models.py:185
 msgid "Berth"
 msgstr "Liegeplatz"
 
+#: marina/models.py:186 templates/base.html:83
+#: templates/marina/dashboard.html:32
 msgid "Berths"
 msgstr "Liegeplätze"
 
+#: marina/models.py:190
 msgid "From Meters"
 msgstr "Ab Meter"
 
+#: marina/models.py:191
 msgid "To Meters"
 msgstr "Bis Meter"
 
+#: marina/models.py:192
 msgid "Price per Day"
 msgstr "Preis pro Tag"
 
+#: marina/models.py:198
 msgid "Price Rate"
 msgstr "Preisstufe"
 
+#: marina/models.py:199
 msgid "Price Rates"
 msgstr "Preisstufen"
 
+#: marina/models.py:223
 msgid "Arrival Date"
 msgstr "Ankunftsdatum"
 
+#: marina/models.py:224
 msgid "Departure Date"
 msgstr "Abreisedatum"
 
+#: marina/models.py:226 marina/models.py:346
 msgid "Status"
 msgstr "Status"
 
+#: marina/models.py:227
 msgid "Reference"
 msgstr "Referenz"
 
+#: marina/models.py:228
 msgid "At Sea"
 msgstr "Auf See"
 
+#: marina/models.py:229 marina/models.py:347 marina/models.py:379
 msgid "Notes"
 msgstr "Notizen"
 
+#: marina/models.py:256
 msgid "Booking"
 msgstr "Buchung"
 
+#: marina/models.py:257 templates/base.html:95
 msgid "Bookings"
 msgstr "Buchungen"
 
+#: marina/models.py:260
 msgid "Provider Name"
 msgstr "Anbietername"
 
+#: marina/models.py:268
 msgid "Service Provider"
 msgstr "Dienstleister"
 
+#: marina/models.py:269
 msgid "Service Providers"
 msgstr "Dienstleister"
 
+#: marina/models.py:272
 msgid "Category Name"
 msgstr "Kategoriename"
 
+#: marina/models.py:273 marina/models.py:295
 msgid "Description"
 msgstr "Beschreibung"
 
+#: marina/models.py:274
 msgid "Available for Marina (Supplies)"
 msgstr "Verfügbar für Marina (Versorgung)"
 
+#: marina/models.py:275
 msgid "Available for Yard (Work Orders)"
 msgstr "Verfügbar für Werft (Aufträge)"
 
+#: marina/models.py:278
 msgid "Service Category"
 msgstr "Servicekategorie"
 
+#: marina/models.py:279
 msgid "Service Categories"
 msgstr "Servicekategorien"
 
+#: marina/models.py:294
 msgid "Service Name"
 msgstr "Servicename"
 
+#: marina/models.py:296
 msgid "Category"
 msgstr "Kategorie"
 
+#: marina/models.py:297
 msgid "Unit"
 msgstr "Einheit"
 
+#: marina/models.py:298 marina/models.py:316
 msgid "Price per Unit"
 msgstr "Preis pro Einheit"
 
+#: marina/models.py:299 marina/models.py:317 marina/models.py:377
 msgid "Tax Rate (%)"
 msgstr "Steuersatz (%)"
 
+#: marina/models.py:300
 msgid "Image"
 msgstr "Bild"
 
+#: marina/models.py:302
 msgid "Provider / Supplier"
 msgstr "Anbieter / Lieferant"
 
+#: marina/models.py:309 marina/models.py:310
 msgid "Service Catalog"
 msgstr "Leistungskatalog"
 
+#: marina/models.py:315 marina/models.py:374
 msgid "Quantity / Units"
 msgstr "Menge / Einheiten"
 
+#: marina/models.py:318 marina/models.py:380
 msgid "Date Added"
 msgstr "Hinzugefügt am"
 
+#: marina/models.py:350
 msgid "Start Date"
 msgstr "Startdatum"
 
+#: marina/models.py:351
 msgid "End Date"
 msgstr "Enddatum"
 
+#: marina/models.py:353
 msgid "Date Created"
 msgstr "Erstellt am"
 
+#: marina/models.py:368
 msgid "Work Order"
 msgstr "Arbeitsauftrag"
 
+#: marina/models.py:369
 msgid "Work Orders"
 msgstr "Arbeitsaufträge"
 
+#: marina/models.py:376
 msgid "Price per Unit (At Order)"
 msgstr "Preis pro Einheit (bei Auftrag)"
 
+#: marina/models.py:397
 msgid "Work Order Item"
 msgstr "Auftragsposition"
 
+#: marina/models.py:398
 msgid "Work Order Items"
 msgstr "Auftragspositionen"
 
+#: marina_project/settings.py:180
 msgid "English"
 msgstr "Englisch"
 
+#: marina_project/settings.py:181
 msgid "Greek"
 msgstr "Griechisch"
 
+#: marina_project/settings.py:182
 msgid "German"
 msgstr "Deutsch"
+
+#: templates/base.html:71 templates/marina/dashboard.html:4
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: templates/base.html:77 templates/marina/dashboard.html:100
+msgid "Calendar"
+msgstr "Kalender"
+
+#: templates/base.html:101 templates/marina/dashboard.html:99
+msgid "Planning"
+msgstr "Planung"
+
+#: templates/base.html:107
+msgid "Service"
+msgstr "Werft/Service"
+
+#: templates/base.html:113 templates/marina/invoices_list.html:4
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: templates/base.html:119
+msgid "Reports"
+msgstr "Berichte"
+
+#: templates/base.html:146
+msgid "Admin Panel"
+msgstr "Adminbereich"
+
+#: templates/base.html:156
+msgid "Menu Settings"
+msgstr "Menüeinstellungen"
+
+#: templates/base.html:166
+msgid "Logout"
+msgstr "Abmelden"
+
+#: templates/base.html:184
+msgid "Marina Samos Administration"
+msgstr "Marina Samos Verwaltung"
+
+#: templates/base.html:186
+msgid "About System"
+msgstr "Über das System"
+
+#: templates/base.html:218
+msgid "Close"
+msgstr "Schließen"
+
+#: templates/marina/dashboard.html:18
+msgid "Active"
+msgstr "Aktiv"
+
+#: templates/marina/dashboard.html:46
+msgid "Unpaid"
+msgstr "Unbezahlt"
+
+#: templates/marina/dashboard.html:60
+msgid "Guests"
+msgstr "Gäste"
+
+#: templates/marina/dashboard.html:85
+msgid "Check-In"
+msgstr "Anmeldung"
+
+#: templates/marina/dashboard.html:86
+msgid "New Boat"
+msgstr "Neues Boot"
+
+#: templates/marina/dashboard.html:114
+msgid "Billing"
+msgstr "Rechnung"
+
+#: templates/marina/dashboard.html:115
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: templates/marina/dashboard.html:129
+msgid "Check-Out"
+msgstr "Abreise"
+
+#: templates/marina/dashboard.html:130
+msgid "Depart"
+msgstr "Abreisen"
+
+#: templates/marina/dashboard.html:141
+msgid "Marina Live View"
+msgstr "Marina Live-Ansicht"
+
+#: templates/marina/invoices_list.html:20
+msgid "Total Invoices"
+msgstr "Rechnungen gesamt"
+
+#: templates/marina/invoices_list.html:33
+#: templates/marina/invoices_list.html:100
+msgid "Open"
+msgstr "Offen"
+
+#: templates/marina/invoices_list.html:46
+#: templates/marina/invoices_list.html:101
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: templates/marina/invoices_list.html:59
+msgid "myDATA Overdue"
+msgstr "myDATA überfällig"
+
+#: templates/marina/invoices_list.html:74
+msgid "Invoice Management"
+msgstr "Rechnungsverwaltung"
+
+#: templates/marina/invoices_list.html:75
+msgid "Manage your billing and payments"
+msgstr "Rechnungen und Zahlungen verwalten"
+
+#: templates/marina/invoices_list.html:81
+msgid "New Invoice"
+msgstr "Neue Rechnung"
+
+#: templates/marina/invoices_list.html:91
+msgid "Search customer, ID, item…"
+msgstr "Suche nach Kunde, ID, Position…"
+
+#: templates/marina/invoices_list.html:99
+msgid "All Statuses"
+msgstr "Alle Status"

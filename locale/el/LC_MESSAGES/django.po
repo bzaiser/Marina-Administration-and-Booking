@@ -1,252 +1,463 @@
 # Greek translations for Marina Management
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-02 10:58+0300\n"
+"Language: el\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: el\n"
 
+#: marina/models.py:7
 msgid "ISO Code"
 msgstr "Κωδικός ISO"
 
+#: marina/models.py:8
 msgid "Country Name"
 msgstr "Όνομα Χώρας"
 
+#: marina/models.py:14
 msgid "Country"
 msgstr "Χώρα"
 
+#: marina/models.py:15
 msgid "Countries"
 msgstr "Χώρες"
 
+#: marina/models.py:84
 msgid "Name"
 msgstr "Όνομα"
 
+#: marina/models.py:85 marina/models.py:262
 msgid "Email"
 msgstr "Email"
 
+#: marina/models.py:86 marina/models.py:261
 msgid "Phone"
 msgstr "Τηλέφωνο"
 
+#: marina/models.py:87
 msgid "Address"
 msgstr "Διεύθυνση"
 
+#: marina/models.py:88
 msgid "City / Postal Code"
 msgstr "Πόλη / Τ.Κ."
 
+#: marina/models.py:89
 msgid "Profession"
 msgstr "Επάγγελμα"
 
+#: marina/models.py:90
 msgid "VAT Number / AFM"
 msgstr "Α.Φ.Μ."
 
+#: marina/models.py:91
 msgid "Tax Office / DOY"
 msgstr "Δ.Ο.Υ."
 
+#: marina/models.py:92
 msgid "Passport Number"
 msgstr "Αριθμός Διαβατηρίου"
 
+#: marina/models.py:93
 msgid "Nationality"
 msgstr "Εθνικότητα"
 
+#: marina/models.py:94
 msgid "Preferred Language"
 msgstr "Προτιμώμενη Γλώσσα"
 
+#: marina/models.py:101
 msgid "Customer"
 msgstr "Πελάτης"
 
+#: marina/models.py:102 templates/base.html:89
 msgid "Customers"
 msgstr "Πελάτες"
 
+#: marina/models.py:113
 msgid "Boat Name"
 msgstr "Όνομα Σκάφους"
 
+#: marina/models.py:115 marina/models.py:225
 msgid "Type"
 msgstr "Τύπος"
 
+#: marina/models.py:116
 msgid "Weight (tons)"
 msgstr "Βάρος (τόνοι)"
 
+#: marina/models.py:117
 msgid "Length (meters)"
 msgstr "Μήκος (μέτρα)"
 
+#: marina/models.py:118
 msgid "Width (meters)"
 msgstr "Πλάτος (μέτρα)"
 
+#: marina/models.py:119
 msgid "Draft (meters)"
 msgstr "Βύθισμα (μέτρα)"
 
+#: marina/models.py:120
 msgid "Engine"
 msgstr "Κινητήρας"
 
+#: marina/models.py:121
 msgid "Flag"
 msgstr "Σημαία"
 
+#: marina/models.py:122 marina/models.py:301
 msgid "Color"
 msgstr "Χρώμα"
 
+#: marina/models.py:123
 msgid "Boat Photo"
 msgstr "Φωτογραφία Σκάφους"
 
+#: marina/models.py:124
 msgid "Year Built"
 msgstr "Έτος Κατασκευής"
 
+#: marina/models.py:125
 msgid "Last Maintenance"
 msgstr "Τελευταία Συντήρηση"
 
+#: marina/models.py:126
 msgid "Diesel Tank (L)"
 msgstr "Δεξαμενή Πετρελαίου (L)"
 
+#: marina/models.py:127
 msgid "Water Tank (L)"
 msgstr "Δεξαμενή Νερού (L)"
 
+#: marina/models.py:128
 msgid "Technical Notes"
 msgstr "Τεχνικές Σημειώσεις"
 
+#: marina/models.py:154
 msgid "Boat"
 msgstr "Σκάφος"
 
+#: marina/models.py:155
 msgid "Boats"
 msgstr "Σκάφη"
 
+#: marina/models.py:176
 msgid "Number"
 msgstr "Αριθμός"
 
+#: marina/models.py:177
 msgid "Max Length (m)"
 msgstr "Μέγ. Μήκος (μ)"
 
+#: marina/models.py:178
 msgid "Max Weight (t)"
 msgstr "Μέγ. Βάρος (τ)"
 
+#: marina/models.py:185
 msgid "Berth"
 msgstr "Θέση Ελλιμενισμού"
 
+#: marina/models.py:186 templates/base.html:83
+#: templates/marina/dashboard.html:32
 msgid "Berths"
 msgstr "Θέσεις Ελλιμενισμού"
 
+#: marina/models.py:190
 msgid "From Meters"
 msgstr "Από Μέτρα"
 
+#: marina/models.py:191
 msgid "To Meters"
 msgstr "Έως Μέτρα"
 
+#: marina/models.py:192
 msgid "Price per Day"
 msgstr "Τιμή ανά Ημέρα"
 
+#: marina/models.py:198
 msgid "Price Rate"
 msgstr "Τιμολόγιο"
 
+#: marina/models.py:199
 msgid "Price Rates"
 msgstr "Τιμολόγια"
 
+#: marina/models.py:223
 msgid "Arrival Date"
 msgstr "Ημερομηνία Άφιξης"
 
+#: marina/models.py:224
 msgid "Departure Date"
 msgstr "Ημερομηνία Αναχώρησης"
 
+#: marina/models.py:226 marina/models.py:346
 msgid "Status"
 msgstr "Κατάσταση"
 
+#: marina/models.py:227
 msgid "Reference"
 msgstr "Αναφορά"
 
+#: marina/models.py:228
 msgid "At Sea"
 msgstr "Εν Πλω"
 
+#: marina/models.py:229 marina/models.py:347 marina/models.py:379
 msgid "Notes"
 msgstr "Παρατηρήσεις"
 
+#: marina/models.py:256
 msgid "Booking"
 msgstr "Κράτηση"
 
+#: marina/models.py:257 templates/base.html:95
 msgid "Bookings"
 msgstr "Κρατήσεις"
 
+#: marina/models.py:260
 msgid "Provider Name"
 msgstr "Όνομα Παρόχου"
 
+#: marina/models.py:268
 msgid "Service Provider"
 msgstr "Πάροχος Υπηρεσιών"
 
+#: marina/models.py:269
 msgid "Service Providers"
 msgstr "Πάροχοι Υπηρεσιών"
 
+#: marina/models.py:272
 msgid "Category Name"
 msgstr "Όνομα Κατηγορίας"
 
+#: marina/models.py:273 marina/models.py:295
 msgid "Description"
 msgstr "Περιγραφή"
 
+#: marina/models.py:274
 msgid "Available for Marina (Supplies)"
 msgstr "Διαθέσιμο για Μαρίνα (Εφόδια)"
 
+#: marina/models.py:275
 msgid "Available for Yard (Work Orders)"
 msgstr "Διαθέσιμο για Ναυπηγείο (Εντολές)"
 
+#: marina/models.py:278
 msgid "Service Category"
 msgstr "Κατηγορία Υπηρεσιών"
 
+#: marina/models.py:279
 msgid "Service Categories"
 msgstr "Κατηγορίες Υπηρεσιών"
 
+#: marina/models.py:294
 msgid "Service Name"
 msgstr "Όνομα Υπηρεσίας"
 
+#: marina/models.py:296
 msgid "Category"
 msgstr "Κατηγορία"
 
+#: marina/models.py:297
 msgid "Unit"
 msgstr "Μονάδα"
 
+#: marina/models.py:298 marina/models.py:316
 msgid "Price per Unit"
 msgstr "Τιμή ανά Μονάδα"
 
+#: marina/models.py:299 marina/models.py:317 marina/models.py:377
 msgid "Tax Rate (%)"
 msgstr "Φ.Π.Α. (%)"
 
+#: marina/models.py:300
 msgid "Image"
 msgstr "Εικόνα"
 
+#: marina/models.py:302
 msgid "Provider / Supplier"
 msgstr "Πάροχος / Προμηθευτής"
 
+#: marina/models.py:309 marina/models.py:310
 msgid "Service Catalog"
 msgstr "Κατάλογος Υπηρεσιών"
 
+#: marina/models.py:315 marina/models.py:374
 msgid "Quantity / Units"
 msgstr "Ποσότητα / Μονάδες"
 
+#: marina/models.py:318 marina/models.py:380
 msgid "Date Added"
 msgstr "Ημερομηνία Προσθήκης"
 
+#: marina/models.py:350
 msgid "Start Date"
 msgstr "Ημερομηνία Έναρξης"
 
+#: marina/models.py:351
 msgid "End Date"
 msgstr "Ημερομηνία Λήξης"
 
+#: marina/models.py:353
 msgid "Date Created"
 msgstr "Ημερομηνία Δημιουργίας"
 
+#: marina/models.py:368
 msgid "Work Order"
 msgstr "Εντολή Εργασίας"
 
+#: marina/models.py:369
 msgid "Work Orders"
 msgstr "Εντολές Εργασίας"
 
+#: marina/models.py:376
 msgid "Price per Unit (At Order)"
 msgstr "Τιμή ανά Μονάδα (κατά Παραγγελία)"
 
+#: marina/models.py:397
 msgid "Work Order Item"
 msgstr "Στοιχείο Εντολής"
 
+#: marina/models.py:398
 msgid "Work Order Items"
 msgstr "Στοιχεία Εντολής"
 
+#: marina_project/settings.py:180
 msgid "English"
 msgstr "Αγγλικά"
 
+#: marina_project/settings.py:181
 msgid "Greek"
 msgstr "Ελληνικά"
 
+#: marina_project/settings.py:182
 msgid "German"
 msgstr "Γερμανικά"
+
+#: templates/base.html:71 templates/marina/dashboard.html:4
+msgid "Dashboard"
+msgstr "Πίνακας Ελέγχου"
+
+#: templates/base.html:77 templates/marina/dashboard.html:100
+msgid "Calendar"
+msgstr "Ημερολόγιο"
+
+#: templates/base.html:101 templates/marina/dashboard.html:99
+msgid "Planning"
+msgstr "Προγραμματισμός"
+
+#: templates/base.html:107
+msgid "Service"
+msgstr "Υπηρεσίες"
+
+#: templates/base.html:113 templates/marina/invoices_list.html:4
+msgid "Invoices"
+msgstr "Τιμολόγια"
+
+#: templates/base.html:119
+msgid "Reports"
+msgstr "Αναφορές"
+
+#: templates/base.html:146
+msgid "Admin Panel"
+msgstr "Διαχείριση"
+
+#: templates/base.html:156
+msgid "Menu Settings"
+msgstr "Ρυθμίσεις Μενού"
+
+#: templates/base.html:166
+msgid "Logout"
+msgstr "Αποσύνδεση"
+
+#: templates/base.html:184
+msgid "Marina Samos Administration"
+msgstr "Διαχείριση Μαρίνας Σάμου"
+
+#: templates/base.html:186
+msgid "About System"
+msgstr "Σχετικά με το Σύστημα"
+
+#: templates/base.html:218
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: templates/marina/dashboard.html:18
+msgid "Active"
+msgstr "Ενεργά"
+
+#: templates/marina/dashboard.html:46
+msgid "Unpaid"
+msgstr "Απλήρωτα"
+
+#: templates/marina/dashboard.html:60
+msgid "Guests"
+msgstr "Επισκέπτες"
+
+#: templates/marina/dashboard.html:85
+msgid "Check-In"
+msgstr "Άφιξη"
+
+#: templates/marina/dashboard.html:86
+msgid "New Boat"
+msgstr "Νέο Σκάφος"
+
+#: templates/marina/dashboard.html:114
+msgid "Billing"
+msgstr "Τιμολόγηση"
+
+#: templates/marina/dashboard.html:115
+msgid "Invoice"
+msgstr "Τιμολόγιο"
+
+#: templates/marina/dashboard.html:129
+msgid "Check-Out"
+msgstr "Αναχώρηση"
+
+#: templates/marina/dashboard.html:130
+msgid "Depart"
+msgstr "Αναχώρηση"
+
+#: templates/marina/dashboard.html:141
+msgid "Marina Live View"
+msgstr "Ζωντανή Προβολή Μαρίνας"
+
+#: templates/marina/invoices_list.html:20
+msgid "Total Invoices"
+msgstr "Σύνολο Τιμολογίων"
+
+#: templates/marina/invoices_list.html:33
+#: templates/marina/invoices_list.html:100
+msgid "Open"
+msgstr "Ανοιχτό"
+
+#: templates/marina/invoices_list.html:46
+#: templates/marina/invoices_list.html:101
+msgid "Paid"
+msgstr "Εξοφλημένο"
+
+#: templates/marina/invoices_list.html:59
+msgid "myDATA Overdue"
+msgstr "myDATA Εκπρόθεσμα"
+
+#: templates/marina/invoices_list.html:74
+msgid "Invoice Management"
+msgstr "Διαχείριση Τιμολογίων"
+
+#: templates/marina/invoices_list.html:75
+msgid "Manage your billing and payments"
+msgstr "Διαχείριση των χρεώσεων και των πληρωμών σας"
+
+#: templates/marina/invoices_list.html:81
+msgid "New Invoice"
+msgstr "Νέο Τιμολόγιο"
+
+#: templates/marina/invoices_list.html:91
+msgid "Search customer, ID, item…"
+msgstr "Αναζήτηση πελάτη, ID, αντικειμένου…"
+
+#: templates/marina/invoices_list.html:99
+msgid "All Statuses"
+msgstr "Όλες οι Καταστάσεις"
