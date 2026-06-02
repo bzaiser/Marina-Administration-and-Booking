@@ -1,0 +1,252 @@
+# Greek translations for Marina Management
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
+
+msgid "ISO Code"
+msgstr "Κωδικός ISO"
+
+msgid "Country Name"
+msgstr "Όνομα Χώρας"
+
+msgid "Country"
+msgstr "Χώρα"
+
+msgid "Countries"
+msgstr "Χώρες"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+msgid "Address"
+msgstr "Διεύθυνση"
+
+msgid "City / Postal Code"
+msgstr "Πόλη / Τ.Κ."
+
+msgid "Profession"
+msgstr "Επάγγελμα"
+
+msgid "VAT Number / AFM"
+msgstr "Α.Φ.Μ."
+
+msgid "Tax Office / DOY"
+msgstr "Δ.Ο.Υ."
+
+msgid "Passport Number"
+msgstr "Αριθμός Διαβατηρίου"
+
+msgid "Nationality"
+msgstr "Εθνικότητα"
+
+msgid "Preferred Language"
+msgstr "Προτιμώμενη Γλώσσα"
+
+msgid "Customer"
+msgstr "Πελάτης"
+
+msgid "Customers"
+msgstr "Πελάτες"
+
+msgid "Boat Name"
+msgstr "Όνομα Σκάφους"
+
+msgid "Type"
+msgstr "Τύπος"
+
+msgid "Weight (tons)"
+msgstr "Βάρος (τόνοι)"
+
+msgid "Length (meters)"
+msgstr "Μήκος (μέτρα)"
+
+msgid "Width (meters)"
+msgstr "Πλάτος (μέτρα)"
+
+msgid "Draft (meters)"
+msgstr "Βύθισμα (μέτρα)"
+
+msgid "Engine"
+msgstr "Κινητήρας"
+
+msgid "Flag"
+msgstr "Σημαία"
+
+msgid "Color"
+msgstr "Χρώμα"
+
+msgid "Boat Photo"
+msgstr "Φωτογραφία Σκάφους"
+
+msgid "Year Built"
+msgstr "Έτος Κατασκευής"
+
+msgid "Last Maintenance"
+msgstr "Τελευταία Συντήρηση"
+
+msgid "Diesel Tank (L)"
+msgstr "Δεξαμενή Πετρελαίου (L)"
+
+msgid "Water Tank (L)"
+msgstr "Δεξαμενή Νερού (L)"
+
+msgid "Technical Notes"
+msgstr "Τεχνικές Σημειώσεις"
+
+msgid "Boat"
+msgstr "Σκάφος"
+
+msgid "Boats"
+msgstr "Σκάφη"
+
+msgid "Number"
+msgstr "Αριθμός"
+
+msgid "Max Length (m)"
+msgstr "Μέγ. Μήκος (μ)"
+
+msgid "Max Weight (t)"
+msgstr "Μέγ. Βάρος (τ)"
+
+msgid "Berth"
+msgstr "Θέση Ελλιμενισμού"
+
+msgid "Berths"
+msgstr "Θέσεις Ελλιμενισμού"
+
+msgid "From Meters"
+msgstr "Από Μέτρα"
+
+msgid "To Meters"
+msgstr "Έως Μέτρα"
+
+msgid "Price per Day"
+msgstr "Τιμή ανά Ημέρα"
+
+msgid "Price Rate"
+msgstr "Τιμολόγιο"
+
+msgid "Price Rates"
+msgstr "Τιμολόγια"
+
+msgid "Arrival Date"
+msgstr "Ημερομηνία Άφιξης"
+
+msgid "Departure Date"
+msgstr "Ημερομηνία Αναχώρησης"
+
+msgid "Status"
+msgstr "Κατάσταση"
+
+msgid "Reference"
+msgstr "Αναφορά"
+
+msgid "At Sea"
+msgstr "Εν Πλω"
+
+msgid "Notes"
+msgstr "Παρατηρήσεις"
+
+msgid "Booking"
+msgstr "Κράτηση"
+
+msgid "Bookings"
+msgstr "Κρατήσεις"
+
+msgid "Provider Name"
+msgstr "Όνομα Παρόχου"
+
+msgid "Service Provider"
+msgstr "Πάροχος Υπηρεσιών"
+
+msgid "Service Providers"
+msgstr "Πάροχοι Υπηρεσιών"
+
+msgid "Category Name"
+msgstr "Όνομα Κατηγορίας"
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Available for Marina (Supplies)"
+msgstr "Διαθέσιμο για Μαρίνα (Εφόδια)"
+
+msgid "Available for Yard (Work Orders)"
+msgstr "Διαθέσιμο για Ναυπηγείο (Εντολές)"
+
+msgid "Service Category"
+msgstr "Κατηγορία Υπηρεσιών"
+
+msgid "Service Categories"
+msgstr "Κατηγορίες Υπηρεσιών"
+
+msgid "Service Name"
+msgstr "Όνομα Υπηρεσίας"
+
+msgid "Category"
+msgstr "Κατηγορία"
+
+msgid "Unit"
+msgstr "Μονάδα"
+
+msgid "Price per Unit"
+msgstr "Τιμή ανά Μονάδα"
+
+msgid "Tax Rate (%)"
+msgstr "Φ.Π.Α. (%)"
+
+msgid "Image"
+msgstr "Εικόνα"
+
+msgid "Provider / Supplier"
+msgstr "Πάροχος / Προμηθευτής"
+
+msgid "Service Catalog"
+msgstr "Κατάλογος Υπηρεσιών"
+
+msgid "Quantity / Units"
+msgstr "Ποσότητα / Μονάδες"
+
+msgid "Date Added"
+msgstr "Ημερομηνία Προσθήκης"
+
+msgid "Start Date"
+msgstr "Ημερομηνία Έναρξης"
+
+msgid "End Date"
+msgstr "Ημερομηνία Λήξης"
+
+msgid "Date Created"
+msgstr "Ημερομηνία Δημιουργίας"
+
+msgid "Work Order"
+msgstr "Εντολή Εργασίας"
+
+msgid "Work Orders"
+msgstr "Εντολές Εργασίας"
+
+msgid "Price per Unit (At Order)"
+msgstr "Τιμή ανά Μονάδα (κατά Παραγγελία)"
+
+msgid "Work Order Item"
+msgstr "Στοιχείο Εντολής"
+
+msgid "Work Order Items"
+msgstr "Στοιχεία Εντολής"
+
+msgid "English"
+msgstr "Αγγλικά"
+
+msgid "Greek"
+msgstr "Ελληνικά"
+
+msgid "German"
+msgstr "Γερμανικά"

@@ -1,0 +1,252 @@
+# German translations for Marina Management
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+
+msgid "ISO Code"
+msgstr "ISO-Code"
+
+msgid "Country Name"
+msgstr "Ländername"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Countries"
+msgstr "Länder"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "City / Postal Code"
+msgstr "Stadt / PLZ"
+
+msgid "Profession"
+msgstr "Beruf"
+
+msgid "VAT Number / AFM"
+msgstr "USt-IdNr. / AFM"
+
+msgid "Tax Office / DOY"
+msgstr "Finanzamt / DOY"
+
+msgid "Passport Number"
+msgstr "Passnummer"
+
+msgid "Nationality"
+msgstr "Nationalität"
+
+msgid "Preferred Language"
+msgstr "Bevorzugte Sprache"
+
+msgid "Customer"
+msgstr "Kunde"
+
+msgid "Customers"
+msgstr "Kunden"
+
+msgid "Boat Name"
+msgstr "Bootsname"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Weight (tons)"
+msgstr "Gewicht (Tonnen)"
+
+msgid "Length (meters)"
+msgstr "Länge (Meter)"
+
+msgid "Width (meters)"
+msgstr "Breite (Meter)"
+
+msgid "Draft (meters)"
+msgstr "Tiefgang (Meter)"
+
+msgid "Engine"
+msgstr "Motor"
+
+msgid "Flag"
+msgstr "Flagge"
+
+msgid "Color"
+msgstr "Farbe"
+
+msgid "Boat Photo"
+msgstr "Bootsfoto"
+
+msgid "Year Built"
+msgstr "Baujahr"
+
+msgid "Last Maintenance"
+msgstr "Letzte Wartung"
+
+msgid "Diesel Tank (L)"
+msgstr "Dieseltank (L)"
+
+msgid "Water Tank (L)"
+msgstr "Wassertank (L)"
+
+msgid "Technical Notes"
+msgstr "Technische Notizen"
+
+msgid "Boat"
+msgstr "Boot"
+
+msgid "Boats"
+msgstr "Boote"
+
+msgid "Number"
+msgstr "Nummer"
+
+msgid "Max Length (m)"
+msgstr "Max. Länge (m)"
+
+msgid "Max Weight (t)"
+msgstr "Max. Gewicht (t)"
+
+msgid "Berth"
+msgstr "Liegeplatz"
+
+msgid "Berths"
+msgstr "Liegeplätze"
+
+msgid "From Meters"
+msgstr "Ab Meter"
+
+msgid "To Meters"
+msgstr "Bis Meter"
+
+msgid "Price per Day"
+msgstr "Preis pro Tag"
+
+msgid "Price Rate"
+msgstr "Preisstufe"
+
+msgid "Price Rates"
+msgstr "Preisstufen"
+
+msgid "Arrival Date"
+msgstr "Ankunftsdatum"
+
+msgid "Departure Date"
+msgstr "Abreisedatum"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Reference"
+msgstr "Referenz"
+
+msgid "At Sea"
+msgstr "Auf See"
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Booking"
+msgstr "Buchung"
+
+msgid "Bookings"
+msgstr "Buchungen"
+
+msgid "Provider Name"
+msgstr "Anbietername"
+
+msgid "Service Provider"
+msgstr "Dienstleister"
+
+msgid "Service Providers"
+msgstr "Dienstleister"
+
+msgid "Category Name"
+msgstr "Kategoriename"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Available for Marina (Supplies)"
+msgstr "Verfügbar für Marina (Versorgung)"
+
+msgid "Available for Yard (Work Orders)"
+msgstr "Verfügbar für Werft (Aufträge)"
+
+msgid "Service Category"
+msgstr "Servicekategorie"
+
+msgid "Service Categories"
+msgstr "Servicekategorien"
+
+msgid "Service Name"
+msgstr "Servicename"
+
+msgid "Category"
+msgstr "Kategorie"
+
+msgid "Unit"
+msgstr "Einheit"
+
+msgid "Price per Unit"
+msgstr "Preis pro Einheit"
+
+msgid "Tax Rate (%)"
+msgstr "Steuersatz (%)"
+
+msgid "Image"
+msgstr "Bild"
+
+msgid "Provider / Supplier"
+msgstr "Anbieter / Lieferant"
+
+msgid "Service Catalog"
+msgstr "Leistungskatalog"
+
+msgid "Quantity / Units"
+msgstr "Menge / Einheiten"
+
+msgid "Date Added"
+msgstr "Hinzugefügt am"
+
+msgid "Start Date"
+msgstr "Startdatum"
+
+msgid "End Date"
+msgstr "Enddatum"
+
+msgid "Date Created"
+msgstr "Erstellt am"
+
+msgid "Work Order"
+msgstr "Arbeitsauftrag"
+
+msgid "Work Orders"
+msgstr "Arbeitsaufträge"
+
+msgid "Price per Unit (At Order)"
+msgstr "Preis pro Einheit (bei Auftrag)"
+
+msgid "Work Order Item"
+msgstr "Auftragsposition"
+
+msgid "Work Order Items"
+msgstr "Auftragspositionen"
+
+msgid "English"
+msgstr "Englisch"
+
+msgid "Greek"
+msgstr "Griechisch"
+
+msgid "German"
+msgstr "Deutsch"
