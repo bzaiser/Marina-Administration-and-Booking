@@ -486,6 +486,10 @@ class InvoiceItem(models.Model):
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=24.0, help_text="ΦΠΑ % (Greece default 24%, Samos 17%)")
 
     @property
+    def item_total_before_discount(self):
+        return round(float(self.quantity) * float(self.unit_price), 2)
+
+    @property
     def net_price(self):
         return float(self.unit_price) * (1 - float(self.discount_pct) / 100)
 
