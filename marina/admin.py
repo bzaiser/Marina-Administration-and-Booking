@@ -99,11 +99,11 @@ class TenantConfigAdmin(admin.ModelAdmin):
     list_display = ('company_name', 'owner_name', 'email', 'phone', 'vat_number')
     search_fields = ('company_name', 'email')
     fieldsets = (
-        ('Company Identity', {'fields': ('company_name', 'owner_name', 'logo')}),
-        ('Contact', {'fields': ('address', 'phone', 'mobile', 'email', 'website', 'opening_hours')}),
-        ('Tax & Legal', {'fields': ('vat_number', 'tax_office')}),
-        ('Bank Accounts (IBAN)', {'fields': ('iban_1_bank', 'iban_1', 'iban_2_bank', 'iban_2')}),
-        ('Invoice', {'fields': ('invoice_footer',)}),
+        ('Company Identity', {'fields': ('company_name', 'company_name_el', 'owner_name', 'owner_name_el', 'logo')}),
+        ('Contact', {'fields': ('address', 'address_el', 'phone', 'mobile', 'email', 'website', 'opening_hours')}),
+        ('Tax & Legal', {'fields': ('vat_number', 'tax_office', 'tax_office_el')}),
+        ('Bank Accounts (IBAN)', {'fields': ('iban_1_bank', 'iban_1_bank_el', 'iban_1', 'iban_2_bank', 'iban_2_bank_el', 'iban_2')}),
+        ('Invoice', {'fields': ('invoice_footer', 'invoice_footer_el')}),
         ('Marina Map', {'fields': ('marina_svg',), 'classes': ('collapse',)}),
     )
 

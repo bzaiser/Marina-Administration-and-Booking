@@ -511,9 +511,12 @@ class InvoiceItem(models.Model):
 
 class TenantConfig(models.Model):
     company_name = models.CharField(max_length=150, default="ORMOS MARINA")
+    company_name_el = models.CharField(max_length=150, blank=True, null=True, help_text="Company name in Greek / Ελληνικά")
     owner_name = models.CharField(max_length=150, blank=True, null=True, help_text="Full legal owner name for invoice header")
+    owner_name_el = models.CharField(max_length=150, blank=True, null=True, help_text="Full legal owner name in Greek / Ελληνικά")
     logo = models.ImageField(upload_to="tenant_logos/", blank=True, null=True)
     address = models.TextField(default="Ormos Marathokampou Marina,\nSamos Island, 81002, Greece")
+    address_el = models.TextField(blank=True, null=True, help_text="Address in Greek / Ελληνικά")
     opening_hours = models.CharField(max_length=100, default="08:00 - 20:00")
     email = models.EmailField(default="ormosmarina@aris-samos.com")
     phone = models.CharField(max_length=50, default="+49 163 3430354")
@@ -521,11 +524,15 @@ class TenantConfig(models.Model):
     website = models.CharField(max_length=200, blank=True, null=True, help_text="e.g. www.aris-samos.com")
     vat_number = models.CharField(max_length=50, default="888888888")
     tax_office = models.CharField(max_length=100, default="Samos", help_text="e.g. DOY Samos")
+    tax_office_el = models.CharField(max_length=100, blank=True, null=True, help_text="Tax office name in Greek / Ελληνικά (e.g. ΔΟΥ Σάμου)")
     iban_1 = models.CharField(max_length=34, blank=True, null=True, help_text="Primary IBAN")
     iban_1_bank = models.CharField(max_length=100, blank=True, null=True, help_text="Primary bank name, e.g. Alpha Bank")
+    iban_1_bank_el = models.CharField(max_length=100, blank=True, null=True, help_text="Primary bank name in Greek / Ελληνικά")
     iban_2 = models.CharField(max_length=34, blank=True, null=True, help_text="Secondary IBAN")
     iban_2_bank = models.CharField(max_length=100, blank=True, null=True, help_text="Secondary bank name, e.g. Piraeus Bank")
+    iban_2_bank_el = models.CharField(max_length=100, blank=True, null=True, help_text="Secondary bank name in Greek / Ελληνικά")
     invoice_footer = models.TextField(default="Thank you for choosing Ormos Marina. Safe travels!", help_text="Custom thank-you message on the bottom of invoices")
+    invoice_footer_el = models.TextField(blank=True, null=True, help_text="Custom thank-you message in Greek / Ελληνικά")
     marina_svg = models.TextField(blank=True, null=True, help_text="Paste raw SVG map code here to dynamically render berths. If empty, the default static SVG will be used.")
 
     class Meta:

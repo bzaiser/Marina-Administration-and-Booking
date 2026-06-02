@@ -75,13 +75,13 @@
   <!-- ═══════════════════════════════════════════════════ HEADER -->
   <div class="header">
     <div class="header-logo">
-      {% if logo_base64 %}<img src="data:image/jpeg;base64,{{ logo_base64 }}" alt="Logo">{% else %}<div class="logo-placeholder">{{ config.company_name }}</div>{% endif %}
+      {% if logo_base64 %}<img src="data:image/jpeg;base64,{{ logo_base64 }}" alt="Logo">{% else %}<div class="logo-placeholder">{% if invoice.language == 'EL' and config.company_name_el %}{{ config.company_name_el }}{% else %}{{ config.company_name }}{% endif %}</div>{% endif %}
     </div>
     <div class="header-company">
-      <div class="company-name">{% if config.owner_name %}{{ config.owner_name }}{% else %}{{ config.company_name }}{% endif %}</div>
-      {% if config.vat_number %}<div>{% if invoice.language == 'EL' %}Α.Φ.Μ.{% elif invoice.language == 'DE' %}Steuer-Nr.{% else %}VAT No.{% endif %}: {{ config.vat_number }} &nbsp; {% if invoice.language == 'EL' %}Δ.Ο.Υ.{% else %}Tax Office{% endif %}: {{ config.tax_office }}</div>{% endif %}
-      <div>{{ config.company_name }}</div>
-      {% if config.address %}<div>{{ config.address }}</div>{% endif %}
+      <div class="company-name">{% if invoice.language == 'EL' and config.owner_name_el %}{{ config.owner_name_el }}{% elif config.owner_name %}{{ config.owner_name }}{% elif invoice.language == 'EL' and config.company_name_el %}{{ config.company_name_el }}{% else %}{{ config.company_name }}{% endif %}</div>
+      {% if config.vat_number %}<div>{% if invoice.language == 'EL' %}Α.Φ.Μ.{% elif invoice.language == 'DE' %}Steuer-Nr.{% else %}VAT No.{% endif %}: {{ config.vat_number }} &nbsp; {% if invoice.language == 'EL' %}Δ.Ο.Υ.{% else %}Tax Office{% endif %}: {% if invoice.language == 'EL' and config.tax_office_el %}{{ config.tax_office_el }}{% else %}{{ config.tax_office }}{% endif %}</div>{% endif %}
+      <div>{% if invoice.language == 'EL' and config.company_name_el %}{{ config.company_name_el }}{% else %}{{ config.company_name }}{% endif %}</div>
+      {% if config.address %}<div>{% if invoice.language == 'EL' and config.address_el %}{{ config.address_el }}{% else %}{{ config.address }}{% endif %}</div>{% endif %}
       <div>
         {% if invoice.language == 'EL' %}ΤΗΛ{% else %}Tel{% endif %}: {{ config.phone }}{% if config.mobile %} &nbsp; KIN: {{ config.mobile }}{% endif %}
       </div>
@@ -210,15 +210,15 @@
   <!-- ═══════════════════════════════════════════════════ IBAN -->
   {% if config.iban_1 or config.iban_2 %}
   <div class="iban-block">
-    {% if config.iban_1 %}IBAN {{ config.iban_1_bank|default:"" }} &nbsp; {{ config.iban_1 }}<br>{% endif %}
-    {% if config.iban_2 %}IBAN {{ config.iban_2_bank|default:"" }} &nbsp; {{ config.iban_2 }}{% endif %}
+    {% if config.iban_1 %}IBAN {% if invoice.language == 'EL' and config.iban_1_bank_el %}{{ config.iban_1_bank_el }}{% else %}{{ config.iban_1_bank|default:"" }}{% endif %} &nbsp; {{ config.iban_1 }}<br>{% endif %}
+    {% if config.iban_2 %}IBAN {% if invoice.language == 'EL' and config.iban_2_bank_el %}{{ config.iban_2_bank_el }}{% else %}{{ config.iban_2_bank|default:"" }}{% endif %} &nbsp; {{ config.iban_2 }}{% endif %}
   </div>
   {% endif %}
 
   <!-- ═══════════════════════════════════════════════════ FOOTER / SIGNATURES -->
   <div style="display:flex; justify-content:space-between; align-items:flex-end;">
     <div class="page-label">{% if invoice.language == 'EL' %}ΣΕΛΙΔΑ{% elif invoice.language == 'DE' %}SEITE{% else %}PAGE{% endif %} :1/1 &nbsp;|&nbsp; {% if invoice.language == 'EL' %}ΕΝΙΑΙΟ ΜΗΧΑΝΟΓΡΑΦΙΚΟ ΕΝΤΥΠΟ ΠΟΛΛΑΠΛΗΣ ΧΡΗΣΗΣ{% elif invoice.language == 'DE' %}EINHEITLICHES BELEG-FORMULAR{% else %}UNIFIED MULTI-USE DOCUMENT{% endif %}</div>
-    <div style="font-size:8pt; color:#555;">{{ config.invoice_footer }}</div>
+    <div style="font-size:8pt; color:#555;">{% if invoice.language == 'EL' and config.invoice_footer_el %}{{ config.invoice_footer_el }}{% else %}{{ config.invoice_footer }}{% endif %}</div>
   </div>
   <div class="sig-row">
     <div class="sig-col">
