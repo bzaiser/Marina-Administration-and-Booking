@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}Bookings - Marina Samos{% endblock %}
+{% block title %}{% trans "Bookings" %} - Marina Samos{% endblock %}
 
 {% block extra_head %}
 <!-- AG Grid CSS inherited from base.html -->
@@ -42,23 +42,23 @@
     <div class="card-header bg-white py-3">
         <div class="row align-items-center">
             <div class="col">
-                <h5 class="mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>Booking Management</h5>
-                <div class="small text-muted">Advanced list with sorting, filtering, and grouping</div>
+                <h5 class="mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>{% trans "Booking Management" %}</h5>
+                <div class="small text-muted">{% trans "Advanced list with sorting, filtering, and grouping" %}</div>
             </div>
             <div class="col-auto">
                 <div class="d-flex gap-2">
                     <div class="input-group input-group-sm" style="width: 250px;">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                        <input type="text" id="booking-search" class="form-control border-start-0" placeholder="Search bookings..." oninput="onSearchInput()">
+                        <input type="text" id="booking-search" class="form-control border-start-0" placeholder="{% trans 'Search bookings...' %}" oninput="onSearchInput()">
                     </div>
-                    <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()" title="Reset Filters">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()" title="{% trans 'Reset Filters' %}">
                         <i class="bi bi-arrow-counterclockwise"></i>
                     </button>
                     <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="createBooking()">
-                        <i class="bi bi-plus-lg me-1"></i>New Booking
+                        <i class="bi bi-plus-lg me-1"></i>{% trans "New Booking" %}
                     </button>
                     <a href="{% url 'planning_grid' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                        <i class="bi bi-grid-3x3-gap me-1"></i>Planning Grid
+                        <i class="bi bi-grid-3x3-gap me-1"></i>{% trans "Planning Grid" %}
                     </a>
                 </div>
             </div>
@@ -80,7 +80,7 @@
     const columnDefs = [
         { 
             field: "id", 
-            headerName: "ID", 
+            headerName: "{% trans 'ID' %}", 
             width: 80, 
             sortable: true, 
             filter: 'agNumberColumnFilter',
@@ -88,7 +88,7 @@
         },
         { 
             field: "boat_name", 
-            headerName: "Boat / Owner", 
+            headerName: "{% trans 'Boat / Owner' %}", 
             flex: 2,
             sortable: true, 
             filter: 'agTextColumnFilter',
@@ -107,7 +107,7 @@
         },
         { 
             field: "block_name", 
-            headerName: "Berth", 
+            headerName: "{% trans 'Berth' %}", 
             width: 120,
             sortable: true, 
             filter: 'agTextColumnFilter',
@@ -123,7 +123,7 @@
         },
         { 
             field: "start_iso", 
-            headerName: "Arrival", 
+            headerName: "{% trans 'Arrival' %}", 
             width: 120,
             sortable: true, 
             filter: 'agDateColumnFilter',
@@ -131,7 +131,7 @@
         },
         { 
             field: "end_iso", 
-            headerName: "Departure", 
+            headerName: "{% trans 'Departure' %}", 
             width: 120,
             sortable: true, 
             filter: 'agDateColumnFilter',
@@ -139,7 +139,7 @@
         },
         { 
             field: "duration", 
-            headerName: "Days", 
+            headerName: "{% trans 'Days' %}", 
             width: 90,
             sortable: true, 
             filter: 'agNumberColumnFilter',
@@ -147,7 +147,7 @@
         },
         { 
             field: "status", 
-            headerName: "Status", 
+            headerName: "{% trans 'Status' %}", 
             width: 120,
             sortable: true, 
             filter: true,
@@ -159,14 +159,14 @@
         },
         { 
             field: "type", 
-            headerName: "Type", 
+            headerName: "{% trans 'Type' %}", 
             width: 120,
             sortable: true, 
             filter: true,
             cellRenderer: (params) => `<span class="badge type-badge rounded-pill">${params.value}</span>`
         },
         {
-            headerName: "Services",
+            headerName: "{% trans 'Services' %}",
             field: "services",
             width: 110,
             cellDataType: false,
@@ -178,7 +178,7 @@
             }
         },
         { 
-            headerName: "Actions", 
+            headerName: "{% trans 'Actions' %}", 
             width: 120, 
             pinned: 'right',
             cellRenderer: (params) => {
@@ -186,13 +186,13 @@
                 const b = params.data;
                 let checkoutBtn = '';
                 if (b.status_code === 'ACTIVE') {
-                    checkoutBtn = `<button class="btn btn-outline-success" onclick="checkout(${b.id})" title="Checkout"><i class="bi bi-box-arrow-right"></i></button>`;
+                    checkoutBtn = `<button class="btn btn-outline-success" onclick="checkout(${b.id})" title="{% trans 'Checkout' %}"><i class="bi bi-box-arrow-right"></i></button>`;
                 }
                 return `
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="editBooking(${b.id})" title="Edit"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-outline-primary" onclick="editBooking(${b.id})" title="{% trans 'Edit' %}"><i class="bi bi-pencil"></i></button>
                         ${checkoutBtn}
-                        <button class="btn btn-outline-danger" onclick="deleteBooking(${b.id})" title="Delete"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-outline-danger" onclick="deleteBooking(${b.id})" title="{% trans 'Delete' %}"><i class="bi bi-trash"></i></button>
                     </div>
                 `;
             }
@@ -265,7 +265,7 @@
         const modalContent = modalElement.querySelector('.modal-content');
         
         // Reset content to show loading state
-        modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading booking data...</p></div>';
+        modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">{% trans "Loading booking data..." %}</p></div>';
         
         const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
         modal.show();
@@ -275,7 +275,7 @@
             swap: 'innerHTML'
         }).catch(err => {
             console.error("HTMX Error:", err);
-            modalContent.innerHTML = '<div class="alert alert-danger m-3">Error loading booking data. Please try again.</div>';
+            modalContent.innerHTML = '<div class="alert alert-danger m-3">{% trans "Error loading booking data. Please try again." %}</div>';
         });
     }
 
@@ -293,7 +293,7 @@
     }
 
     function deleteBooking(id) {
-        if (confirm("Are you sure you want to delete this booking?")) {
+        if (confirm("{% trans 'Are you sure you want to delete this booking?' %}")) {
             fetch(`/booking/delete/${id}/`, {
                 method: 'POST',
                 headers: { 'X-CSRFToken': '{{ csrf_token }}' }
@@ -309,17 +309,17 @@
         const services = rowData.services;
         let html = `
             <div class="modal-header">
-                <h5 class="modal-title">Services for Booking #${id}</h5>
+                <h5 class="modal-title">{% trans "Services for Booking #" %}${id}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-0">
                 <table class="table table-sm table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3">Service</th>
-                            <th>Category</th>
-                            <th class="text-end">Qty</th>
-                            <th class="text-end pe-3">Subtotal</th>
+                            <th class="ps-3">{% trans "Service" %}</th>
+                            <th>{% trans "Category" %}</th>
+                            <th class="text-end">{% trans "Qty" %}</th>
+                            <th class="text-end pe-3">{% trans "Subtotal" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -338,7 +338,7 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td colspan="3" class="ps-3 fw-bold">Total Services</td>
+                            <td colspan="3" class="ps-3 fw-bold">{% trans "Total Services" %}</td>
                             <td class="text-end pe-3 fw-bold text-primary">€${rowData.total_services.toFixed(2)}</td>
                         </tr>
                     </tfoot>

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-02 19:59+0300\n"
+"POT-Creation-Date: 2026-06-03 16:51+0300\n"
 "Language: de\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,6 +28,7 @@ msgid "Name"
 msgstr "Name"
 
 #: marina/models.py:85 marina/models.py:262
+#: templates/marina/providers_list.html:24
 msgid "Email"
 msgstr "E-Mail"
 
@@ -68,6 +69,7 @@ msgid "Preferred Language"
 msgstr "Bevorzugte Sprache"
 
 #: marina/models.py:101 templates/marina/invoices_list.html:231
+#: templates/marina/reports.html:150
 msgid "Customer"
 msgstr "Kunde"
 
@@ -80,6 +82,7 @@ msgid "Boat Name"
 msgstr "Bootsname"
 
 #: marina/models.py:115 marina/models.py:225
+#: templates/marina/bookings_list.html:162
 msgid "Type"
 msgstr "Typ"
 
@@ -155,12 +158,12 @@ msgstr "Max. Länge (m)"
 msgid "Max Weight (t)"
 msgstr "Max. Gewicht (t)"
 
-#: marina/models.py:185
+#: marina/models.py:185 templates/marina/bookings_list.html:110
 msgid "Berth"
 msgstr "Liegeplatz"
 
 #: marina/models.py:186 templates/base.html:83
-#: templates/marina/dashboard.html:32
+#: templates/marina/berths_grid.html:40 templates/marina/dashboard.html:33
 msgid "Berths"
 msgstr "Liegeplätze"
 
@@ -193,7 +196,9 @@ msgid "Departure Date"
 msgstr "Abreisedatum"
 
 #: marina/models.py:226 marina/models.py:346
+#: templates/marina/berths_grid.html:56 templates/marina/bookings_list.html:150
 #: templates/marina/invoices_list.html:257
+#: templates/marina/work_order_list.html:26
 msgid "Status"
 msgstr "Status"
 
@@ -201,11 +206,12 @@ msgstr "Status"
 msgid "Reference"
 msgstr "Referenz"
 
-#: marina/models.py:228
+#: marina/models.py:228 templates/marina/berths_grid.html:110
 msgid "At Sea"
 msgstr "Auf See"
 
 #: marina/models.py:229 marina/models.py:347 marina/models.py:379
+#: templates/marina/customers_list.html:274
 msgid "Notes"
 msgstr "Notizen"
 
@@ -214,10 +220,11 @@ msgid "Booking"
 msgstr "Buchung"
 
 #: marina/models.py:257 templates/base.html:95
+#: templates/marina/bookings_list.html:5
 msgid "Bookings"
 msgstr "Buchungen"
 
-#: marina/models.py:260
+#: marina/models.py:260 templates/marina/providers_list.html:22
 msgid "Provider Name"
 msgstr "Anbietername"
 
@@ -225,7 +232,8 @@ msgstr "Anbietername"
 msgid "Service Provider"
 msgstr "Dienstleister"
 
-#: marina/models.py:269
+#: marina/models.py:269 templates/marina/providers_list.html:4
+#: templates/marina/providers_list.html:10
 msgid "Service Providers"
 msgstr "Dienstleister"
 
@@ -257,7 +265,7 @@ msgstr "Servicekategorien"
 msgid "Service Name"
 msgstr "Servicename"
 
-#: marina/models.py:296
+#: marina/models.py:296 templates/marina/bookings_list.html:320
 msgid "Category"
 msgstr "Kategorie"
 
@@ -338,19 +346,19 @@ msgstr "Griechisch"
 msgid "German"
 msgstr "Deutsch"
 
-#: templates/base.html:71 templates/marina/dashboard.html:4
+#: templates/base.html:71 templates/marina/dashboard.html:5
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: templates/base.html:77 templates/marina/dashboard.html:100
+#: templates/base.html:77 templates/marina/dashboard.html:101
 msgid "Calendar"
 msgstr "Kalender"
 
-#: templates/base.html:101 templates/marina/dashboard.html:99
+#: templates/base.html:101 templates/marina/dashboard.html:100
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/base.html:107
+#: templates/base.html:107 templates/marina/bookings_list.html:319
 msgid "Service"
 msgstr "Werft/Service"
 
@@ -382,93 +390,403 @@ msgstr "Marina Samos Verwaltung"
 msgid "About System"
 msgstr "Über das System"
 
-#: templates/base.html:218
+#: templates/base.html:218 templates/marina/customers_list.html:283
 msgid "Close"
 msgstr "Schließen"
 
-#: templates/marina/dashboard.html:18
+#: templates/marina/berths_grid.html:5 templates/marina/berths_grid.html:20
+#, fuzzy
+#| msgid "Invoice Management"
+msgid "Berths Management"
+msgstr "Rechnungsverwaltung"
+
+#: templates/marina/berths_grid.html:24
+msgid "Filter berths..."
+msgstr "Liegeplätze filtern..."
+
+#: templates/marina/berths_grid.html:25
+# fuzzy (resolved)
+#| msgid "Year Built"
+msgid "Clear filter"
+msgstr "Filter löschen"
+
+#: templates/marina/berths_grid.html:39
+# fuzzy (resolved)
+#| msgid "By Block"
+msgid "Block"
+msgstr "Block"
+
+#: templates/marina/berths_grid.html:50
+# fuzzy (resolved)
+#| msgid "Berth"
+msgid "Berth #"
+msgstr "Liegeplatz #"
+
+#: templates/marina/berths_grid.html:51
+msgid "L (m)"
+msgstr "L (m)"
+
+#: templates/marina/berths_grid.html:52
+msgid "W (t)"
+msgstr "G (t)"
+
+#: templates/marina/berths_grid.html:53
+# fuzzy (resolved)
+#| msgid "New Boat"
+msgid "Current Boat"
+msgstr "Aktuelles Boot"
+
+#: templates/marina/berths_grid.html:54
+msgid "In"
+msgstr "In"
+
+#: templates/marina/berths_grid.html:55
+msgid "Out"
+msgstr "Out"
+
+# fuzzy (resolved)
+#: templates/marina/berths_grid.html:57 templates/marina/bookings_list.html:181
+#: templates/marina/customers_list.html:164
+#: templates/marina/invoices_list.html:278
+#: templates/marina/providers_list.html:25
+#: templates/marina/work_order_list.html:28
+msgid "Actions"
+msgstr "Aktionen"
+
+#: templates/marina/berths_grid.html:84
+msgid "In:"
+msgstr "In:"
+
+#: templates/marina/berths_grid.html:85
+msgid "Out:"
+msgstr "Out:"
+
+#: templates/marina/berths_grid.html:90
+msgid "Ref:"
+msgstr "Ref:"
+
+#: templates/marina/berths_grid.html:91
+# fuzzy (resolved)
+#| msgid "Notes"
+msgid "Note:"
+msgstr "Notiz:"
+
+#: templates/marina/berths_grid.html:108
+msgid "Occupied"
+msgstr ""
+
+#: templates/marina/berths_grid.html:112
+msgid "Vacant"
+msgstr "Frei"
+
+#: templates/marina/berths_grid.html:117 templates/marina/bookings_list.html:58
+# fuzzy (resolved)
+#| msgid "Booking"
+msgid "New Booking"
+msgstr "Neue Buchung"
+
+#: templates/marina/berths_grid.html:122
+#: templates/marina/bookings_list.html:193
+#: templates/marina/customers_list.html:171
+msgid "Edit"
+msgstr ""
+
+#: templates/marina/berths_grid.html:125
+#: templates/marina/bookings_list.html:189
+#, fuzzy
+#| msgid "Check-Out"
+msgid "Checkout"
+msgstr "Abreise"
+
+#: templates/marina/berths_grid.html:128
+#: templates/marina/bookings_list.html:195
+#: templates/marina/customers_list.html:172
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: templates/marina/bookings_list.html:45
+# fuzzy (resolved)
+#| msgid "Invoice Management"
+msgid "Booking Management"
+msgstr "Buchungsverwaltung"
+
+#: templates/marina/bookings_list.html:46
+msgid "Advanced list with sorting, filtering, and grouping"
+msgstr "Erweiterte Liste mit Sortierung, Filterung und Gruppierung"
+
+#: templates/marina/bookings_list.html:52
+# fuzzy (resolved)
+#| msgid "Search boat or owner..."
+msgid "Search bookings..."
+msgstr "Buchungen suchen..."
+
+#: templates/marina/bookings_list.html:54
+msgid "Reset Filters"
+msgstr "Filter zurücksetzen"
+
+#: templates/marina/bookings_list.html:61
+# fuzzy (resolved)
+#| msgid "Planning"
+msgid "Planning Grid"
+msgstr "Planungsraster"
+
+#: templates/marina/bookings_list.html:83
+#: templates/marina/invoices_list.html:218
+#: templates/marina/work_order_list.html:22
+msgid "ID"
+msgstr "ID"
+
+#: templates/marina/bookings_list.html:91
+msgid "Boat / Owner"
+msgstr "Boot / Eigner"
+
+#: templates/marina/bookings_list.html:126
+# fuzzy (resolved)
+#| msgid "Arrival Date"
+msgid "Arrival"
+msgstr "Ankunft"
+
+#: templates/marina/bookings_list.html:134
+# fuzzy (resolved)
+#| msgid "Depart"
+msgid "Departure"
+msgstr "Abreise"
+
+#: templates/marina/bookings_list.html:142
+msgid "Days"
+msgstr "Tage"
+
+#: templates/marina/bookings_list.html:169
+#, fuzzy
+#| msgid "Service"
+msgid "Services"
+msgstr "Werft/Service"
+
+#: templates/marina/bookings_list.html:268
+msgid "Loading booking data..."
+msgstr "Buchungsdaten werden geladen..."
+
+#: templates/marina/bookings_list.html:278
+msgid "Error loading booking data. Please try again."
+msgstr "Fehler beim Laden der Buchungsdaten. Bitte versuchen Sie es erneut."
+
+#: templates/marina/bookings_list.html:296
+msgid "Are you sure you want to delete this booking?"
+msgstr "Sind Sie sicher, dass Sie diese Buchung löschen möchten?"
+
+#: templates/marina/bookings_list.html:312
+msgid "Services for Booking #"
+msgstr "Dienstleistungen für Buchung #"
+
+#: templates/marina/bookings_list.html:321
+msgid "Qty"
+msgstr "Menge"
+
+#: templates/marina/bookings_list.html:322
+msgid "Subtotal"
+msgstr "Zwischensumme"
+
+#: templates/marina/bookings_list.html:341
+# fuzzy (resolved)
+#| msgid "Total Invoices"
+msgid "Total Services"
+msgstr "Dienstleistungen Gesamt"
+
+#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:25
+msgid "Timeline"
+msgstr "Zeitachse"
+
+#: templates/marina/calendar.html:51
+# fuzzy (resolved)
+#| msgid "Booking"
+msgid "Booking Timeline"
+msgstr "Buchungs-Zeitachse"
+
+#: templates/marina/calendar.html:53
+# fuzzy (resolved)
+#| msgid "Search boat or owner..."
+msgid "Search boat..."
+msgstr "Boot suchen..."
+
+#: templates/marina/calendar.html:56
+msgid "Zoom In"
+msgstr "Vergrößern"
+
+#: templates/marina/calendar.html:57
+msgid "Zoom Out"
+msgstr "Verkleinern"
+
+#: templates/marina/customers_list.html:5
+#: templates/marina/customers_list.html:84
+# fuzzy (resolved)
+#| msgid "Invoice Management"
+msgid "Customer Management"
+msgstr "Kundenverwaltung"
+
+#: templates/marina/customers_list.html:85
+msgid "Manage your marina customers and their boats."
+msgstr "Verwalten Sie Ihre Marina-Kunden und deren Boote."
+
+#: templates/marina/customers_list.html:92
+# fuzzy (resolved)
+#| msgid "Customer"
+msgid "New Customer"
+msgstr "Neuer Kunde"
+
+#: templates/marina/customers_list.html:100
+# fuzzy (resolved)
+#| msgid "Search customer, ID, item…"
+msgid "Search customers or boats..."
+msgstr "Kunden oder Boote suchen..."
+
+#: templates/marina/customers_list.html:125
+# fuzzy (resolved)
+#| msgid "Customer"
+msgid "Customer Name"
+msgstr "Kundenname"
+
+#: templates/marina/customers_list.html:133
+msgid "Contact"
+msgstr "Kontakt"
+
+#: templates/marina/customers_list.html:142
+# fuzzy (resolved)
+#| msgid "New Boat"
+msgid "Owned Boats"
+msgstr "Eigene Boote"
+
+#: templates/marina/customers_list.html:146
+# fuzzy (resolved)
+#| msgid "Boats"
+msgid "No boats"
+msgstr "Keine Boote"
+
+#: templates/marina/customers_list.html:214
+msgid "Are you sure you want to delete this customer?"
+msgstr "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?"
+
+#: templates/marina/customers_list.html:227
+msgid "Boat Specifications"
+msgstr "Bootsdaten"
+
+#: templates/marina/customers_list.html:243
+# fuzzy (resolved)
+#| msgid "Max Length (m)"
+msgid "Length"
+msgstr "Länge"
+
+#: templates/marina/customers_list.html:247
+msgid "Width"
+msgstr "Breite"
+
+#: templates/marina/customers_list.html:251
+msgid "Draft"
+msgstr "Tiefgang"
+
+#: templates/marina/customers_list.html:259
+# fuzzy (resolved)
+#| msgid "Weight (tons)"
+msgid "Weight"
+msgstr "Gewicht"
+
+#: templates/marina/customers_list.html:263
+msgid "Diesel"
+msgstr "Diesel"
+
+#: templates/marina/customers_list.html:267
+msgid "Water"
+msgstr "Wasser"
+
+#: templates/marina/customers_list.html:276
+# fuzzy (resolved)
+#| msgid "Technical Notes"
+msgid "No technical notes recorded."
+msgstr "Keine technischen Notizen erfasst."
+
+#: templates/marina/dashboard.html:19 templates/marina/reports.html:61
 msgid "Active"
 msgstr "Aktiv"
 
-#: templates/marina/dashboard.html:46
+#: templates/marina/dashboard.html:47
 msgid "Unpaid"
 msgstr "Unbezahlt"
 
-#: templates/marina/dashboard.html:60
+#: templates/marina/dashboard.html:61
 msgid "Guests"
 msgstr "Gäste"
 
-#: templates/marina/dashboard.html:85
+#: templates/marina/dashboard.html:86
 msgid "Check-In"
 msgstr "Anmeldung"
 
-#: templates/marina/dashboard.html:86
+#: templates/marina/dashboard.html:87
 msgid "New Boat"
 msgstr "Neues Boot"
 
-#: templates/marina/dashboard.html:114
+#: templates/marina/dashboard.html:115
 msgid "Billing"
 msgstr "Rechnung"
 
-#: templates/marina/dashboard.html:115
+#: templates/marina/dashboard.html:116
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: templates/marina/dashboard.html:129
+#: templates/marina/dashboard.html:130
 msgid "Check-Out"
 msgstr "Abreise"
 
-#: templates/marina/dashboard.html:130
+#: templates/marina/dashboard.html:131
 msgid "Depart"
 msgstr "Abreisen"
 
-#: templates/marina/dashboard.html:141
+#: templates/marina/dashboard.html:142
 msgid "Marina Live View"
 msgstr "Marina Live-Ansicht"
 
-#: templates/marina/dashboard.html:284
+#: templates/marina/dashboard.html:287
 msgid "Occupancy"
 msgstr "Belegung"
 
-#: templates/marina/dashboard.html:285
+#: templates/marina/dashboard.html:288
 msgid "By Block"
 msgstr "Nach Block"
 
-#: templates/marina/dashboard.html:294
+#: templates/marina/dashboard.html:297
 msgid "Full"
 msgstr "Voll"
 
-#: templates/marina/dashboard.html:312
+#: templates/marina/dashboard.html:315
 msgid "Upcoming Arrivals"
 msgstr "Anstehende Ankünfte"
 
-#: templates/marina/dashboard.html:329
+#: templates/marina/dashboard.html:332
 msgid "No arrivals"
 msgstr "Keine Ankünfte"
 
 # fuzzy (resolved)
-#: templates/marina/dashboard.html:337
+#: templates/marina/dashboard.html:340
 msgid "Check-Outs"
 msgstr "Abreisen"
 
-#: templates/marina/dashboard.html:354
+#: templates/marina/dashboard.html:357
 msgid "No checkouts"
 msgstr "Keine Abreisen"
 
 # fuzzy (resolved)
-#: templates/marina/dashboard.html:362
+#: templates/marina/dashboard.html:365
 msgid "Open Invoices"
 msgstr "Offene Rechnungen"
 
-#: templates/marina/dashboard.html:363
+#: templates/marina/dashboard.html:366
 msgid "View All"
 msgstr "Alle anzeigen"
 
-#: templates/marina/dashboard.html:373
+#: templates/marina/dashboard.html:376
 msgid "OVERDUE"
 msgstr "ÜBERFÄLLIG"
 
-#: templates/marina/dashboard.html:384
+#: templates/marina/dashboard.html:387
 msgid "All paid! 🎉"
 msgstr "Alles bezahlt! 🎉"
 
@@ -581,10 +899,6 @@ msgstr "myDATA: Ausstehend"
 msgid "myDATA: Overdue"
 msgstr "myDATA: Überfällig"
 
-#: templates/marina/invoices_list.html:218
-msgid "ID"
-msgstr "ID"
-
 # fuzzy (resolved)
 #: templates/marina/invoices_list.html:244
 msgid "Date"
@@ -595,24 +909,218 @@ msgstr "Datum"
 msgid "Amount"
 msgstr "Betrag"
 
-# fuzzy (resolved)
-#: templates/marina/invoices_list.html:278
-msgid "Actions"
-msgstr "Aktionen"
-
-#: templates/marina/planning_grid.html:60
+#: templates/marina/planning_grid.html:61
 msgid "Yearly Planning Matrix"
 msgstr "Jährliche Planungsmatrix"
 
-#: templates/marina/planning_grid.html:64
+#: templates/marina/planning_grid.html:65
 msgid "Search boat or owner..."
 msgstr "Boot oder Eigner suchen..."
 
-#: templates/marina/planning_grid.html:71
 # fuzzy (resolved)
-#| msgid "Work Order"
+#: templates/marina/planning_grid.html:72
+#: templates/marina/work_order_list.html:14
 msgid "New Work Order"
 msgstr "Neuer Arbeitsauftrag"
+
+#: templates/marina/providers_list.html:11
+msgid "Manage your external partners, mechanics, and suppliers"
+msgstr "Verwalten Sie Ihre externen Partner, Mechaniker und Lieferanten"
+
+#: templates/marina/providers_list.html:14
+# fuzzy (resolved)
+#| msgid "Service Provider"
+msgid "New Provider"
+msgstr "Neuer Anbieter"
+
+#: templates/marina/providers_list.html:23
+# fuzzy (resolved)
+#| msgid "Boat Photo"
+msgid "Contact Phone"
+msgstr "Telefonnummer"
+
+#: templates/marina/providers_list.html:51
+# fuzzy (resolved)
+#| msgid "Service Providers"
+msgid "No service providers defined yet."
+msgstr "Noch keine Dienstleister definiert."
+
+#: templates/marina/reports.html:4 templates/marina/reports.html:11
+msgid "Business Analytics"
+msgstr "Unternehmensanalyse"
+
+#: templates/marina/reports.html:12
+msgid "Comprehensive performance metrics for Marina Samos"
+msgstr "Umfassende Leistungskennzahlen für Marina Samos"
+
+#: templates/marina/reports.html:16
+msgid "Export PDF"
+msgstr "PDF exportieren"
+
+#: templates/marina/reports.html:19
+# fuzzy (resolved)
+#| msgid "Dashboard"
+msgid "Live Dashboard"
+msgstr "Live-Dashboard"
+
+#: templates/marina/reports.html:31
+msgid "Monthly Revenue"
+msgstr ""
+
+#: templates/marina/reports.html:39
+msgid "Live"
+msgstr ""
+
+#: templates/marina/reports.html:40
+msgid "Paid invoices this month"
+msgstr "Bezahlte Rechnungen diesen Monat"
+
+#: templates/marina/reports.html:50
+# fuzzy (resolved)
+#| msgid "Occupancy"
+msgid "Live Occupancy"
+msgstr "Live-Belegung"
+
+#: templates/marina/reports.html:61
+#, fuzzy
+#| msgid "Upcoming Arrivals"
+msgid "Upcoming"
+msgstr "Anstehende Ankünfte"
+
+#: templates/marina/reports.html:71
+msgid "Avg Boat Size"
+msgstr "Ø Bootsgröße"
+
+#: templates/marina/reports.html:79
+msgid "Average length across all boats"
+msgstr "Durchschnittliche Länge aller Boote"
+
+#: templates/marina/reports.html:89
+# fuzzy (resolved)
+#| msgid "Service Provider"
+msgid "Top Provider"
+msgstr "Top-Dienstleister"
+
+#: templates/marina/reports.html:97
+# fuzzy (resolved)
+#| msgid "Service Category"
+msgid "Most utilized service category"
+msgstr "Am häufigsten genutzte Dienstleistungskategorie"
+
+#: templates/marina/reports.html:109
+msgid "Revenue Trend"
+msgstr "Umsatzentwicklung"
+
+#: templates/marina/reports.html:119
+# fuzzy (resolved)
+#| msgid "Boats"
+msgid "Boat Types"
+msgstr "Bootstypen"
+
+#: templates/marina/reports.html:133
+msgid "Flag Statistics"
+msgstr "Flaggen-Statistik"
+
+#: templates/marina/reports.html:143
+# fuzzy (resolved)
+#| msgid "Customers"
+msgid "Top Customers"
+msgstr "Beste Kunden"
+
+#: templates/marina/reports.html:151
+msgid "Revenue"
+msgstr ""
+
+#: templates/marina/reports.html:179
+# fuzzy (resolved)
+#| msgid "Service Catalog"
+msgid "Service Breakdown"
+msgstr "Dienstleistungen Aufschlüsselung"
+
+#: templates/marina/reports.html:187
+msgid "Direct utilization revenue"
+msgstr "Umsatz durch direkte Inanspruchnahme"
+
+#: templates/marina/reports.html:192
+msgid "No service data yet"
+msgstr "Noch keine Servicedaten vorhanden"
+
+#: templates/marina/work_order_list.html:4
+# fuzzy (resolved)
+#| msgid "Work Orders"
+msgid "Work Orders (Yard)"
+msgstr "Arbeitsaufträge (Werft)"
+
+#: templates/marina/work_order_list.html:10
+# fuzzy (resolved)
+#| msgid "Invoice Management"
+msgid "Yard Service Management"
+msgstr "Werft-Serviceverwaltung"
+
+#: templates/marina/work_order_list.html:11
+msgid "Manage repairs, maintenance, and dry-dock projects"
+msgstr "Verwalten Sie Reparaturen, Wartung und Trockendock-Projekte"
+
+#: templates/marina/work_order_list.html:23
+#, fuzzy
+#| msgid "Customer"
+msgid "Boat / Customer"
+msgstr "Kunde"
+
+# fuzzy (resolved)
+#: templates/marina/work_order_list.html:24
+#, fuzzy
+#| msgid "Actions"
+msgid "Location"
+msgstr "Aktionen"
+
+#: templates/marina/work_order_list.html:27
+msgid "Value"
+msgstr "Wert"
+
+#: templates/marina/work_order_list.html:43
+msgid "No location set"
+msgstr "Kein Liegeplatz festgelegt"
+
+#: templates/marina/work_order_list.html:49
+msgid "to"
+msgstr "bis"
+
+#: templates/marina/work_order_list.html:51
+msgid "Not scheduled"
+msgstr "Nicht geplant"
+
+#: templates/marina/work_order_list.html:56
+#, fuzzy
+#| msgid "⏳ Pending"
+msgid "Pending"
+msgstr "⏳ Ausstehend"
+
+#: templates/marina/work_order_list.html:58
+msgid "In Progress"
+msgstr "In Bearbeitung"
+
+#: templates/marina/work_order_list.html:60
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: templates/marina/work_order_list.html:68
+msgid "Checkout & Bill"
+msgstr "Abreise & Rechnung"
+
+#: templates/marina/work_order_list.html:71
+# fuzzy (resolved)
+#| msgid "Work Order"
+msgid "Edit Order"
+msgstr "Auftrag bearbeiten"
+
+#: templates/marina/work_order_list.html:74
+msgid "Delete Order"
+msgstr "Auftrag löschen"
+
+#: templates/marina/work_order_list.html:84
+msgid "No work orders recorded in the yard."
+msgstr "Keine Arbeitsaufträge in der Werft erfasst."
 
 #: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:15
 msgid "Messages"
@@ -1194,10 +1702,6 @@ msgstr[1] ""
 #| msgid "Work Order"
 msgid "Order"
 msgstr "Arbeitsauftrag"
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
-msgid "Delete"
-msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/models.py:886
 #, python-format

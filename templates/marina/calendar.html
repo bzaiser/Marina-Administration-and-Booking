@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Timeline - Marina Samos{% endblock %}
+{% block title %}{% trans "Timeline" %} - Marina Samos{% endblock %}
 
 {% block extra_head %}
 <link href="{% static 'vendor/visjs/vis-timeline-graph2d.min.css' %}" rel="stylesheet" type="text/css" />
@@ -47,13 +48,13 @@
 {% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-2">
-        <h5 class="mb-0"><i class="bi bi-calendar3 text-secondary me-2"></i><span class="fi fi-de fis me-2"></span>Booking Timeline</h5>
+        <h5 class="mb-0"><i class="bi bi-calendar3 text-secondary me-2"></i><span class="fi fi-de fis me-2"></span>{% trans "Booking Timeline" %}</h5>
         <div class="d-flex gap-2 align-items-center">
-            <input type="text" id="searchBoat" class="form-control form-control-sm" placeholder="Search boat..." style="width: 150px;">
+            <input type="text" id="searchBoat" class="form-control form-control-sm" placeholder="{% trans 'Search boat...' %}" style="width: 150px;">
             <div class="btn-group btn-group-sm">
                 <button class="btn btn-outline-secondary" onclick="moveWindow(-0.2)"><i class="bi bi-chevron-left"></i></button>
-                <button class="btn btn-outline-secondary" onclick="zoomIn()">Zoom In</button>
-                <button class="btn btn-outline-secondary" onclick="zoomOut()">Zoom Out</button>
+                <button class="btn btn-outline-secondary" onclick="zoomIn()">{% trans "Zoom In" %}</button>
+                <button class="btn btn-outline-secondary" onclick="zoomOut()">{% trans "Zoom Out" %}</button>
                 <button class="btn btn-outline-secondary" onclick="moveWindow(0.2)"><i class="bi bi-chevron-right"></i></button>
             </div>
         </div>

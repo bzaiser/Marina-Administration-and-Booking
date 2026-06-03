@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Service Providers - Marina Samos{% endblock %}
+{% block title %}{% trans "Service Providers" %} - Marina Samos{% endblock %}
 
 {% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
         <div>
-            <h5 class="mb-0"><i class="bi bi-truck text-primary me-2"></i>Service Providers</h5>
-            <div class="small text-muted">Manage your external partners, mechanics, and suppliers</div>
+            <h5 class="mb-0"><i class="bi bi-truck text-primary me-2"></i>{% trans "Service Providers" %}</h5>
+            <div class="small text-muted">{% trans "Manage your external partners, mechanics, and suppliers" %}</div>
         </div>
         <button class="btn btn-primary btn-sm rounded-pill px-3" hx-get="{% url 'provider_create' %}" hx-target="#modals-here .modal-content">
-            <i class="bi bi-plus-lg me-1"></i>New Provider
+            <i class="bi bi-plus-lg me-1"></i>{% trans "New Provider" %}
         </button>
     </div>
     <div class="card-body p-0">
@@ -18,10 +19,10 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Provider Name</th>
-                        <th>Contact Phone</th>
-                        <th>Email</th>
-                        <th class="text-end">Actions</th>
+                        <th>{% trans "Provider Name" %}</th>
+                        <th>{% trans "Contact Phone" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th class="text-end">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +48,7 @@
                     <tr>
                         <td colspan="4" class="text-center py-5 text-muted">
                             <i class="bi bi-info-circle fs-1 d-block mb-2"></i>
-                            No service providers defined yet.
+                            {% trans "No service providers defined yet." %}
                         </td>
                     </tr>
                     {% endfor %}

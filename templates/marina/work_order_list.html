@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}Work Orders (Yard) - Marina Samos{% endblock %}
+{% block title %}{% trans "Work Orders (Yard)" %} - Marina Samos{% endblock %}
 
 {% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
         <div>
-            <h5 class="mb-0"><i class="bi bi-tools text-warning me-2"></i>Yard Service Management</h5>
-            <div class="small text-muted">Manage repairs, maintenance, and dry-dock projects</div>
+            <h5 class="mb-0"><i class="bi bi-tools text-warning me-2"></i>{% trans "Yard Service Management" %}</h5>
+            <div class="small text-muted">{% trans "Manage repairs, maintenance, and dry-dock projects" %}</div>
         </div>
         <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">
-            <i class="bi bi-plus-lg me-1"></i>New Work Order
+            <i class="bi bi-plus-lg me-1"></i>{% trans "New Work Order" %}
         </button>
     </div>
     <div class="card-body p-0">
@@ -19,13 +19,13 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>ID</th>
-                        <th>Boat / Customer</th>
-                        <th>Location</th>
-                        <th>Timeline</th>
-                        <th>Status</th>
-                        <th class="text-end">Value</th>
-                        <th class="text-end">Actions</th>
+                        <th>{% trans "ID" %}</th>
+                        <th>{% trans "Boat / Customer" %}</th>
+                        <th>{% trans "Location" %}</th>
+                        <th>{% trans "Timeline" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th class="text-end">{% trans "Value" %}</th>
+                        <th class="text-end">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,24 +40,24 @@
                             {% if order.berth %}
                                 <span class="badge bg-secondary px-2"><i class="bi bi-geo-alt me-1"></i>{{ order.berth.number }}</span>
                             {% else %}
-                                <span class="text-muted small">No location set</span>
+                                <span class="text-muted small">{% trans "No location set" %}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% if order.start_date %}
                                 <div class="small fw-bold text-primary">{{ order.start_date|date:"d.m.Y" }}</div>
-                                <div class="small text-muted">to {{ order.end_date|date:"d.m.Y"|default:"Open" }}</div>
+                                <div class="small text-muted">{% trans "to" %} {{ order.end_date|date:"d.m.Y"|default:"Open" }}</div>
                             {% else %}
-                                <span class="text-muted small">Not scheduled</span>
+                                <span class="text-muted small">{% trans "Not scheduled" %}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% if order.status == 'PENDING' %}
-                                <span class="badge bg-warning text-dark px-2">Pending</span>
+                                <span class="badge bg-warning text-dark px-2">{% trans "Pending" %}</span>
                             {% elif order.status == 'IN_PROGRESS' %}
-                                <span class="badge bg-primary px-2">In Progress</span>
+                                <span class="badge bg-primary px-2">{% trans "In Progress" %}</span>
                             {% elif order.status == 'COMPLETED' %}
-                                <span class="badge bg-success px-2">Completed</span>
+                                <span class="badge bg-success px-2">{% trans "Completed" %}</span>
                             {% else %}
                                 <span class="badge bg-light text-dark px-2">{{ order.status }}</span>
                             {% endif %}
@@ -65,13 +65,13 @@
                         <td class="text-end fw-bold">€{{ order.total_value|floatformat:2 }}</td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm shadow-sm rounded-pill overflow-hidden">
-                                <a href="{% url 'work_order_checkout' order.id %}" class="btn btn-outline-success border-0 px-3" title="Checkout & Bill">
+                                <a href="{% url 'work_order_checkout' order.id %}" class="btn btn-outline-success border-0 px-3" title="{% trans 'Checkout & Bill' %}">
                                     <i class="bi bi-box-arrow-right"></i>
                                 </a>
-                                <button class="btn btn-outline-primary border-0 px-3" hx-get="{% url 'work_order_edit' order.id %}" hx-target="#modals-here .modal-content" title="Edit Order">
+                                <button class="btn btn-outline-primary border-0 px-3" hx-get="{% url 'work_order_edit' order.id %}" hx-target="#modals-here .modal-content" title="{% trans 'Edit Order' %}">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <button class="btn btn-outline-danger border-0 px-3" hx-get="{% url 'work_order_delete' order.id %}" hx-target="#modals-here .modal-content" title="Delete Order">
+                                <button class="btn btn-outline-danger border-0 px-3" hx-get="{% url 'work_order_delete' order.id %}" hx-target="#modals-here .modal-content" title="{% trans 'Delete Order' %}">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -81,7 +81,7 @@
                     <tr>
                         <td colspan="7" class="text-center py-5 text-muted">
                             <i class="bi bi-tools fs-1 d-block mb-2"></i>
-                            No work orders recorded in the yard.
+                            {% trans "No work orders recorded in the yard." %}
                         </td>
                     </tr>
                     {% endfor %}
