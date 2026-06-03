@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load l10n %}
 
 {% block title %}{% trans "Dashboard" %} - Marina Samos{% endblock %}
 
@@ -190,6 +191,7 @@
                     {% if config and config.marina_svg %}
                         {{ config.marina_svg|safe }}
                     {% else %}
+                    {% localize off %}
                     <svg id="marina-svg" viewBox="0 0 961 880" class="w-100 h-100" style="background-color: #f0f7ff; cursor: grab;"
                        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
                        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -271,6 +273,7 @@
                          {% endfor %}
                        </g>
                     </svg>
+                    {% endlocalize %}
                     {% endif %}
                 </div>
             </div>
