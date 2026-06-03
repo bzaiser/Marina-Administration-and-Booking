@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 16:51+0300\n"
+"POT-Creation-Date: 2026-06-03 17:09+0300\n"
 "Language: el\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,11 +28,15 @@ msgid "Name"
 msgstr "Όνομα"
 
 #: marina/models.py:85 marina/models.py:262
+#: templates/marina/partials/provider_form.html:27
+#: templates/marina/partials/quick_boat_form.html:42
 #: templates/marina/providers_list.html:24
 msgid "Email"
 msgstr "Email"
 
 #: marina/models.py:86 marina/models.py:261
+#: templates/marina/partials/provider_form.html:23
+#: templates/marina/partials/quick_boat_form.html:46
 msgid "Phone"
 msgstr "Τηλέφωνο"
 
@@ -48,11 +52,11 @@ msgstr "Πόλη / Τ.Κ."
 msgid "Profession"
 msgstr "Επάγγελμα"
 
-#: marina/models.py:90
+#: marina/models.py:90 templates/marina/partials/customer_form_modal.html:71
 msgid "VAT Number / AFM"
 msgstr "Α.Φ.Μ."
 
-#: marina/models.py:91
+#: marina/models.py:91 templates/marina/partials/customer_form_modal.html:75
 msgid "Tax Office / DOY"
 msgstr "Δ.Ο.Υ."
 
@@ -60,7 +64,7 @@ msgstr "Δ.Ο.Υ."
 msgid "Passport Number"
 msgstr "Αριθμός Διαβατηρίου"
 
-#: marina/models.py:93
+#: marina/models.py:93 templates/marina/partials/quick_boat_form.html:50
 msgid "Nationality"
 msgstr "Εθνικότητα"
 
@@ -69,20 +73,26 @@ msgid "Preferred Language"
 msgstr "Προτιμώμενη Γλώσσα"
 
 #: marina/models.py:101 templates/marina/invoices_list.html:231
+#: templates/marina/partials/invoice_create_modal.html:25
+#: templates/marina/partials/invoice_edit_modal.html:17
 #: templates/marina/reports.html:150
 msgid "Customer"
 msgstr "Πελάτης"
 
 #: marina/models.py:102 templates/base.html:89
+#: templates/marina/partials/menu_preferences_modal.html:53
 msgid "Customers"
 msgstr "Πελάτες"
 
-#: marina/models.py:113
+#: marina/models.py:113 templates/marina/partials/boat_form_modal.html:18
+#: templates/marina/partials/quick_boat_form.html:63
 msgid "Boat Name"
 msgstr "Όνομα Σκάφους"
 
 #: marina/models.py:115 marina/models.py:225
 #: templates/marina/bookings_list.html:162
+#: templates/marina/partials/boat_form_modal.html:23
+#: templates/marina/partials/booking_form.html:42
 msgid "Type"
 msgstr "Τύπος"
 
@@ -111,30 +121,32 @@ msgid "Flag"
 msgstr "Σημαία"
 
 #: marina/models.py:122 marina/models.py:301
+#: templates/marina/partials/boat_form_modal.html:48
 msgid "Color"
 msgstr "Χρώμα"
 
-#: marina/models.py:123
+#: marina/models.py:123 templates/marina/partials/boat_form_modal.html:73
 msgid "Boat Photo"
 msgstr "Φωτογραφία Σκάφους"
 
-#: marina/models.py:124
+#: marina/models.py:124 templates/marina/partials/boat_form_modal.html:43
+#: templates/marina/partials/quick_boat_form.html:95
 msgid "Year Built"
 msgstr "Έτος Κατασκευής"
 
-#: marina/models.py:125
+#: marina/models.py:125 templates/marina/partials/boat_form_modal.html:63
 msgid "Last Maintenance"
 msgstr "Τελευταία Συντήρηση"
 
-#: marina/models.py:126
+#: marina/models.py:126 templates/marina/partials/quick_boat_form.html:87
 msgid "Diesel Tank (L)"
 msgstr "Δεξαμενή Πετρελαίου (L)"
 
-#: marina/models.py:127
+#: marina/models.py:127 templates/marina/partials/quick_boat_form.html:91
 msgid "Water Tank (L)"
 msgstr "Δεξαμενή Νερού (L)"
 
-#: marina/models.py:128
+#: marina/models.py:128 templates/marina/partials/boat_form_modal.html:68
 msgid "Technical Notes"
 msgstr "Τεχνικές Σημειώσεις"
 
@@ -159,11 +171,13 @@ msgid "Max Weight (t)"
 msgstr "Μέγ. Βάρος (τ)"
 
 #: marina/models.py:185 templates/marina/bookings_list.html:110
+#: templates/marina/partials/booking_form.html:37
 msgid "Berth"
 msgstr "Θέση Ελλιμενισμού"
 
 #: marina/models.py:186 templates/base.html:83
 #: templates/marina/berths_grid.html:40 templates/marina/dashboard.html:33
+#: templates/marina/partials/menu_preferences_modal.html:42
 msgid "Berths"
 msgstr "Θέσεις Ελλιμενισμού"
 
@@ -187,22 +201,24 @@ msgstr "Τιμολόγιο"
 msgid "Price Rates"
 msgstr "Τιμολόγια"
 
-#: marina/models.py:223
+#: marina/models.py:223 templates/marina/partials/booking_form.html:58
 msgid "Arrival Date"
 msgstr "Ημερομηνία Άφιξης"
 
-#: marina/models.py:224
+#: marina/models.py:224 templates/marina/partials/booking_form.html:62
 msgid "Departure Date"
 msgstr "Ημερομηνία Αναχώρησης"
 
 #: marina/models.py:226 marina/models.py:346
 #: templates/marina/berths_grid.html:56 templates/marina/bookings_list.html:150
 #: templates/marina/invoices_list.html:257
+#: templates/marina/partials/booking_form.html:47
+#: templates/marina/partials/invoice_create_modal.html:41
 #: templates/marina/work_order_list.html:26
 msgid "Status"
 msgstr "Κατάσταση"
 
-#: marina/models.py:227
+#: marina/models.py:227 templates/marina/partials/booking_form.html:73
 msgid "Reference"
 msgstr "Αναφορά"
 
@@ -221,6 +237,7 @@ msgstr "Κράτηση"
 
 #: marina/models.py:257 templates/base.html:95
 #: templates/marina/bookings_list.html:5
+#: templates/marina/partials/menu_preferences_modal.html:64
 msgid "Bookings"
 msgstr "Κρατήσεις"
 
@@ -242,6 +259,9 @@ msgid "Category Name"
 msgstr "Όνομα Κατηγορίας"
 
 #: marina/models.py:273 marina/models.py:295
+#: templates/marina/partials/invoice_edit_modal.html:69
+#: templates/marina/partials/invoice_edit_modal.html:164
+#: templates/marina/partials/invoice_edit_modal.html:194
 msgid "Description"
 msgstr "Περιγραφή"
 
@@ -261,15 +281,17 @@ msgstr "Κατηγορία Υπηρεσιών"
 msgid "Service Categories"
 msgstr "Κατηγορίες Υπηρεσιών"
 
-#: marina/models.py:294
+#: marina/models.py:294 templates/marina/partials/invoice_edit_modal.html:162
 msgid "Service Name"
 msgstr "Όνομα Υπηρεσίας"
 
 #: marina/models.py:296 templates/marina/bookings_list.html:320
+#: templates/marina/partials/invoice_edit_modal.html:163
 msgid "Category"
 msgstr "Κατηγορία"
 
-#: marina/models.py:297
+#: marina/models.py:297 templates/marina/partials/invoice_edit_modal.html:71
+#: templates/marina/partials/invoice_edit_modal.html:202
 msgid "Unit"
 msgstr "Μονάδα"
 
@@ -302,7 +324,7 @@ msgstr "Ποσότητα / Μονάδες"
 msgid "Date Added"
 msgstr "Ημερομηνία Προσθήκης"
 
-#: marina/models.py:350
+#: marina/models.py:350 templates/marina/modals/work_order_form.html:56
 msgid "Start Date"
 msgstr "Ημερομηνία Έναρξης"
 
@@ -347,26 +369,32 @@ msgid "German"
 msgstr "Γερμανικά"
 
 #: templates/base.html:71 templates/marina/dashboard.html:5
+#: templates/marina/partials/menu_preferences_modal.html:20
 msgid "Dashboard"
 msgstr "Πίνακας Ελέγχου"
 
 #: templates/base.html:77 templates/marina/dashboard.html:101
+#: templates/marina/partials/menu_preferences_modal.html:31
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
 #: templates/base.html:101 templates/marina/dashboard.html:100
+#: templates/marina/partials/menu_preferences_modal.html:75
 msgid "Planning"
 msgstr "Προγραμματισμός"
 
 #: templates/base.html:107 templates/marina/bookings_list.html:319
+#: templates/marina/partials/menu_preferences_modal.html:86
 msgid "Service"
 msgstr "Υπηρεσίες"
 
 #: templates/base.html:113 templates/marina/invoices_list.html:4
+#: templates/marina/partials/menu_preferences_modal.html:97
 msgid "Invoices"
 msgstr "Τιμολόγια"
 
 #: templates/base.html:119
+#: templates/marina/partials/menu_preferences_modal.html:108
 msgid "Reports"
 msgstr "Αναφορές"
 
@@ -404,21 +432,18 @@ msgstr "Διαχείριση Τιμολογίων"
 msgid "Filter berths..."
 msgstr "Φιλτράρισμα θέσεων ελλιμενισμού..."
 
-#: templates/marina/berths_grid.html:25
 # fuzzy (resolved)
-#| msgid "Year Built"
+#: templates/marina/berths_grid.html:25
 msgid "Clear filter"
 msgstr "Καθαρισμός φίλτρου"
 
-#: templates/marina/berths_grid.html:39
 # fuzzy (resolved)
-#| msgid "By Block"
+#: templates/marina/berths_grid.html:39
 msgid "Block"
 msgstr "Μπλοκ"
 
-#: templates/marina/berths_grid.html:50
 # fuzzy (resolved)
-#| msgid "Berth"
+#: templates/marina/berths_grid.html:50
 msgid "Berth #"
 msgstr "Θέση #"
 
@@ -430,9 +455,8 @@ msgstr "Μ (μ)"
 msgid "W (t)"
 msgstr "Β (τ)"
 
-#: templates/marina/berths_grid.html:53
 # fuzzy (resolved)
-#| msgid "New Boat"
+#: templates/marina/berths_grid.html:53
 msgid "Current Boat"
 msgstr "Τρέχον Σκάφος"
 
@@ -465,9 +489,8 @@ msgstr "Έξοδος:"
 msgid "Ref:"
 msgstr "Κωδ:"
 
-#: templates/marina/berths_grid.html:91
 # fuzzy (resolved)
-#| msgid "Notes"
+#: templates/marina/berths_grid.html:91
 msgid "Note:"
 msgstr "Σημείωση:"
 
@@ -479,9 +502,9 @@ msgstr ""
 msgid "Vacant"
 msgstr "Κενό"
 
-#: templates/marina/berths_grid.html:117 templates/marina/bookings_list.html:58
 # fuzzy (resolved)
-#| msgid "Booking"
+#: templates/marina/berths_grid.html:117 templates/marina/bookings_list.html:58
+#: templates/marina/partials/booking_form.html:5
 msgid "New Booking"
 msgstr "Νέα Κράτηση"
 
@@ -493,10 +516,10 @@ msgstr ""
 
 #: templates/marina/berths_grid.html:125
 #: templates/marina/bookings_list.html:189
-#, fuzzy
+# fuzzy (resolved)
 #| msgid "Check-Out"
 msgid "Checkout"
-msgstr "Αναχώρηση"
+msgstr "Check-out"
 
 #: templates/marina/berths_grid.html:128
 #: templates/marina/bookings_list.html:195
@@ -505,9 +528,8 @@ msgstr "Αναχώρηση"
 msgid "Delete"
 msgstr ""
 
-#: templates/marina/bookings_list.html:45
 # fuzzy (resolved)
-#| msgid "Invoice Management"
+#: templates/marina/bookings_list.html:45
 msgid "Booking Management"
 msgstr "Διαχείριση Κρατήσεων"
 
@@ -515,9 +537,8 @@ msgstr "Διαχείριση Κρατήσεων"
 msgid "Advanced list with sorting, filtering, and grouping"
 msgstr "Σύνθετη λίστα με ταξινόμηση, φιλτράρισμα και ομαδοποίηση"
 
-#: templates/marina/bookings_list.html:52
 # fuzzy (resolved)
-#| msgid "Search boat or owner..."
+#: templates/marina/bookings_list.html:52
 msgid "Search bookings..."
 msgstr "Αναζήτηση κρατήσεων..."
 
@@ -525,9 +546,8 @@ msgstr "Αναζήτηση κρατήσεων..."
 msgid "Reset Filters"
 msgstr "Επαναφορά Φίλτρων"
 
-#: templates/marina/bookings_list.html:61
 # fuzzy (resolved)
-#| msgid "Planning"
+#: templates/marina/bookings_list.html:61
 msgid "Planning Grid"
 msgstr "Πλέγμα Προγραμματισμού"
 
@@ -541,15 +561,15 @@ msgstr "ID"
 msgid "Boat / Owner"
 msgstr "Σκάφος / Ιδιοκτήτης"
 
-#: templates/marina/bookings_list.html:126
 # fuzzy (resolved)
-#| msgid "Arrival Date"
+#: templates/marina/bookings_list.html:126
+#: templates/marina/partials/checkout_confirm.html:22
 msgid "Arrival"
 msgstr "Άφιξη"
 
-#: templates/marina/bookings_list.html:134
 # fuzzy (resolved)
-#| msgid "Depart"
+#: templates/marina/bookings_list.html:134
+#: templates/marina/partials/checkout_confirm.html:26
 msgid "Departure"
 msgstr "Αναχώρηση"
 
@@ -570,6 +590,7 @@ msgstr "Φόρτωση δεδομένων κράτησης..."
 #: templates/marina/bookings_list.html:278
 msgid "Error loading booking data. Please try again."
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
+"Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 
 #: templates/marina/bookings_list.html:296
 msgid "Are you sure you want to delete this booking?"
@@ -580,16 +601,20 @@ msgid "Services for Booking #"
 msgstr "Υπηρεσίες για την Κράτηση #"
 
 #: templates/marina/bookings_list.html:321
+#: templates/marina/partials/booking_supplies_list.html:8
+#: templates/marina/partials/invoice_edit_modal.html:70
+#: templates/marina/partials/invoice_edit_modal.html:198
+#: templates/marina/partials/work_order_items_table.html:8
 msgid "Qty"
 msgstr "Ποσότητα"
 
 #: templates/marina/bookings_list.html:322
+#: templates/marina/partials/invoice_edit_modal.html:75
 msgid "Subtotal"
 msgstr "Μερικό σύνολο"
 
-#: templates/marina/bookings_list.html:341
 # fuzzy (resolved)
-#| msgid "Total Invoices"
+#: templates/marina/bookings_list.html:341
 msgid "Total Services"
 msgstr "Σύνολο Υπηρεσιών"
 
@@ -597,15 +622,13 @@ msgstr "Σύνολο Υπηρεσιών"
 msgid "Timeline"
 msgstr "Χρονοδιάγραμμα"
 
-#: templates/marina/calendar.html:51
 # fuzzy (resolved)
-#| msgid "Booking"
+#: templates/marina/calendar.html:51
 msgid "Booking Timeline"
 msgstr "Χρονοδιάγραμμα Κρατήσεων"
 
-#: templates/marina/calendar.html:53
 # fuzzy (resolved)
-#| msgid "Search boat or owner..."
+#: templates/marina/calendar.html:53
 msgid "Search boat..."
 msgstr "Αναζήτηση σκάφους..."
 
@@ -617,10 +640,24 @@ msgstr "Μεγέθυνση"
 msgid "Zoom Out"
 msgstr "Σμίκρυνση"
 
+#: templates/marina/checkout_confirm_full.html:4
+#, python-format
+msgid "Checkout - %(boat_name)s - Marina Samos"
+msgstr "Check-out - %(boat_name)s - Μαρίνα Σάμου"
+
+#: templates/marina/checkout_confirm_full.html:16
+#: templates/marina/partials/checkout_confirm.html:72
+#: templates/marina/partials/checkout_confirm.html:74
+msgid "Go Back"
+msgstr "Επιστροφή"
+
+#: templates/marina/checkout_success_full.html:4
+msgid "Checkout Successful - Marina Samos"
+msgstr "Επιτυχές Check-out - Μαρίνα Σάμου"
+
+# fuzzy (resolved)
 #: templates/marina/customers_list.html:5
 #: templates/marina/customers_list.html:84
-# fuzzy (resolved)
-#| msgid "Invoice Management"
 msgid "Customer Management"
 msgstr "Διαχείριση Πελατών"
 
@@ -628,21 +665,20 @@ msgstr "Διαχείριση Πελατών"
 msgid "Manage your marina customers and their boats."
 msgstr "Διαχειριστείτε τους πελάτες της μαρίνας και τα σκάφη τους."
 
-#: templates/marina/customers_list.html:92
 # fuzzy (resolved)
-#| msgid "Customer"
+#: templates/marina/customers_list.html:92
+#: templates/marina/partials/customer_form_modal.html:5
 msgid "New Customer"
 msgstr "Νέος Πελάτης"
 
-#: templates/marina/customers_list.html:100
 # fuzzy (resolved)
-#| msgid "Search customer, ID, item…"
+#: templates/marina/customers_list.html:100
 msgid "Search customers or boats..."
 msgstr "Αναζήτηση πελατών ή σκαφών..."
 
-#: templates/marina/customers_list.html:125
 # fuzzy (resolved)
-#| msgid "Customer"
+#: templates/marina/customers_list.html:125
+#: templates/marina/partials/quick_boat_form.html:38
 msgid "Customer Name"
 msgstr "Όνομα Πελάτη"
 
@@ -650,15 +686,14 @@ msgstr "Όνομα Πελάτη"
 msgid "Contact"
 msgstr "Επικοινωνία"
 
-#: templates/marina/customers_list.html:142
 # fuzzy (resolved)
-#| msgid "New Boat"
+#: templates/marina/customers_list.html:142
+#: templates/marina/partials/customer_form_modal.html:91
 msgid "Owned Boats"
 msgstr "Ιδιόκτητα Σκάφη"
 
-#: templates/marina/customers_list.html:146
 # fuzzy (resolved)
-#| msgid "Boats"
+#: templates/marina/customers_list.html:146
 msgid "No boats"
 msgstr "Δεν υπάρχουν σκάφη"
 
@@ -670,9 +705,8 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 msgid "Boat Specifications"
 msgstr "Τεχνικά Χαρακτηριστικά Σκάφους"
 
-#: templates/marina/customers_list.html:243
 # fuzzy (resolved)
-#| msgid "Max Length (m)"
+#: templates/marina/customers_list.html:243
 msgid "Length"
 msgstr "Μήκος"
 
@@ -684,9 +718,8 @@ msgstr "Πλάτος"
 msgid "Draft"
 msgstr "Βύθισμα"
 
-#: templates/marina/customers_list.html:259
 # fuzzy (resolved)
-#| msgid "Weight (tons)"
+#: templates/marina/customers_list.html:259
 msgid "Weight"
 msgstr "Βάρος"
 
@@ -698,9 +731,8 @@ msgstr "Diesel"
 msgid "Water"
 msgstr "Νερό"
 
-#: templates/marina/customers_list.html:276
 # fuzzy (resolved)
-#| msgid "Technical Notes"
+#: templates/marina/customers_list.html:276
 msgid "No technical notes recorded."
 msgstr "Δεν έχουν καταγραφεί τεχνικές σημειώσεις."
 
@@ -790,6 +822,12 @@ msgstr "ΕΚΠΡΟΘΕΣΜΟ"
 msgid "All paid! 🎉"
 msgstr "Όλα εξοφλημένα! 🎉"
 
+#: templates/marina/full_page_modal.html:16
+# fuzzy (resolved)
+#| msgid "Dashboard"
+msgid "Back to Dashboard"
+msgstr "Πίσω στο Dashboard"
+
 #: templates/marina/invoices_list.html:20
 msgid "Total Invoices"
 msgstr "Σύνολο Τιμολογίων"
@@ -819,6 +857,7 @@ msgid "Manage your billing and payments"
 msgstr "Διαχείριση των χρεώσεων και των πληρωμών σας"
 
 #: templates/marina/invoices_list.html:81
+#: templates/marina/partials/invoice_create_modal.html:3
 msgid "New Invoice"
 msgstr "Νέο Τιμολόγιο"
 
@@ -909,6 +948,1007 @@ msgstr "Ημερομηνία"
 msgid "Amount"
 msgstr "Ποσό"
 
+#: templates/marina/modals/work_order_delete_confirm.html:5
+# fuzzy (resolved)
+#| msgid "Delete Order"
+msgid "Delete Work Order"
+msgstr "Διαγραφή Εντολής Εργασίας"
+
+#: templates/marina/modals/work_order_delete_confirm.html:13
+#, python-format
+msgid ""
+"Are you sure you want to delete <strong>Work Order #%(order_id)s</strong> "
+"for boat <strong>%(boat_name)s</strong>?"
+msgstr ""
+
+#: templates/marina/modals/work_order_delete_confirm.html:14
+msgid ""
+"This action cannot be undone. All linked tasks and parts will be removed."
+msgstr ""
+
+#: templates/marina/modals/work_order_delete_confirm.html:18
+#: templates/marina/modals/work_order_form.html:120
+#: templates/marina/partials/boat_delete_confirm.html:12
+#: templates/marina/partials/boat_form_modal.html:86
+#: templates/marina/partials/booking_form.html:104
+#: templates/marina/partials/customer_delete_confirm.html:12
+#: templates/marina/partials/customer_form_modal.html:138
+#: templates/marina/partials/invoice_create_modal.html:65
+#: templates/marina/partials/invoice_delete_confirm.html:12
+#: templates/marina/partials/invoice_edit_modal.html:241
+#: templates/marina/partials/menu_preferences_modal.html:124
+#: templates/marina/partials/provider_delete_confirm.html:14
+#: templates/marina/partials/provider_form.html:37
+msgid "Cancel"
+msgstr ""
+
+#: templates/marina/modals/work_order_delete_confirm.html:20
+# fuzzy (resolved)
+#| msgid "Delete Order"
+msgid "Delete Permanently"
+msgstr "Οριστική Διαγραφή"
+
+# fuzzy (resolved)
+#: templates/marina/modals/work_order_form.html:5
+# fuzzy (resolved), python-format
+#| msgid "Work Orders (Yard)"
+msgid "Edit Work Order #%(order_id)s"
+msgstr "Επεξεργασία Εντολής Εργασίας #%(order_id)s"
+
+# fuzzy (resolved)
+#: templates/marina/modals/work_order_form.html:5
+#: templates/marina/planning_grid.html:72
+#: templates/marina/work_order_list.html:14
+msgid "New Work Order"
+msgstr "Νέα Εντολή Εργασίας"
+
+#: templates/marina/modals/work_order_form.html:22
+#: templates/marina/partials/booking_form.html:22
+#: templates/marina/work_order_list.html:23
+#, fuzzy
+#| msgid "Customer"
+msgid "Boat / Customer"
+msgstr "Πελάτης"
+
+# fuzzy (resolved)
+#: templates/marina/modals/work_order_form.html:31
+#: templates/marina/partials/booking_form.html:30
+# fuzzy (resolved)
+#| msgid "New Customer"
+msgid "Add New Customer/Boat"
+msgstr "Προσθήκη νέου πελάτη/σκάφους"
+
+#: templates/marina/modals/work_order_form.html:39
+msgid "Work Place / Berth"
+msgstr "Χώρος Εργασίας / Θέση"
+
+# fuzzy (resolved)
+#: templates/marina/modals/work_order_form.html:44
+# fuzzy (resolved)
+#| msgid "Current Boat"
+msgid "Current Status"
+msgstr "Τρέχουσα Κατάσταση"
+
+#: templates/marina/modals/work_order_form.html:60
+# fuzzy (resolved)
+#| msgid "End Date"
+msgid "Estimated End Date"
+msgstr "Εκτιμώμενη ημερομηνία λήξης"
+
+#: templates/marina/modals/work_order_form.html:70
+msgid "Work Description / Internal Notes"
+msgstr "Περιγραφή Εργασίας / Εσωτερικές Σημειώσεις"
+
+#: templates/marina/modals/work_order_form.html:79
+msgid "Add Initial Task or Part"
+msgstr "Προσθήκη αρχικής εργασίας ή ανταλλακτικού"
+
+#: templates/marina/modals/work_order_form.html:82
+msgid "Task / Part"
+msgstr "Εργασία / Ανταλλακτικό"
+
+# fuzzy (resolved)
+#: templates/marina/modals/work_order_form.html:84
+# fuzzy (resolved)
+#| msgid "Search customers or boats..."
+msgid "Select task or part..."
+msgstr "Επιλέξτε εργασία ή ανταλλακτικό..."
+
+#: templates/marina/modals/work_order_form.html:91
+#: templates/marina/partials/add_service_form.html:39
+# fuzzy (resolved)
+#| msgid "Quantity / Units"
+msgid "Quantity"
+msgstr "Ποσότητα"
+
+#: templates/marina/modals/work_order_form.html:105
+msgid "Work Details & Parts"
+msgstr "Λεπτομέρειες Εργασίας & Ανταλλακτικά"
+
+#: templates/marina/modals/work_order_form.html:106
+msgid "Manage shipyard services below"
+msgstr "Διαχειριστείτε τις υπηρεσίες καρνάγιου παρακάτω"
+
+#: templates/marina/modals/work_order_form.html:115
+msgid "Updating records..."
+msgstr "Ενημέρωση εγγραφών..."
+
+#: templates/marina/modals/work_order_form.html:123
+msgid "Create & Add Tasks/Parts"
+msgstr "Δημιουργία & Προσθήκη Εργασιών/Ανταλλακτικών"
+
+#: templates/marina/modals/work_order_form.html:127
+#: templates/marina/partials/booking_form.html:106
+#: templates/marina/partials/invoice_edit_modal.html:243
+msgid "Save & Close"
+msgstr ""
+
+#: templates/marina/modals/work_order_form.html:127
+#: templates/marina/partials/booking_form.html:106
+msgid "Create & Close"
+msgstr "Δημιουργία & Κλείσιμο"
+
+#: templates/marina/partials/add_service_form.html:3
+msgid "Add Service Line Item"
+msgstr "Προσθήκη στοιχείου υπηρεσίας"
+
+#: templates/marina/partials/add_service_form.html:15
+# fuzzy (resolved)
+#| msgid "Booking"
+msgid "Booking for Boat"
+msgstr "Κράτηση για Σκάφος"
+
+#: templates/marina/partials/add_service_form.html:17
+#: templates/marina/partials/checkout_confirm.html:14
+#, python-format
+msgid "Berth %(block_name)s%(berth_num)s"
+msgstr "Θέση %(block_name)s%(berth_num)s"
+
+# fuzzy (resolved)
+#: templates/marina/partials/add_service_form.html:23
+# fuzzy (resolved)
+#| msgid "Service Breakdown"
+msgid "Service Selection"
+msgstr "Επιλογή Υπηρεσίας"
+
+#: templates/marina/partials/add_service_form.html:26
+# fuzzy (resolved)
+#| msgid "Search boat or owner..."
+msgid "Search or select service..."
+msgstr "Αναζήτηση ή επιλογή υπηρεσίας..."
+
+#: templates/marina/partials/add_service_form.html:42
+#: templates/marina/partials/add_service_form.html:93
+# fuzzy (resolved)
+#| msgid "Unit"
+msgid "Units"
+msgstr "Μονάδες"
+
+#: templates/marina/partials/add_service_form.html:46
+msgid "Unit Price (€)"
+msgstr "Τιμή Μονάδας (€)"
+
+#: templates/marina/partials/add_service_form.html:53
+#: templates/marina/partials/booking_supplies_list.html:9
+#: templates/marina/partials/invoice_edit_modal.html:221
+#: templates/marina/partials/work_order_items_table.html:10
+#, fuzzy
+#| msgid "Subtotal"
+msgid "Total"
+msgstr "Μερικό σύνολο"
+
+#: templates/marina/partials/add_service_form.html:59
+#: templates/marina/partials/booking_form.html:85
+#, fuzzy
+#| msgid "Technical Notes"
+msgid "Internal Notes"
+msgstr "Τεχνικές Σημειώσεις"
+
+#: templates/marina/partials/add_service_form.html:60
+msgid "Notes for provider or office..."
+msgstr "Σημειώσεις για τον πάροχο ή το γραφείο..."
+
+#: templates/marina/partials/add_service_form.html:66
+# fuzzy (resolved)
+#| msgid "Invoice"
+msgid "Add to Invoice"
+msgstr "Προσθήκη στο τιμολόγιο"
+
+#: templates/marina/partials/add_service_form.html:68
+msgid "Discard"
+msgstr "Απόρριψη"
+
+#: templates/marina/partials/add_service_form.html:95
+msgid "Selected: "
+msgstr ""
+
+#: templates/marina/partials/boat_delete_confirm.html:3
+msgid "Confirm Boat Deletion"
+msgstr "Επιβεβαίωση διαγραφής σκάφους"
+
+#: templates/marina/partials/boat_delete_confirm.html:8
+#, fuzzy, python-format
+#| msgid "Are you sure you want to delete this customer?"
+msgid ""
+"Are you sure you want to delete the boat <strong>%(boat_name)s</strong>?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον πελάτη;"
+
+#: templates/marina/partials/boat_delete_confirm.html:9
+msgid ""
+"This will remove all technical data and historical records for this boat."
+msgstr ""
+
+#: templates/marina/partials/boat_delete_confirm.html:15
+msgid "Yes, Delete Boat"
+msgstr "Ναι, Διαγραφή Σκάφους"
+
+#: templates/marina/partials/boat_form_modal.html:4
+#, python-format
+msgid "Edit Boat: %(boat_name)s"
+msgstr "Επεξεργασία σκάφους: %(boat_name)s"
+
+#: templates/marina/partials/boat_form_modal.html:4
+#, python-format
+msgid "Add Boat for %(customer_name)s"
+msgstr "Προσθήκη σκάφους για %(customer_name)s"
+
+#: templates/marina/partials/boat_form_modal.html:28
+#: templates/marina/partials/quick_boat_form.html:71
+# fuzzy (resolved)
+#| msgid "Max Length (m)"
+msgid "Length (m)"
+msgstr "Μήκος (μ)"
+
+#: templates/marina/partials/boat_form_modal.html:33
+#: templates/marina/partials/quick_boat_form.html:75
+#, fuzzy
+#| msgid "Weight (tons)"
+msgid "Weight (t)"
+msgstr "Βάρος (τόνοι)"
+
+#: templates/marina/partials/boat_form_modal.html:38
+#: templates/marina/partials/quick_boat_form.html:79
+msgid "Flag (ISO)"
+msgstr ""
+
+#: templates/marina/partials/boat_form_modal.html:53
+#, fuzzy
+#| msgid "Diesel Tank (L)"
+msgid "Diesel (L)"
+msgstr "Δεξαμενή Πετρελαίου (L)"
+
+#: templates/marina/partials/boat_form_modal.html:58
+#, fuzzy
+#| msgid "Water Tank (L)"
+msgid "Water (L)"
+msgstr "Δεξαμενή Νερού (L)"
+
+# fuzzy (resolved)
+#: templates/marina/partials/boat_form_modal.html:77
+# fuzzy (resolved)
+#| msgid "Current Boat"
+msgid "Current photo"
+msgstr "Τρέχουσα φωτογραφία"
+
+#: templates/marina/partials/boat_form_modal.html:87
+msgid "Update Boat Data"
+msgstr "Ενημέρωση Στοιχείων Σκάφους"
+
+#: templates/marina/partials/boat_form_modal.html:87
+#: templates/marina/partials/customer_form_modal.html:97
+# fuzzy (resolved)
+#| msgid "Boat"
+msgid "Add Boat"
+msgstr "Προσθήκη σκάφους"
+
+# fuzzy (resolved)
+#: templates/marina/partials/booking_delete_confirm.html:3
+# fuzzy (resolved)
+#| msgid "New Booking"
+msgid "Cancel Booking"
+msgstr "Ακύρωση Κράτησης"
+
+#: templates/marina/partials/booking_delete_confirm.html:7
+#, python-format
+msgid ""
+"Are you sure you want to <strong>delete/cancel</strong> the booking for "
+"<strong>%(boat_name)s</strong>?"
+msgstr ""
+
+#: templates/marina/partials/booking_delete_confirm.html:9
+msgid ""
+"This action cannot be undone. All data for this specific booking period will "
+"be removed."
+msgstr ""
+
+# fuzzy (resolved)
+#: templates/marina/partials/booking_delete_confirm.html:15
+# fuzzy (resolved)
+#| msgid "New Booking"
+msgid "Keep Booking"
+msgstr "Διατήρηση Κράτησης"
+
+#: templates/marina/partials/booking_delete_confirm.html:16
+#: templates/marina/partials/customer_delete_confirm.html:3
+# fuzzy (resolved)
+#| msgid "Completed"
+msgid "Confirm Delete"
+msgstr "Επιβεβαίωση διαγραφής"
+
+#: templates/marina/partials/booking_form.html:5
+#, python-format
+msgid "Edit Booking #%(booking_id)s"
+msgstr "Επεξεργασία Κράτησης #%(booking_id)s"
+
+# fuzzy (resolved)
+#: templates/marina/partials/booking_form.html:80
+# fuzzy (resolved)
+#| msgid "Current Boat"
+msgid "Currently at sea"
+msgstr "Αυτή τη στιγμή στη θάλασσα"
+
+#: templates/marina/partials/booking_form.html:94
+# fuzzy (resolved)
+#| msgid "Service"
+msgid "Booked Services"
+msgstr "Κρατημένες Υπηρεσίες"
+
+#: templates/marina/partials/booking_form.html:95
+msgid "Manage additional services below"
+msgstr "Διαχειριστείτε τις πρόσθετες υπηρεσίες παρακάτω"
+
+#: templates/marina/partials/booking_form.html:140
+msgid "Departure date cannot be before arrival date."
+msgstr "Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
+
+#: templates/marina/partials/booking_supplies_list.html:7
+msgid "Utility / Item"
+msgstr "Παροχή / Είδος"
+
+# fuzzy (resolved)
+#: templates/marina/partials/booking_supplies_list.html:10
+#: templates/marina/partials/invoice_edit_modal.html:76
+# fuzzy (resolved)
+#| msgid "Actions"
+msgid "Action"
+msgstr "Ενέργεια"
+
+#: templates/marina/partials/booking_supplies_list.html:18
+msgid "Marina Supply"
+msgstr "Εφόδιο Μαρίνας"
+
+#: templates/marina/partials/booking_supplies_list.html:36
+msgid "No supplies (water, power, etc.) recorded for this stay."
+msgstr "Δεν έχουν καταγραφεί εφόδια (νερό, ρεύμα κ.λπ.) για αυτή τη διαμονή."
+
+#: templates/marina/partials/booking_supplies_list.html:45
+msgid "Quick Add Supply..."
+msgstr "Γρήγορη Προσθήκη Εφοδίου..."
+
+#: templates/marina/partials/booking_supplies_list.html:84
+# fuzzy (resolved)
+#| msgid "Subtotal"
+msgid "Supply Total"
+msgstr "Σύνολο Εφοδίων"
+
+#: templates/marina/partials/checkout_confirm.html:3
+# fuzzy (resolved)
+#| msgid "Check-Out"
+msgid "Finalize Checkout"
+msgstr "Οριστικοποίηση Check-out"
+
+# fuzzy (resolved)
+#: templates/marina/partials/checkout_confirm.html:32
+# fuzzy (resolved)
+#| msgid "Berth #"
+msgid "Berth Fee"
+msgstr "Τέλη ελλιμενισμού"
+
+#: templates/marina/partials/checkout_confirm.html:32
+#, python-format
+msgid "%(days)s days"
+msgstr "%(days)s ημέρες"
+
+# fuzzy (resolved)
+#: templates/marina/partials/checkout_confirm.html:38
+# fuzzy (resolved)
+#| msgid "Total Services"
+msgid "Additional Services"
+msgstr "Πρόσθετες Υπηρεσίες"
+
+# fuzzy (resolved)
+#: templates/marina/partials/checkout_confirm.html:49
+# fuzzy (resolved)
+#| msgid "Amount"
+msgid "Total Amount"
+msgstr "Συνολικό Ποσό"
+
+#: templates/marina/partials/checkout_confirm.html:57
+#, python-format
+msgid ""
+"By confirming, the booking status will be set to <strong>Completed</strong> "
+"and an official invoice will be generated for <strong>%(owner_name)s</"
+"strong>."
+msgstr ""
+
+#: templates/marina/partials/checkout_confirm.html:69
+msgid "Confirm & Edit Invoice"
+msgstr "Επιβεβαίωση & Επεξεργασία Τιμολογίου"
+
+#: templates/marina/partials/checkout_success.html:10
+# fuzzy (resolved)
+#| msgid "Check-Out"
+msgid "Checkout Complete"
+msgstr "Το Check-out ολοκληρώθηκε"
+
+#: templates/marina/partials/checkout_success.html:11
+msgid ""
+"The boat has been checked out successfully and the invoice has been "
+"generated."
+msgstr ""
+
+#: templates/marina/partials/checkout_success.html:18
+# fuzzy (resolved)
+#| msgid "Invoice Management"
+msgid "Invoice Amount"
+msgstr "Ποσό Τιμολογίου"
+
+#: templates/marina/partials/checkout_success.html:22
+#, python-format
+msgid "Invoice #%(invoice_id)s"
+msgstr "Τιμολόγιο #%(invoice_id)s"
+
+#: templates/marina/partials/checkout_success.html:30
+msgid "Download PDF Invoice"
+msgstr "Λήψη Τιμολογίου PDF"
+
+#: templates/marina/partials/checkout_success.html:33
+msgid "View Billing History"
+msgstr "Προβολή Ιστορικού Χρεώσεων"
+
+# fuzzy (resolved)
+#: templates/marina/partials/checkout_success.html:38
+# fuzzy (resolved)
+#| msgid "Live Dashboard"
+msgid "Return to Dashboard"
+msgstr "Επιστροφή στο Dashboard"
+
+#: templates/marina/partials/customer_delete_confirm.html:8
+#, fuzzy, python-format
+#| msgid "Are you sure you want to delete this customer?"
+msgid ""
+"Are you sure you want to delete customer <strong>%(customer_name)s</strong>?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον πελάτη;"
+
+#: templates/marina/partials/customer_delete_confirm.html:9
+msgid ""
+"This action cannot be undone. All related boats and bookings might be "
+"affected."
+msgstr ""
+
+# fuzzy (resolved)
+#: templates/marina/partials/customer_delete_confirm.html:15
+# fuzzy (resolved)
+#| msgid "New Customer"
+msgid "Yes, Delete Customer"
+msgstr "Ναι, Διαγραφή Πελάτη"
+
+#: templates/marina/partials/customer_form_modal.html:5
+#, python-format
+msgid "Edit Customer #%(customer_id)s"
+msgstr "Επεξεργασία Πελάτη #%(customer_id)s"
+
+#: templates/marina/partials/customer_form_modal.html:18
+msgid "Please correct the following errors:"
+msgstr "Παρακαλώ διορθώστε τα ακόλουθα σφάλματα:"
+
+#: templates/marina/partials/customer_form_modal.html:33
+msgid "Full Name / Company"
+msgstr "Ονοματεπώνυμο / Εταιρεία"
+
+#: templates/marina/partials/customer_form_modal.html:37
+# fuzzy (resolved)
+#| msgid "Nationality"
+msgid "Nationality (ISO)"
+msgstr "Εθνικότητα (ISO)"
+
+#: templates/marina/partials/customer_form_modal.html:41
+msgid "Language (ISO)"
+msgstr "Γλώσσα (ISO)"
+
+#: templates/marina/partials/customer_form_modal.html:52
+# fuzzy (resolved)
+#| msgid "Address"
+msgid "Email Address"
+msgstr "Διεύθυνση Email"
+
+#: templates/marina/partials/customer_form_modal.html:56
+# fuzzy (resolved)
+#| msgid "Passport Number"
+msgid "Phone Number"
+msgstr "Αριθμός Τηλεφώνου"
+
+#: templates/marina/partials/customer_form_modal.html:67
+# fuzzy (resolved)
+#| msgid "Address"
+msgid "Postal Address"
+msgstr "Ταχυδρομική Διεύθυνση"
+
+#: templates/marina/partials/customer_form_modal.html:79
+# fuzzy (resolved)
+#| msgid "Passport Number"
+msgid "Passport Number (Non-EU Tax-Free)"
+msgstr "Αριθμός Διαβατηρίου (Non-EU Tax-Free)"
+
+#: templates/marina/partials/customer_form_modal.html:116
+#, fuzzy
+#| msgid "Boat"
+msgid "Edit Boat"
+msgstr "Σκάφος"
+
+#: templates/marina/partials/customer_form_modal.html:122
+# fuzzy (resolved)
+#| msgid "New Boat"
+msgid "Delete Boat"
+msgstr "Διαγραφή σκάφους"
+
+#: templates/marina/partials/customer_form_modal.html:130
+msgid "No boats assigned to this customer yet."
+msgstr "Δεν έχουν ανατεθεί ακόμη σκάφη σε αυτόν τον πελάτη."
+
+# fuzzy (resolved)
+#: templates/marina/partials/customer_form_modal.html:140
+# fuzzy (resolved)
+#| msgid "New Customer"
+msgid "Save Customer"
+msgstr "Αποθήκευση Πελάτη"
+
+#: templates/marina/partials/invoice_create_modal.html:11
+msgid "Step 1: Set customer, type and language."
+msgstr "Βήμα 1: Ορισμός πελάτη, τύπου και γλώσσας."
+
+#: templates/marina/partials/invoice_create_modal.html:11
+msgid "Line items are added in the next step."
+msgstr "Τα στοιχεία προστίθενται στο επόμενο βήμα."
+
+#: templates/marina/partials/invoice_create_modal.html:18
+msgid "Please correct the errors below."
+msgstr "Παρακαλώ διορθώστε τα παρακάτω σφάλματα."
+
+#: templates/marina/partials/invoice_create_modal.html:29
+#: templates/marina/partials/invoice_edit_modal.html:21
+#, fuzzy
+#| msgid "All Doc Types"
+msgid "Document Type"
+msgstr "Όλοι οι τύποι παραστατικών"
+
+#: templates/marina/partials/invoice_create_modal.html:33
+# fuzzy (resolved)
+#| msgid "Preferred Language"
+msgid "PDF Language"
+msgstr "Γλώσσα PDF"
+
+#: templates/marina/partials/invoice_create_modal.html:37
+msgid "Series"
+msgstr "Σειρά"
+
+#: templates/marina/partials/invoice_create_modal.html:45
+#: templates/marina/partials/invoice_edit_modal.html:29
+msgid "Payment Method"
+msgstr ""
+
+#: templates/marina/partials/invoice_create_modal.html:49
+#: templates/marina/partials/invoice_edit_modal.html:33
+msgid "Discount (€)"
+msgstr ""
+
+#: templates/marina/partials/invoice_create_modal.html:53
+msgid "Purpose"
+msgstr "Σκοπός"
+
+#: templates/marina/partials/invoice_create_modal.html:53
+msgid "(ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)"
+msgstr "(ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)"
+
+#: templates/marina/partials/invoice_create_modal.html:57
+msgid "Remarks"
+msgstr "Παρατηρήσεις"
+
+#: templates/marina/partials/invoice_create_modal.html:57
+msgid "(ΠΑΡΑΤΗΡΗΣΕΙΣ)"
+msgstr "(ΠΑΡΑΤΗΡΗΣΕΙΣ)"
+
+#: templates/marina/partials/invoice_create_modal.html:64
+msgid "Next: Add Line Items"
+msgstr "Επόμενο: Προσθήκη στοιχείων"
+
+#: templates/marina/partials/invoice_delete_confirm.html:3
+msgid "Confirm Invoice Deletion"
+msgstr "Επιβεβαίωση διαγραφής τιμολογίου"
+
+#: templates/marina/partials/invoice_delete_confirm.html:8
+#, python-format
+msgid ""
+"Are you sure you want to delete invoice <strong>#%(invoice_id)s</strong> for "
+"<strong>%(cust_name)s</strong>?"
+msgstr ""
+
+#: templates/marina/partials/invoice_delete_confirm.html:9
+msgid ""
+"This will remove the billing record and all associated items from the system."
+msgstr ""
+
+#: templates/marina/partials/invoice_delete_confirm.html:15
+# fuzzy (resolved)
+#| msgid "New Invoice"
+msgid "Yes, Delete Invoice"
+msgstr "Ναι, Διαγραφή Τιμολογίου"
+
+#: templates/marina/partials/invoice_edit_modal.html:3
+#, python-format
+msgid "Edit Invoice #%(invoice_id)s"
+msgstr "Επεξεργασία Τιμολογίου #%(invoice_id)s"
+
+#: templates/marina/partials/invoice_edit_modal.html:25
+# fuzzy (resolved)
+#| msgid "Invoices"
+msgid "Invoice Status"
+msgstr "Κατάσταση Τιμολογίου"
+
+#: templates/marina/partials/invoice_edit_modal.html:37
+#: templates/marina/partials/quick_boat_form.html:54
+#, fuzzy
+#| msgid "Preferred Language"
+msgid "Language"
+msgstr "Προτιμώμενη Γλώσσα"
+
+#: templates/marina/partials/invoice_edit_modal.html:41
+msgid "Series (ΣΕΙΡΑ)"
+msgstr "Σειρά (ΣΕΙΡΑ)"
+
+#: templates/marina/partials/invoice_edit_modal.html:45
+msgid "Purpose (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)"
+msgstr "Σκοπός (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)"
+
+#: templates/marina/partials/invoice_edit_modal.html:49
+msgid "Remarks / Notes (ΠΑΡΑΤΗΡΗΣΕΙΣ)"
+msgstr "Παρατηρήσεις / Σημειώσεις (ΠΑΡΑΤΗΡΗΣΕΙΣ)"
+
+#: templates/marina/partials/invoice_edit_modal.html:60
+# fuzzy (resolved)
+#| msgid "Invoices"
+msgid "Invoice Items"
+msgstr "Στοιχεία Τιμολογίου"
+
+#: templates/marina/partials/invoice_edit_modal.html:61
+msgid "Detailed list of services and supplies"
+msgstr "Λεπτομερής λίστα υπηρεσιών και εφοδίων"
+
+#: templates/marina/partials/invoice_edit_modal.html:68
+#: templates/marina/partials/invoice_edit_modal.html:83
+#: templates/marina/partials/invoice_edit_modal.html:190
+#, fuzzy
+#| msgid "ISO Code"
+msgid "Code"
+msgstr "Κωδικός ISO"
+
+#: templates/marina/partials/invoice_edit_modal.html:72
+#: templates/marina/partials/invoice_edit_modal.html:206
+# fuzzy (resolved)
+#| msgid "Price Rate"
+msgid "Price"
+msgstr "Τιμή"
+
+#: templates/marina/partials/invoice_edit_modal.html:73
+#, python-format
+msgid "Disc %%"
+msgstr ""
+
+#: templates/marina/partials/invoice_edit_modal.html:74
+#, python-format
+msgid "VAT %%"
+msgstr ""
+
+#: templates/marina/partials/invoice_edit_modal.html:93
+msgid "Liter"
+msgstr "Λίτρο"
+
+#: templates/marina/partials/invoice_edit_modal.html:94
+msgid "Kilogram"
+msgstr "Κιλό"
+
+#: templates/marina/partials/invoice_edit_modal.html:95
+msgid "kWh"
+msgstr "kWh"
+
+#: templates/marina/partials/invoice_edit_modal.html:96
+msgid "Hour"
+msgstr "Ώρα"
+
+#: templates/marina/partials/invoice_edit_modal.html:97
+msgid "Day(s)"
+msgstr "Ημέρα(ες)"
+
+#: templates/marina/partials/invoice_edit_modal.html:98
+msgid "Piece"
+msgstr "Τεμάχιο"
+
+#: templates/marina/partials/invoice_edit_modal.html:124
+# fuzzy (resolved)
+#| msgid "Subtotal"
+msgid "Subtotal (Net)"
+msgstr "Μερικό σύνολο (Καθαρό)"
+
+#: templates/marina/partials/invoice_edit_modal.html:130
+msgid "Applied Header Discount"
+msgstr "Εφαρμοσμένη γενική έκπτωση"
+
+#: templates/marina/partials/invoice_edit_modal.html:136
+msgid "Total Amount Due"
+msgstr "Συνολικό οφειλόμενο ποσό"
+
+#: templates/marina/partials/invoice_edit_modal.html:147
+msgid "Add New Line Item"
+msgstr "Προσθήκη νέου στοιχείου"
+
+# fuzzy (resolved)
+#: templates/marina/partials/invoice_edit_modal.html:153
+# fuzzy (resolved)
+#| msgid "Search boat..."
+msgid "Search catalog..."
+msgstr "Αναζήτηση καταλόγου..."
+
+#: templates/marina/partials/invoice_edit_modal.html:165
+# fuzzy (resolved)
+#| msgid "Price per Unit"
+msgid "Price / Unit"
+msgstr "Τιμή / Μονάδα"
+
+#: templates/marina/partials/invoice_edit_modal.html:178
+# fuzzy (resolved)
+#| msgid "No service data yet"
+msgid "No services found in catalog."
+msgstr "Δεν βρέθηκαν υπηρεσίες στον κατάλογο."
+
+#: templates/marina/partials/invoice_edit_modal.html:213
+#, python-format
+msgid "Disc%%"
+msgstr "Έκπτ%"
+
+#: templates/marina/partials/invoice_edit_modal.html:217
+#, python-format
+msgid "VAT%%"
+msgstr ""
+
+#: templates/marina/partials/invoice_edit_modal.html:236
+msgid "Updating invoice records..."
+msgstr "Ενημέρωση στοιχείων τιμολογίου..."
+
+#: templates/marina/partials/invoice_edit_modal.html:288
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr "Ιανουάριος"
+
+#: templates/marina/partials/invoice_edit_modal.html:289
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr "Φεβρουάριος"
+
+#: templates/marina/partials/invoice_edit_modal.html:290
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr "Μάρτιος"
+
+#: templates/marina/partials/invoice_edit_modal.html:291
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr "Απρίλιος"
+
+#: templates/marina/partials/invoice_edit_modal.html:292
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr "Μάιος"
+
+#: templates/marina/partials/invoice_edit_modal.html:293
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr "Ιούνιος"
+
+#: templates/marina/partials/invoice_edit_modal.html:294
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr "Ιούλιος"
+
+#: templates/marina/partials/invoice_edit_modal.html:295
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr "Αύγουστος"
+
+#: templates/marina/partials/invoice_edit_modal.html:296
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr "Σεπτέμβριος"
+
+#: templates/marina/partials/invoice_edit_modal.html:297
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr "Οκτώβριος"
+
+#: templates/marina/partials/invoice_edit_modal.html:298
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
+# fuzzy (resolved)
+#| msgid "Number"
+msgid "November"
+msgstr "Νοέμβριος"
+
+#: templates/marina/partials/invoice_edit_modal.html:299
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr "Δεκέμβριος"
+
+# fuzzy (resolved)
+#: templates/marina/partials/menu_preferences_modal.html:3
+# fuzzy (resolved)
+#| msgid "Customer Management"
+msgid "Customize Menu"
+msgstr "Προσαρμογή Μενού"
+
+#: templates/marina/partials/menu_preferences_modal.html:11
+msgid ""
+"Choose which menu items you would like to display in your navigation header. "
+"Pages disabled by the administrator will not be listed."
+msgstr ""
+
+#: templates/marina/partials/menu_preferences_modal.html:117
+msgid "Show Company Name in Header"
+msgstr "Εμφάνιση Ονόματος Εταιρείας στην Κεφαλίδα"
+
+#: templates/marina/partials/menu_preferences_modal.html:125
+msgid "Save Changes"
+msgstr "Αποθήκευση Αλλαγών"
+
+#: templates/marina/partials/provider_delete_confirm.html:3
+msgid "Confirm Deletion"
+msgstr "Επιβεβαίωση Διαγραφής"
+
+#: templates/marina/partials/provider_delete_confirm.html:7
+#, fuzzy, python-format
+#| msgid "Are you sure you want to delete this customer?"
+msgid ""
+"Are you sure you want to delete the provider <strong>%(provider_name)s</"
+"strong>?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον πελάτη;"
+
+#: templates/marina/partials/provider_delete_confirm.html:8
+msgid ""
+"This action cannot be undone. Any services linked to this provider will have "
+"their provider field cleared."
+msgstr ""
+
+#: templates/marina/partials/provider_delete_confirm.html:13
+# fuzzy (resolved)
+#| msgid "Delete Order"
+msgid "Delete Provider"
+msgstr "Διαγραφή Παρόχου"
+
+# fuzzy (resolved)
+#: templates/marina/partials/provider_form.html:5
+# fuzzy (resolved)
+#| msgid "Edit Order"
+msgid "Edit Provider"
+msgstr "Επεξεργασία Παρόχου"
+
+# fuzzy (resolved)
+#: templates/marina/partials/provider_form.html:5
+#: templates/marina/providers_list.html:14
+msgid "New Provider"
+msgstr "Νέος Πάροχος"
+
+#: templates/marina/partials/provider_form.html:18
+# fuzzy (resolved)
+#| msgid "Provider Name"
+msgid "Provider / Company Name"
+msgstr "Όνομα Παρόχου / Εταιρείας"
+
+#: templates/marina/partials/provider_form.html:35
+# fuzzy (resolved)
+#| msgid "Service Provider"
+msgid "Save Provider"
+msgstr "Αποθήκευση Παρόχου"
+
+# fuzzy (resolved)
+#: templates/marina/partials/quick_boat_form.html:3
+# fuzzy (resolved)
+#| msgid "New Customer"
+msgid "New Customer & Boat Details"
+msgstr "Στοιχεία Νέου Πελάτη & Σκάφους"
+
+#: templates/marina/partials/quick_boat_form.html:20
+msgid "Please check the following fields:"
+msgstr "Παρακαλώ ελέγξτε τα ακόλουθα πεδία:"
+
+#: templates/marina/partials/quick_boat_form.html:23
+#, python-format
+msgid "Customer %(field_label)s: %(error)s"
+msgstr "Πελάτης %(field_label)s: %(error)s"
+
+#: templates/marina/partials/quick_boat_form.html:28
+#, python-format
+msgid "Boat %(field_label)s: %(error)s"
+msgstr "Σκάφος %(field_label)s: %(error)s"
+
+#: templates/marina/partials/quick_boat_form.html:35
+# fuzzy (resolved)
+#| msgid "Customers"
+msgid "Customer Details"
+msgstr "Στοιχεία Πελάτη"
+
+# fuzzy (resolved)
+#: templates/marina/partials/quick_boat_form.html:60
+# fuzzy (resolved)
+#| msgid "Boat Types"
+msgid "Boat Details"
+msgstr "Στοιχεία Σκάφους"
+
+# fuzzy (resolved)
+#: templates/marina/partials/quick_boat_form.html:67
+# fuzzy (resolved)
+#| msgid "Boat Types"
+msgid "Boat Type"
+msgstr "Τύπος Σκάφους"
+
+#: templates/marina/partials/quick_boat_form.html:83
+# fuzzy (resolved)
+#| msgid "Boat Photo"
+msgid "Boat Color"
+msgstr "Χρώμα σκάφους"
+
+#: templates/marina/partials/quick_boat_form.html:102
+#: templates/marina/partials/quick_boat_form.html:104
+msgid "Cancel & Back"
+msgstr "Ακύρωση & Πίσω"
+
+#: templates/marina/partials/quick_boat_form.html:107
+# fuzzy (resolved)
+#| msgid "Date Created"
+msgid "Create"
+msgstr "Δημιουργία"
+
+#: templates/marina/partials/work_order_items_table.html:7
+# fuzzy (resolved)
+#| msgid "Service Name"
+msgid "Service / Part"
+msgstr "Υπηρεσία / Ανταλλακτικό"
+
+#: templates/marina/partials/work_order_items_table.html:9
+msgid "Unit Price"
+msgstr "Τιμή Μονάδας"
+
+#: templates/marina/partials/work_order_items_table.html:19
+# fuzzy (resolved)
+#| msgid "Service"
+msgid "Yard Service"
+msgstr "Υπηρεσία Καρνάγιου"
+
+#: templates/marina/partials/work_order_items_table.html:38
+# fuzzy (resolved)
+#| msgid "No work orders recorded in the yard."
+msgid "No work or parts recorded yet."
+msgstr "Δεν έχουν καταγραφεί ακόμη εργασίες ή ανταλλακτικά."
+
+# fuzzy (resolved)
+#: templates/marina/partials/work_order_items_table.html:46
+# fuzzy (resolved)
+#| msgid "Search customers or boats..."
+msgid "Quick search tasks or parts..."
+msgstr "Γρήγορη αναζήτηση εργασιών ή ανταλλακτικών..."
+
+#: templates/marina/partials/work_order_items_table.html:93
+# fuzzy (resolved)
+#| msgid "Work Order Item"
+msgid "Total Work Order Value"
+msgstr "Συνολική Αξία Εντολής"
+
 #: templates/marina/planning_grid.html:61
 msgid "Yearly Planning Matrix"
 msgstr "Ετήσιος Πίνακας Προγραμματισμού"
@@ -917,31 +1957,17 @@ msgstr "Ετήσιος Πίνακας Προγραμματισμού"
 msgid "Search boat or owner..."
 msgstr "Αναζήτηση σκάφους ή ιδιοκτήτη..."
 
-# fuzzy (resolved)
-#: templates/marina/planning_grid.html:72
-#: templates/marina/work_order_list.html:14
-msgid "New Work Order"
-msgstr "Νέα Εντολή Εργασίας"
-
 #: templates/marina/providers_list.html:11
 msgid "Manage your external partners, mechanics, and suppliers"
 msgstr "Διαχειριστείτε τους εξωτερικούς συνεργάτες, μηχανικούς και προμηθευτές"
 
-#: templates/marina/providers_list.html:14
 # fuzzy (resolved)
-#| msgid "Service Provider"
-msgid "New Provider"
-msgstr "Νέος Πάροχος"
-
 #: templates/marina/providers_list.html:23
-# fuzzy (resolved)
-#| msgid "Boat Photo"
 msgid "Contact Phone"
 msgstr "Τηλέφωνο Επικοινωνίας"
 
-#: templates/marina/providers_list.html:51
 # fuzzy (resolved)
-#| msgid "Service Providers"
+#: templates/marina/providers_list.html:51
 msgid "No service providers defined yet."
 msgstr "Δεν έχουν οριστεί ακόμη πάροχοι υπηρεσιών."
 
@@ -957,9 +1983,8 @@ msgstr "Ολοκληρωμένα στατιστικά στοιχεία για τ
 msgid "Export PDF"
 msgstr "Εξαγωγή PDF"
 
-#: templates/marina/reports.html:19
 # fuzzy (resolved)
-#| msgid "Dashboard"
+#: templates/marina/reports.html:19
 msgid "Live Dashboard"
 msgstr "Live Dashboard"
 
@@ -975,9 +2000,8 @@ msgstr ""
 msgid "Paid invoices this month"
 msgstr "Εξοφλημένα τιμολόγια αυτόν το μήνα"
 
-#: templates/marina/reports.html:50
 # fuzzy (resolved)
-#| msgid "Occupancy"
+#: templates/marina/reports.html:50
 msgid "Live Occupancy"
 msgstr "Live Πληρότητα"
 
@@ -995,15 +2019,13 @@ msgstr "Μέσο Μέγεθος Σκάφους"
 msgid "Average length across all boats"
 msgstr "Μέσο μήκος όλων των σκαφών"
 
-#: templates/marina/reports.html:89
 # fuzzy (resolved)
-#| msgid "Service Provider"
+#: templates/marina/reports.html:89
 msgid "Top Provider"
 msgstr "Κορυφαίος Πάροχος"
 
-#: templates/marina/reports.html:97
 # fuzzy (resolved)
-#| msgid "Service Category"
+#: templates/marina/reports.html:97
 msgid "Most utilized service category"
 msgstr "Πιο δημοφιλής κατηγορία υπηρεσιών"
 
@@ -1011,9 +2033,8 @@ msgstr "Πιο δημοφιλής κατηγορία υπηρεσιών"
 msgid "Revenue Trend"
 msgstr "Τάση Εσόδων"
 
-#: templates/marina/reports.html:119
 # fuzzy (resolved)
-#| msgid "Boats"
+#: templates/marina/reports.html:119
 msgid "Boat Types"
 msgstr "Τύποι Σκαφών"
 
@@ -1021,9 +2042,8 @@ msgstr "Τύποι Σκαφών"
 msgid "Flag Statistics"
 msgstr "Στατιστικά Σημαιών"
 
-#: templates/marina/reports.html:143
 # fuzzy (resolved)
-#| msgid "Customers"
+#: templates/marina/reports.html:143
 msgid "Top Customers"
 msgstr "Κορυφαίοι Πελάτες"
 
@@ -1031,9 +2051,8 @@ msgstr "Κορυφαίοι Πελάτες"
 msgid "Revenue"
 msgstr ""
 
-#: templates/marina/reports.html:179
 # fuzzy (resolved)
-#| msgid "Service Catalog"
+#: templates/marina/reports.html:179
 msgid "Service Breakdown"
 msgstr "Ανάλυση Υπηρεσιών"
 
@@ -1045,27 +2064,19 @@ msgstr "Άμεσα έσοδα από υπηρεσίες"
 msgid "No service data yet"
 msgstr "Δεν υπάρχουν ακόμη δεδομένα υπηρεσιών"
 
-#: templates/marina/work_order_list.html:4
 # fuzzy (resolved)
-#| msgid "Work Orders"
+#: templates/marina/work_order_list.html:4
 msgid "Work Orders (Yard)"
 msgstr "Εντολές Εργασίας (Καρνάγιο)"
 
-#: templates/marina/work_order_list.html:10
 # fuzzy (resolved)
-#| msgid "Invoice Management"
+#: templates/marina/work_order_list.html:10
 msgid "Yard Service Management"
 msgstr "Διαχείριση Υπηρεσιών Καρνάγιου"
 
 #: templates/marina/work_order_list.html:11
 msgid "Manage repairs, maintenance, and dry-dock projects"
 msgstr "Διαχειριστείτε επισκευές, συντήρηση και έργα dry-dock"
-
-#: templates/marina/work_order_list.html:23
-#, fuzzy
-#| msgid "Customer"
-msgid "Boat / Customer"
-msgstr "Πελάτης"
 
 # fuzzy (resolved)
 #: templates/marina/work_order_list.html:24
@@ -1108,9 +2119,8 @@ msgstr "Ολοκληρώθηκε"
 msgid "Checkout & Bill"
 msgstr "Αναχώρηση & Τιμολόγηση"
 
-#: templates/marina/work_order_list.html:71
 # fuzzy (resolved)
-#| msgid "Work Order"
+#: templates/marina/work_order_list.html:71
 msgid "Edit Order"
 msgstr "Επεξεργασία Εντολής"
 
@@ -1888,56 +2898,6 @@ msgstr "Κατάσταση"
 msgid "Sun"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
-msgid "January"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
-msgid "February"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
-msgid "March"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
-msgid "April"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
-msgid "May"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
-msgid "June"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
-msgid "July"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
-msgid "August"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
-msgid "September"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
-msgid "October"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
-#, fuzzy
-#| msgid "Number"
-msgid "November"
-msgstr "Αριθμός"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
-msgid "December"
-msgstr ""
-
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:39
 msgid "jan"
 msgstr ""
@@ -1999,27 +2959,27 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:55
 msgctxt "abbrev. month"
 msgid "March"
-msgstr ""
+msgstr "Μάρτιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:56
 msgctxt "abbrev. month"
 msgid "April"
-msgstr ""
+msgstr "Απρίλιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:57
 msgctxt "abbrev. month"
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:58
 msgctxt "abbrev. month"
 msgid "June"
-msgstr ""
+msgstr "Ιούνιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:59
 msgctxt "abbrev. month"
 msgid "July"
-msgstr ""
+msgstr "Ιούλιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:60
 msgctxt "abbrev. month"
@@ -2049,64 +3009,64 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:67
 msgctxt "alt. month"
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:68
 msgctxt "alt. month"
 msgid "February"
-msgstr ""
+msgstr "Φεβρουάριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:69
 msgctxt "alt. month"
 msgid "March"
-msgstr ""
+msgstr "Μάρτιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:70
 msgctxt "alt. month"
 msgid "April"
-msgstr ""
+msgstr "Απρίλιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:71
 msgctxt "alt. month"
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:72
 msgctxt "alt. month"
 msgid "June"
-msgstr ""
+msgstr "Ιούνιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:73
 msgctxt "alt. month"
 msgid "July"
-msgstr ""
+msgstr "Ιούλιος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:74
 msgctxt "alt. month"
 msgid "August"
-msgstr ""
+msgstr "Αύγουστος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:75
 msgctxt "alt. month"
 msgid "September"
-msgstr ""
+msgstr "Σεπτέμβριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:76
 msgctxt "alt. month"
 msgid "October"
-msgstr ""
+msgstr "Οκτώβριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:77
-#, fuzzy
+# fuzzy (resolved)
 #| msgid "Number"
 msgctxt "alt. month"
 msgid "November"
-msgstr "Αριθμός"
+msgstr "Νοέμβριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:78
 msgctxt "alt. month"
 msgid "December"
-msgstr ""
+msgstr "Δεκέμβριος"
 
 #: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
 msgid "This is not a valid IPv6 address."

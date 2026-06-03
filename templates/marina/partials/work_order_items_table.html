@@ -1,12 +1,13 @@
+{% load i18n %}
 <div id="work-items-table-container">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr class="xx-small text-muted text-uppercase">
-                    <th class="ps-3">Service / Part</th>
-                    <th class="text-end">Qty</th>
-                    <th class="text-end">Unit Price</th>
-                    <th class="text-end">Total</th>
+                    <th class="ps-3">{% trans "Service / Part" %}</th>
+                    <th class="text-end">{% trans "Qty" %}</th>
+                    <th class="text-end">{% trans "Unit Price" %}</th>
+                    <th class="text-end">{% trans "Total" %}</th>
                     <th class="text-center"></th>
                 </tr>
             </thead>
@@ -15,7 +16,7 @@
                 <tr class="small">
                     <td class="ps-3">
                         <div class="fw-bold text-primary">{{ item.service.name }}</div>
-                        <div class="xx-small text-muted text-uppercase">{% if item.service.category %}{{ item.service.category.name }}{% else %}Yard Service{% endif %}</div>
+                        <div class="xx-small text-muted text-uppercase">{% if item.service.category %}{{ item.service.category.name }}{% else %}{% trans "Yard Service" %}{% endif %}</div>
                         {% if item.notes %}<div class="xx-small text-muted italic">{{ item.notes }}</div>{% endif %}
                     </td>
                     <td class="text-end">{{ item.quantity }} {{ item.service.get_unit_display }}</td>
@@ -34,7 +35,7 @@
                 <tr>
                     <td colspan="5" class="text-center py-4 text-muted small">
                         <div class="mb-2"><i class="bi bi-tools fs-4"></i></div>
-                        No work or parts recorded yet.
+                        {% trans "No work or parts recorded yet." %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -42,7 +43,7 @@
                 <tr class="bg-light border-top border-primary border-opacity-10">
                     <td class="ps-3">
                         <select name="add_service_id" id="work-item-quick-add-service" class="form-select form-select-sm select2-search-items" onchange="updateQuickAddUnit()">
-                            <option value="">Quick search tasks or parts...</option>
+                            <option value="">{% trans "Quick search tasks or parts..." %}</option>
                             {% for service in all_services %}
                             <option value="{{ service.id }}" data-unit="{{ service.get_unit_display }}">{{ service.name }} (€{{ service.price_per_unit }})</option>
                             {% endfor %}
@@ -89,7 +90,7 @@
 </script>
             <tfoot class="table-light">
                 <tr>
-                    <td colspan="3" class="text-end fw-bold ps-3">Total Work Order Value</td>
+                    <td colspan="3" class="text-end fw-bold ps-3">{% trans "Total Work Order Value" %}</td>
                     <td class="text-end fw-bold text-primary fs-6">€{{ order.total_value|default:"0.00" }}</td>
                     <td></td>
                 </tr>

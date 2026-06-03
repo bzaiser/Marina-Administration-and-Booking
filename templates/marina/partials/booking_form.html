@@ -1,7 +1,8 @@
+{% load i18n %}
 <div class="modal-header border-0 pb-0">
     <h5 class="modal-title fw-bold">
         <i class="bi bi-calendar-plus text-primary me-2"></i>
-        {% if editing %}Edit Booking #{{ form.instance.id }}{% else %}New Booking{% endif %}
+        {% if editing %}{% blocktrans with booking_id=form.instance.id %}Edit Booking #{{ booking_id }}{% endblocktrans %}{% else %}{% trans "New Booking" %}{% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -18,7 +19,7 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Boat / Customer</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Boat / Customer" %}</label>
                         <div class="input-group flex-nowrap">
                             <div class="flex-grow-1">
                                 {{ form.boat }}
@@ -26,24 +27,24 @@
                             <button type="button" class="btn btn-primary" 
                                     hx-get="{% url 'quick_boat_create' %}?start={{ form.start_date.value|default_if_none:'' }}&end={{ form.end_date.value|default_if_none:'' }}&berth={{ form.berth.value|default_if_none:'' }}" 
                                     hx-target="#modals-here .modal-content" 
-                                    title="Add New Customer/Boat">
+                                    title="{% trans "Add New Customer/Boat" %}">
                                 <i class="bi bi-plus-lg"></i>
                             </button>
                         </div>
                     </div>
                     
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Berth</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Berth" %}</label>
                         {{ form.berth }}
                     </div>
                     
                     <div class="col-md-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Type</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Type" %}</label>
                         {{ form.booking_type }}
                     </div>
                     
                     <div class="col-md-3">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Status</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Status" %}</label>
                         {{ form.status }}
                     </div>
                 </div>
@@ -54,11 +55,11 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Arrival Date</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Arrival Date" %}</label>
                         {{ form.start_date }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Departure Date</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Departure Date" %}</label>
                         {{ form.end_date }}
                     </div>
                 </div>
@@ -69,19 +70,19 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Reference</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Reference" %}</label>
                         {{ form.reference }}
                     </div>
                     <div class="col-md-6 d-flex align-items-center pt-4">
                         <div class="form-check form-switch">
                             {{ form.is_at_sea }}
                             <label class="form-check-label small fw-bold" for="{{ form.is_at_sea.id_for_label }}">
-                                Currently at sea
+                                {% trans "Currently at sea" %}
                             </label>
                         </div>
                     </div>
                     <div class="col-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Internal Notes</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Internal Notes" %}</label>
                         {{ form.notes }}
                     </div>
                 </div>
@@ -90,8 +91,8 @@
         {% if editing %}
         <hr class="my-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0"><i class="bi bi-list-check text-primary me-2"></i>Booked Services</h6>
-            <div class="small text-muted">Manage additional services below</div>
+            <h6 class="fw-bold mb-0"><i class="bi bi-list-check text-primary me-2"></i>{% trans "Booked Services" %}</h6>
+            <div class="small text-muted">{% trans "Manage additional services below" %}</div>
         </div>
         <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
             {% include "marina/partials/booking_supplies_list.html" %}
@@ -100,9 +101,9 @@
     </div>
     
     <div class="modal-footer border-0 pt-0 pb-4">
-        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
         <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
-            <i class="bi bi-check-lg me-1"></i>{% if editing %}Save & Close{% else %}Create & Close{% endif %}
+            <i class="bi bi-check-lg me-1"></i>{% if editing %}{% trans "Save & Close" %}{% else %}{% trans "Create & Close" %}{% endif %}
         </button>
     </div>
 </form>
@@ -136,7 +137,7 @@
                     const startDate = new Date(startInput.value);
                     const endDate = new Date(this.value);
                     if (endDate < startDate) {
-                        alert("Departure date cannot be before arrival date.");
+                        alert("{% trans "Departure date cannot be before arrival date." %}");
                         this.value = startInput.value;
                     }
                 }

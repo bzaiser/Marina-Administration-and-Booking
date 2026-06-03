@@ -1,5 +1,6 @@
+{% load i18n %}
 <div class="modal-header border-0 pb-0">
-    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-primary me-2"></i>Edit Invoice #{{ invoice.id }}</h5>
+    <h5 class="modal-title fw-bold"><i class="bi bi-pencil-square text-primary me-2"></i>{% blocktrans with invoice_id=invoice.id %}Edit Invoice #{{ invoice_id }}{% endblocktrans %}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 
@@ -13,39 +14,39 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Customer</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Customer" %}</label>
                         {{ form.customer }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Document Type</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Document Type" %}</label>
                         {{ form.document_type }}
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Invoice Status</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Invoice Status" %}</label>
                         {{ form.status }}
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Payment Method</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Payment Method" %}</label>
                         {{ form.payment_method }}
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Discount (€)</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Discount (€)" %}</label>
                         {{ form.discount }}
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Language</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Language" %}</label>
                         {{ form.language }}
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Series (ΣΕΙΡΑ)</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Series (ΣΕΙΡΑ)" %}</label>
                         {{ form.series }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Purpose (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Purpose (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)" %}</label>
                         {{ form.purpose }}
                     </div>
                     <div class="col-12">
-                        <label class="form-label xx-small fw-bold text-muted text-uppercase">Remarks / Notes (ΠΑΡΑΤΗΡΗΣΕΙΣ)</label>
+                        <label class="form-label xx-small fw-bold text-muted text-uppercase">{% trans "Remarks / Notes (ΠΑΡΑΤΗΡΗΣΕΙΣ)" %}</label>
                         {{ form.notes }}
                     </div>
                 </div>
@@ -56,30 +57,30 @@
 
         <!-- Invoice Items List -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0"><i class="bi bi-list-ul text-primary me-2"></i>Invoice Items</h6>
-            <div class="small text-muted">Detailed list of services and supplies</div>
+            <h6 class="fw-bold mb-0"><i class="bi bi-list-ul text-primary me-2"></i>{% trans "Invoice Items" %}</h6>
+            <div class="small text-muted">{% trans "Detailed list of services and supplies" %}</div>
         </div>
 
         <div class="table-responsive mb-4">
             <table class="table table-sm align-middle">
                 <thead class="table-light xx-small text-uppercase text-muted">
                     <tr>
-                        <th class="ps-3" style="width: 100px;">Code</th>
-                        <th style="min-width: 180px;">Description</th>
-                        <th class="text-end" style="width: 70px;">Qty</th>
-                        <th class="text-end" style="width: 110px;">Unit</th>
-                        <th class="text-end" style="width: 110px;">Price</th>
-                        <th class="text-end" style="width: 80px;">Disc %</th>
-                        <th class="text-end" style="width: 80px;">VAT %</th>
-                        <th class="text-end" style="width: 100px;">Subtotal</th>
-                        <th class="text-end pe-3" style="width: 50px;">Action</th>
+                        <th class="ps-3" style="width: 100px;">{% trans "Code" %}</th>
+                        <th style="min-width: 180px;">{% trans "Description" %}</th>
+                        <th class="text-end" style="width: 70px;">{% trans "Qty" %}</th>
+                        <th class="text-end" style="width: 110px;">{% trans "Unit" %}</th>
+                        <th class="text-end" style="width: 110px;">{% trans "Price" %}</th>
+                        <th class="text-end" style="width: 80px;">{% trans "Disc %" %}</th>
+                        <th class="text-end" style="width: 80px;">{% trans "VAT %" %}</th>
+                        <th class="text-end" style="width: 100px;">{% trans "Subtotal" %}</th>
+                        <th class="text-end pe-3" style="width: 50px;">{% trans "Action" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in invoice.items.all %}
                     <tr class="small" id="invoice-item-row-{{ item.id }}">
                         <td class="ps-3">
-                            <input type="text" class="form-control form-control-sm" name="item_{{ item.id }}_item_code" value="{{ item.item_code|default:'' }}" placeholder="Code">
+                            <input type="text" class="form-control form-control-sm" name="item_{{ item.id }}_item_code" value="{{ item.item_code|default:'' }}" placeholder="{% trans "Code" %}">
                         </td>
                         <td>
                             <input type="text" class="form-control form-control-sm" name="item_{{ item.id }}_description" value="{{ item.description }}" required>
@@ -89,12 +90,12 @@
                         </td>
                         <td class="text-end">
                             <select class="form-select form-select-sm" name="item_{{ item.id }}_unit">
-                                <option value="LITER" {% if item.unit == 'LITER' %}selected{% endif %}>Liter</option>
-                                <option value="KG" {% if item.unit == 'KG' %}selected{% endif %}>Kilogram</option>
-                                <option value="KWH" {% if item.unit == 'KWH' %}selected{% endif %}>kWh</option>
-                                <option value="HOUR" {% if item.unit == 'HOUR' %}selected{% endif %}>Hour</option>
-                                <option value="DAY" {% if item.unit == 'DAY' %}selected{% endif %}>Day(s)</option>
-                                <option value="PIECE" {% if item.unit == 'PIECE' %}selected{% endif %}>Piece</option>
+                                <option value="LITER" {% if item.unit == 'LITER' %}selected{% endif %}>{% trans "Liter" %}</option>
+                                <option value="KG" {% if item.unit == 'KG' %}selected{% endif %}>{% trans "Kilogram" %}</option>
+                                <option value="KWH" {% if item.unit == 'KWH' %}selected{% endif %}>{% trans "kWh" %}</option>
+                                <option value="HOUR" {% if item.unit == 'HOUR' %}selected{% endif %}>{% trans "Hour" %}</option>
+                                <option value="DAY" {% if item.unit == 'DAY' %}selected{% endif %}>{% trans "Day(s)" %}</option>
+                                <option value="PIECE" {% if item.unit == 'PIECE' %}selected{% endif %}>{% trans "Piece" %}</option>
                             </select>
                         </td>
                         <td class="text-end">
@@ -120,19 +121,19 @@
                     </tr>
                     {% endfor %}
                     <tr class="table-info border-top-2">
-                        <td colspan="7" class="text-end fw-bold">Subtotal (Net)</td>
+                        <td colspan="7" class="text-end fw-bold">{% trans "Subtotal (Net)" %}</td>
                         <td class="text-end fw-bold">€{{ invoice.total_amount|add:invoice.discount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
                     {% if invoice.discount > 0 %}
                     <tr class="table-warning">
-                        <td colspan="7" class="text-end text-muted small">Applied Header Discount</td>
+                        <td colspan="7" class="text-end text-muted small">{% trans "Applied Header Discount" %}</td>
                         <td class="text-end text-danger fw-bold">- €{{ invoice.discount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
                     {% endif %}
                     <tr class="table-primary fw-bold fs-6">
-                        <td colspan="7" class="text-end py-3">Total Amount Due</td>
+                        <td colspan="7" class="text-end py-3">{% trans "Total Amount Due" %}</td>
                         <td class="text-end py-3">€{{ invoice.total_amount|floatformat:2 }}</td>
                         <td></td>
                     </tr>
@@ -143,13 +144,13 @@
         <!-- Add New Item Section (Inside the card but logic stays HTMX) -->
         <div class="card border-primary border-opacity-25 rounded-3 mb-3 shadow-sm">
             <div class="card-header bg-primary bg-opacity-10 py-2 d-flex justify-content-between align-items-center">
-                <small class="fw-bold text-primary text-uppercase xx-small">Add New Line Item</small>
+                <small class="fw-bold text-primary text-uppercase xx-small">{% trans "Add New Line Item" %}</small>
                 
                 <!-- Searchable service input logic with dropdown catalog -->
                 <div class="position-relative" style="width: 280px;">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light"><i class="bi bi-search text-primary small"></i></span>
-                        <input type="text" id="catalogSearchInput" class="form-control form-control-sm fw-bold" placeholder="Search catalog..." autocomplete="off">
+                        <input type="text" id="catalogSearchInput" class="form-control form-control-sm fw-bold" placeholder="{% trans "Search catalog..." %}" autocomplete="off">
                     </div>
                     
                     <!-- Search Results Dropdown Card -->
@@ -158,10 +159,10 @@
                             <table class="table table-sm table-hover align-middle mb-0 small">
                                 <thead class="table-light xx-small text-uppercase text-muted sticky-top">
                                     <tr>
-                                        <th class="ps-3">Service Name</th>
-                                        <th>Category</th>
-                                        <th>Description</th>
-                                        <th class="text-end pe-3">Price / Unit</th>
+                                        <th class="ps-3">{% trans "Service Name" %}</th>
+                                        <th>{% trans "Category" %}</th>
+                                        <th>{% trans "Description" %}</th>
+                                        <th class="text-end pe-3">{% trans "Price / Unit" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="catalogSearchResultsBody">
@@ -174,7 +175,7 @@
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="4" class="text-center py-3 text-muted">No services found in catalog.</td>
+                                        <td colspan="4" class="text-center py-3 text-muted">{% trans "No services found in catalog." %}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -186,38 +187,38 @@
             <div class="card-body p-3">
                 <div class="d-flex flex-wrap align-items-end gap-2">
                     <div style="flex: 1 1 80px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Code</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Code" %}</label>
                         {{ item_form.item_code }}
                     </div>
                     <div style="flex: 3 1 200px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Description</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Description" %}</label>
                         {{ item_form.description }}
                     </div>
                     <div style="flex: 1 1 50px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Qty</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Qty" %}</label>
                         {{ item_form.quantity }}
                     </div>
                     <div style="flex: 1.5 1 90px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Unit</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Unit" %}</label>
                         {{ item_form.unit }}
                     </div>
                     <div style="flex: 2 1 110px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Price</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Price" %}</label>
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-end-0 px-2">€</span>
                             {{ item_form.unit_price }}
                         </div>
                     </div>
                     <div style="flex: 1 1 60px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Disc%</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Disc%" %}</label>
                         {{ item_form.discount_pct }}
                     </div>
                     <div style="flex: 1 1 60px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">VAT%</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "VAT%" %}</label>
                         {{ item_form.tax_rate }}
                     </div>
                     <div class="text-center" style="flex: 1 1 70px;">
-                        <label class="form-label xx-small text-muted fw-bold mb-1">Total</label>
+                        <label class="form-label xx-small text-muted fw-bold mb-1">{% trans "Total" %}</label>
                         <div id="item-preview-total" class="fw-bold text-primary small pt-1">€0.00</div>
                     </div>
                     <div style="flex: 0 0 50px;">
@@ -232,14 +233,14 @@
         <!-- Indicator for Save -->
         <div id="invoice-save-indicator" class="htmx-indicator mt-2 text-center">
             <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-            <span class="ms-2 small text-muted">Updating invoice records...</span>
+            <span class="ms-2 small text-muted">{% trans "Updating invoice records..." %}</span>
         </div>
     </div>
 
     <div class="modal-footer border-0 pt-0 pb-4">
-        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
         <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
-            <i class="bi bi-check-lg me-1"></i>Save & Close
+            <i class="bi bi-check-lg me-1"></i>{% trans "Save & Close" %}
         </button>
     </div>
 </form>
@@ -283,7 +284,20 @@
         
         if (codeField && code) codeField.value = code;
         if (descField) {
-            const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+            const months = [
+                "{% trans 'January' %}", 
+                "{% trans 'February' %}", 
+                "{% trans 'March' %}", 
+                "{% trans 'April' %}", 
+                "{% trans 'May' %}", 
+                "{% trans 'June' %}", 
+                "{% trans 'July' %}", 
+                "{% trans 'August' %}", 
+                "{% trans 'September' %}", 
+                "{% trans 'October' %}", 
+                "{% trans 'November' %}", 
+                "{% trans 'December' %}"
+            ];
             const currentDate = new Date();
             const currentMonthName = months[currentDate.getMonth()];
             const currentYear = currentDate.getFullYear();

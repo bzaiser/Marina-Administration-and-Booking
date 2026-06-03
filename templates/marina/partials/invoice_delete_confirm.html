@@ -1,16 +1,17 @@
+{% load i18n %}
 <div class="modal-header bg-danger text-white">
-    <h5 class="modal-title">Confirm Invoice Deletion</h5>
+    <h5 class="modal-title">{% trans "Confirm Invoice Deletion" %}</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body py-4 text-center">
     <i class="bi bi-exclamation-square text-danger fs-1 mb-3 d-block"></i>
-    <p class="mb-0">Are you sure you want to delete invoice <strong>#{{ invoice.id }}</strong> for <strong>{{ invoice.customer.name }}</strong>?</p>
-    <p class="text-muted small mt-2">This will remove the billing record and all associated items from the system.</p>
+    <p class="mb-0">{% blocktrans with invoice_id=invoice.id cust_name=invoice.customer.name %}Are you sure you want to delete invoice <strong>#{{ invoice_id }}</strong> for <strong>{{ cust_name }}</strong>?{% endblocktrans %}</p>
+    <p class="text-muted small mt-2">{% trans "This will remove the billing record and all associated items from the system." %}</p>
 </div>
 <div class="modal-footer bg-light">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
     <form hx-post="{% url 'invoice_delete' invoice.id %}" class="d-inline">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, Delete Invoice</button>
+        <button type="submit" class="btn btn-danger">{% trans "Yes, Delete Invoice" %}</button>
     </form>
 </div>

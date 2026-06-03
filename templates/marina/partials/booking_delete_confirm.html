@@ -1,17 +1,18 @@
+{% load i18n %}
 <div class="modal-header">
-    <h5 class="modal-title">Cancel Booking</h5>
+    <h5 class="modal-title">{% trans "Cancel Booking" %}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
-    <p>Are you sure you want to <strong>delete/cancel</strong> the booking for <strong>{{ booking.boat.name }}</strong>?</p>
+    <p>{% blocktrans with boat_name=booking.boat.name %}Are you sure you want to <strong>delete/cancel</strong> the booking for <strong>{{ boat_name }}</strong>?{% endblocktrans %}</p>
     <div class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle me-2"></i> This action cannot be undone. All data for this specific booking period will be removed.
+        <i class="bi bi-exclamation-triangle me-2"></i> {% trans "This action cannot be undone. All data for this specific booking period will be removed." %}
     </div>
 </div>
 <div class="modal-footer">
     <form hx-post="{% url 'booking_delete' booking.id %}" hx-target="#modals-here .modal-content">
         {% csrf_token %}
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Booking</button>
-        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Keep Booking" %}</button>
+        <button type="submit" class="btn btn-danger">{% trans "Confirm Delete" %}</button>
     </form>
 </div>

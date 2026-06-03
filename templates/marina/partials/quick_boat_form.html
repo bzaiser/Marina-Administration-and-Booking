@@ -1,5 +1,6 @@
+{% load i18n %}
 <div class="modal-header">
-    <h5 class="modal-title"><i class="bi bi-person-plus me-1"></i> New Customer & Boat Details</h5>
+    <h5 class="modal-title"><i class="bi bi-person-plus me-1"></i> {% trans "New Customer & Boat Details" %}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 {% if request.htmx %}
@@ -16,94 +17,94 @@
 
         {% if c_form.errors or b_form.errors %}
         <div class="alert alert-danger p-2 mb-3 small">
-            <strong>Please check the following fields:</strong><br>
+            <strong>{% trans "Please check the following fields:" %}</strong><br>
             {% for field in c_form %}
                 {% for error in field.errors %}
-                    Customer {{ field.label }}: {{ error }}<br>
+                    {% blocktrans with field_label=field.label error=error %}Customer {{ field_label }}: {{ error }}{% endblocktrans %}<br>
                 {% endfor %}
             {% endfor %}
             {% for field in b_form %}
                 {% for error in field.errors %}
-                    Boat {{ field.label }}: {{ error }}<br>
+                    {% blocktrans with field_label=field.label error=error %}Boat {{ field_label }}: {{ error }}{% endblocktrans %}<br>
                 {% endfor %}
             {% endfor %}
         </div>
         {% endif %}
 
         <!-- Customer Data -->
-        <h6 class="text-primary mt-0 mb-2 border-bottom pb-2"><i class="bi bi-person"></i> Customer Details</h6>
+        <h6 class="text-primary mt-0 mb-2 border-bottom pb-2"><i class="bi bi-person"></i> {% trans "Customer Details" %}</h6>
         <div class="row g-3">
             <div class="col-md-12">
-                <label class="small fw-bold text-muted">Customer Name<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Customer Name" %}<span class="text-danger">*</span></label>
                 {{ c_form.name }}
             </div>
             <div class="col-md-6">
-                <label class="small fw-bold text-muted">Email</label>
+                <label class="small fw-bold text-muted">{% trans "Email" %}</label>
                 {{ c_form.email }}
             </div>
             <div class="col-md-6">
-                <label class="small fw-bold text-muted">Phone</label>
+                <label class="small fw-bold text-muted">{% trans "Phone" %}</label>
                 {{ c_form.phone }}
             </div>
             <div class="col-md-6">
-                <label class="small fw-bold text-muted">Nationality<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Nationality" %}<span class="text-danger">*</span></label>
                 {{ c_form.nationality }}
             </div>
             <div class="col-md-6">
-                <label class="small fw-bold text-muted">Language<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Language" %}<span class="text-danger">*</span></label>
                 {{ c_form.language }}
             </div>
         </div>
 
         <!-- Boat Data -->
-        <h6 class="text-primary mt-4 mb-2 border-bottom pb-2"><i class="bi bi-water"></i> Boat Details</h6>
+        <h6 class="text-primary mt-4 mb-2 border-bottom pb-2"><i class="bi bi-water"></i> {% trans "Boat Details" %}</h6>
         <div class="row g-3">
             <div class="col-md-8">
-                <label class="small fw-bold text-muted">Boat Name<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Boat Name" %}<span class="text-danger">*</span></label>
                 {{ b_form.name }}
             </div>
             <div class="col-md-4">
-                <label class="small fw-bold text-muted">Boat Type<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Boat Type" %}<span class="text-danger">*</span></label>
                 {{ b_form.boat_type }}
             </div>
             <div class="col-md-3">
-                <label class="small fw-bold text-muted">Length (m)<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Length (m)" %}<span class="text-danger">*</span></label>
                 {{ b_form.length }}
             </div>
             <div class="col-md-3">
-                <label class="small fw-bold text-muted">Weight (t)<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Weight (t)" %}<span class="text-danger">*</span></label>
                 {{ b_form.weight }}
             </div>
             <div class="col-md-3">
-                <label class="small fw-bold text-muted">Flag (ISO)</label>
+                <label class="small fw-bold text-muted">{% trans "Flag (ISO)" %}</label>
                 {{ b_form.flag }}
             </div>
             <div class="col-md-3">
-                <label class="small fw-bold text-muted">Boat Color<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Boat Color" %}<span class="text-danger">*</span></label>
                 {{ b_form.color }}
             </div>
             <div class="col-md-4">
-                <label class="small fw-bold text-muted">Diesel Tank (L)<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Diesel Tank (L)" %}<span class="text-danger">*</span></label>
                 {{ b_form.diesel_tank }}
             </div>
             <div class="col-md-4">
-                <label class="small fw-bold text-muted">Water Tank (L)<span class="text-danger">*</span></label>
+                <label class="small fw-bold text-muted">{% trans "Water Tank (L)" %}<span class="text-danger">*</span></label>
                 {{ b_form.water_tank }}
             </div>
             <div class="col-md-4">
-                <label class="small fw-bold text-muted">Year Built</label>
+                <label class="small fw-bold text-muted">{% trans "Year Built" %}</label>
                 {{ b_form.year_built }}
             </div>
         </div>
     </div>
     <div class="modal-footer">
         {% if next_view == 'work_order_create' %}
-        <button type="button" class="btn btn-secondary" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">Cancel & Back</button>
+        <button type="button" class="btn btn-secondary" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">{% trans "Cancel & Back" %}</button>
         {% else %}
-        <button type="button" class="btn btn-secondary" hx-get="{% url 'booking_create' %}?start={{ orig_start }}&end={{ orig_end }}&resource={{ orig_berth }}" hx-target="#modals-here .modal-content">Cancel & Back</button>
+        <button type="button" class="btn btn-secondary" hx-get="{% url 'booking_create' %}?start={{ orig_start }}&end={{ orig_end }}&resource={{ orig_berth }}" hx-target="#modals-here .modal-content">{% trans "Cancel & Back" %}</button>
         {% endif %}
         <button type="submit" class="btn btn-success">
-            <i class="bi bi-check-circle me-1"></i> Create
+            <i class="bi bi-check-circle me-1"></i> {% trans "Create" %}
         </button>
     </div>
 </form>

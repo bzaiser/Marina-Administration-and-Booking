@@ -1,7 +1,8 @@
+{% load i18n %}
 <div class="modal-header border-0 pb-0">
     <h5 class="modal-title fw-bold">
         <i class="bi bi-person-circle text-primary me-2"></i>
-        {% if editing %}Edit Customer #{{ customer.id }}{% else %}New Customer{% endif %}
+        {% if editing %}{% blocktrans with customer_id=customer.id %}Edit Customer #{{ customer_id }}{% endblocktrans %}{% else %}{% trans "New Customer" %}{% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -14,7 +15,7 @@
         
         {% if form.errors %}
         <div class="alert alert-danger rounded-3 p-3 mb-3 small shadow-sm border-0">
-            <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please correct the following errors:</div>
+            <div class="fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>{% trans "Please correct the following errors:" %}</div>
             <ul class="mb-0 ps-3">
                 {% for field, errors in form.errors.items %}
                     {% for error in errors %}
@@ -29,15 +30,15 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Full Name / Company</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Full Name / Company" %}</label>
                         {{ form.name }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Nationality (ISO)</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Nationality (ISO)" %}</label>
                         {{ form.nationality }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Language (ISO)</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Language (ISO)" %}</label>
                         {{ form.language }}
                     </div>
                 </div>
@@ -48,11 +49,11 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Email Address</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Email Address" %}</label>
                         {{ form.email }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Phone Number</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Phone Number" %}</label>
                         {{ form.phone }}
                     </div>
                 </div>
@@ -63,19 +64,19 @@
             <div class="card-body p-3">
                 <div class="row g-3">
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Postal Address</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Postal Address" %}</label>
                         {{ form.address }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">VAT Number / AFM</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "VAT Number / AFM" %}</label>
                         {{ form.vat_number }}
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Tax Office / DOY</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Tax Office / DOY" %}</label>
                         {{ form.tax_office }}
                     </div>
                     <div class="col-md-12">
-                        <label class="form-label small fw-bold text-muted text-uppercase">Passport Number (Non-EU Tax-Free)</label>
+                        <label class="form-label small fw-bold text-muted text-uppercase">{% trans "Passport Number (Non-EU Tax-Free)" %}</label>
                         {{ form.passport_number }}
                     </div>
                 </div>
@@ -87,13 +88,13 @@
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h6 class="fw-bold mb-0 text-primary">
-                        <i class="bi bi-water me-2"></i>Owned Boats
+                        <i class="bi bi-water me-2"></i>{% trans "Owned Boats" %}
                     </h6>
                     <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-3 py-1 text-uppercase small fw-bold"
                             hx-get="{% url 'boat_create' customer.id %}"
                             hx-target="#modals-here .modal-content"
                             style="font-size: 10px;">
-                        <i class="bi bi-plus-lg me-1"></i>Add Boat
+                        <i class="bi bi-plus-lg me-1"></i>{% trans "Add Boat" %}
                     </button>
                 </div>
                 
@@ -112,13 +113,13 @@
                                     <button type="button" class="btn btn-link text-primary p-1 me-2"
                                             hx-get="{% url 'boat_edit' boat.id %}"
                                             hx-target="#modals-here .modal-content"
-                                            title="Edit Boat">
+                                            title="{% trans "Edit Boat" %}">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button type="button" class="btn btn-link text-danger p-1"
                                             hx-get="{% url 'boat_delete' boat.id %}"
                                             hx-target="#modals-here .modal-content"
-                                            title="Delete Boat">
+                                            title="{% trans "Delete Boat" %}">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -126,7 +127,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="text-muted small italic text-center py-2">No boats assigned to this customer yet.</div>
+                    <div class="text-muted small italic text-center py-2">{% trans "No boats assigned to this customer yet." %}</div>
                 {% endif %}
             </div>
         </div>
@@ -134,9 +135,9 @@
     </div>
     
     <div class="modal-footer border-0 pt-0 pb-4">
-        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
         <button type="submit" class="btn btn-primary rounded-pill px-4">
-            <i class="bi bi-check2-circle me-1"></i> Save Customer
+            <i class="bi bi-check2-circle me-1"></i> {% trans "Save Customer" %}
         </button>
     </div>
 </form>

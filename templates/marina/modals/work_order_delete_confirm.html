@@ -1,7 +1,8 @@
+{% load i18n %}
 <div class="modal-header border-0 pb-0">
     <h5 class="modal-title fw-bold">
         <i class="bi bi-exclamation-triangle text-danger me-2"></i>
-        Delete Work Order
+        {% trans "Delete Work Order" %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
@@ -9,14 +10,14 @@
 <form hx-post="{% url 'work_order_delete' order.id %}" hx-target="#modals-here .modal-content">
     <div class="modal-body pt-3">
         {% csrf_token %}
-        <p>Are you sure you want to delete <strong>Work Order #{{ order.id }}</strong> for boat <strong>{{ order.boat.name }}</strong>?</p>
-        <p class="text-danger small"><i class="bi bi-info-circle me-1"></i>This action cannot be undone. All linked tasks and parts will be removed.</p>
+        <p>{% blocktrans with order_id=order.id boat_name=order.boat.name %}Are you sure you want to delete <strong>Work Order #{{ order_id }}</strong> for boat <strong>{{ boat_name }}</strong>?{% endblocktrans %}</p>
+        <p class="text-danger small"><i class="bi bi-info-circle me-1"></i>{% trans "This action cannot be undone. All linked tasks and parts will be removed." %}</p>
     </div>
 
     <div class="modal-footer border-0">
-        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
         <button type="submit" class="btn btn-danger rounded-pill px-4 shadow-sm">
-            <i class="bi bi-trash me-1"></i>Delete Permanently
+            <i class="bi bi-trash me-1"></i>{% trans "Delete Permanently" %}
         </button>
     </div>
 </form>
