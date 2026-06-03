@@ -5,14 +5,33 @@
 
 {% block content %}
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <div>
-            <h5 class="mb-0"><i class="bi bi-tools text-warning me-2"></i>{% trans "Yard Service Management" %}</h5>
-            <div class="small text-muted">{% trans "Manage repairs, maintenance, and dry-dock projects" %}</div>
+    <div class="card-header bg-white py-3">
+        <div class="row align-items-center g-3">
+            <div class="col-md-4">
+                <h5 class="mb-0"><i class="bi bi-tools text-warning me-2"></i>{% trans "Yard Service Management" %}</h5>
+                <div class="small text-muted">{% trans "Manage repairs, maintenance, and dry-dock projects" %}</div>
+            </div>
+            <div class="col-md-8">
+                <div class="d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
+                    <div class="input-group input-group-sm" style="max-width: 250px;">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="work-order-search" class="form-control bg-light border-start-0" placeholder="{% trans 'Search work orders...' %}" oninput="filterWorkOrders()">
+                    </div>
+                    <select id="status-filter" class="form-select form-select-sm bg-light" style="max-width: 150px;" onchange="filterWorkOrders()">
+                        <option value="ALL">{% trans "All Statuses" %}</option>
+                        <option value="PENDING">{% trans "Pending" %}</option>
+                        <option value="IN_PROGRESS">{% trans "In Progress" %}</option>
+                        <option value="COMPLETED">{% trans "Completed" %}</option>
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="resetWorkOrderFilters()" title="{% trans 'Reset Filters' %}">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                    <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">
+                        <i class="bi bi-plus-lg me-1"></i>{% trans "New Work Order" %}
+                    </button>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" hx-get="{% url 'work_order_create' %}" hx-target="#modals-here .modal-content">
-            <i class="bi bi-plus-lg me-1"></i>{% trans "New Work Order" %}
-        </button>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -28,17 +47,17 @@
                         <th class="text-end">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="work-order-table-body">
                     {% for order in orders %}
-                    <tr class="align-middle">
+                    <tr class="align-middle work-order-row" data-status="{{ order.status }}">
                         <td><span class="text-muted">#{{ order.id }}</span></td>
                         <td>
-                            <div class="fw-bold">{{ order.boat.name }}</div>
-                            <div class="small text-muted">{{ order.customer.name }}</div>
+                            <div class="fw-bold boat-name">{{ order.boat.name }}</div>
+                            <div class="small text-muted customer-name">{{ order.customer.name }}</div>
                         </td>
                         <td>
                             {% if order.berth %}
-                                <span class="badge bg-secondary px-2"><i class="bi bi-geo-alt me-1"></i>{{ order.berth.number }}</span>
+                                <span class="badge bg-secondary px-2 location-badge"><i class="bi bi-geo-alt me-1"></i>{{ order.berth.number }}</span>
                             {% else %}
                                 <span class="text-muted small">{% trans "No location set" %}</span>
                             {% endif %}
@@ -78,13 +97,19 @@
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
+                    <tr id="empty-row">
                         <td colspan="7" class="text-center py-5 text-muted">
                             <i class="bi bi-tools fs-1 d-block mb-2"></i>
                             {% trans "No work orders recorded in the yard." %}
                         </td>
                     </tr>
                     {% endfor %}
+                    <tr id="no-results-row" style="display: none;">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-search fs-1 d-block mb-2"></i>
+                            {% trans "No matching work orders found." %}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -99,6 +124,52 @@
 </div>
 
 <script>
+    function filterWorkOrders() {
+        const query = document.getElementById('work-order-search').value.toLowerCase().trim();
+        const status = document.getElementById('status-filter').value;
+        const rows = document.querySelectorAll('.work-order-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const orderId = row.querySelector('td:first-child').textContent.toLowerCase();
+            const boatName = row.querySelector('.boat-name') ? row.querySelector('.boat-name').textContent.toLowerCase() : '';
+            const customerName = row.querySelector('.customer-name') ? row.querySelector('.customer-name').textContent.toLowerCase() : '';
+            const location = row.querySelector('.location-badge') ? row.querySelector('.location-badge').textContent.toLowerCase() : '';
+            const rowStatus = row.getAttribute('data-status');
+
+            const matchesQuery = !query || 
+                orderId.includes(query) || 
+                boatName.includes(query) || 
+                customerName.includes(query) || 
+                location.includes(query);
+
+            const matchesStatus = status === 'ALL' || rowStatus === status;
+
+            if (matchesQuery && matchesStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Show/hide no-results message row if all orders filtered out
+        const noResultsRow = document.getElementById('no-results-row');
+        if (noResultsRow) {
+            if (visibleCount === 0 && rows.length > 0) {
+                noResultsRow.style.display = '';
+            } else {
+                noResultsRow.style.display = 'none';
+            }
+        }
+    }
+
+    function resetWorkOrderFilters() {
+        document.getElementById('work-order-search').value = '';
+        document.getElementById('status-filter').value = 'ALL';
+        filterWorkOrders();
+    }
+
     document.addEventListener('htmx:afterSwap', (e) => {
         if (e.detail.target.closest('#modals-here')) {
             const modalElement = document.getElementById('modals-here');

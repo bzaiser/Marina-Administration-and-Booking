@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 17:09+0300\n"
+"POT-Creation-Date: 2026-06-03 17:23+0300\n"
 "Language: el\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,7 +214,7 @@ msgstr "Ημερομηνία Αναχώρησης"
 #: templates/marina/invoices_list.html:257
 #: templates/marina/partials/booking_form.html:47
 #: templates/marina/partials/invoice_create_modal.html:41
-#: templates/marina/work_order_list.html:26
+#: templates/marina/work_order_list.html:45
 msgid "Status"
 msgstr "Κατάσταση"
 
@@ -227,7 +227,7 @@ msgid "At Sea"
 msgstr "Εν Πλω"
 
 #: marina/models.py:229 marina/models.py:347 marina/models.py:379
-#: templates/marina/customers_list.html:274
+#: templates/marina/customers_list.html:275
 msgid "Notes"
 msgstr "Παρατηρήσεις"
 
@@ -285,7 +285,7 @@ msgstr "Κατηγορίες Υπηρεσιών"
 msgid "Service Name"
 msgstr "Όνομα Υπηρεσίας"
 
-#: marina/models.py:296 templates/marina/bookings_list.html:320
+#: marina/models.py:296 templates/marina/bookings_list.html:321
 #: templates/marina/partials/invoice_edit_modal.html:163
 msgid "Category"
 msgstr "Κατηγορία"
@@ -304,7 +304,6 @@ msgid "Tax Rate (%)"
 msgstr "Φ.Π.Α. (%)"
 
 #: marina/models.py:300
-#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:393
 msgid "Image"
 msgstr "Εικόνα"
 
@@ -383,7 +382,7 @@ msgstr "Ημερολόγιο"
 msgid "Planning"
 msgstr "Προγραμματισμός"
 
-#: templates/base.html:107 templates/marina/bookings_list.html:319
+#: templates/base.html:107 templates/marina/bookings_list.html:320
 #: templates/marina/partials/menu_preferences_modal.html:86
 msgid "Service"
 msgstr "Υπηρεσίες"
@@ -418,7 +417,7 @@ msgstr "Διαχείριση Μαρίνας Σάμου"
 msgid "About System"
 msgstr "Σχετικά με το Σύστημα"
 
-#: templates/base.html:218 templates/marina/customers_list.html:283
+#: templates/base.html:218 templates/marina/customers_list.html:284
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -473,7 +472,7 @@ msgstr "Έξοδος"
 #: templates/marina/customers_list.html:164
 #: templates/marina/invoices_list.html:278
 #: templates/marina/providers_list.html:25
-#: templates/marina/work_order_list.html:28
+#: templates/marina/work_order_list.html:47
 msgid "Actions"
 msgstr "Ενέργειες"
 
@@ -514,17 +513,15 @@ msgstr "Νέα Κράτηση"
 msgid "Edit"
 msgstr ""
 
+# fuzzy (resolved)
 #: templates/marina/berths_grid.html:125
 #: templates/marina/bookings_list.html:189
-# fuzzy (resolved)
-#| msgid "Check-Out"
 msgid "Checkout"
 msgstr "Check-out"
 
 #: templates/marina/berths_grid.html:128
 #: templates/marina/bookings_list.html:195
 #: templates/marina/customers_list.html:172
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
 msgid "Delete"
 msgstr ""
 
@@ -543,6 +540,7 @@ msgid "Search bookings..."
 msgstr "Αναζήτηση κρατήσεων..."
 
 #: templates/marina/bookings_list.html:54
+#: templates/marina/work_order_list.html:26
 msgid "Reset Filters"
 msgstr "Επαναφορά Φίλτρων"
 
@@ -553,7 +551,7 @@ msgstr "Πλέγμα Προγραμματισμού"
 
 #: templates/marina/bookings_list.html:83
 #: templates/marina/invoices_list.html:218
-#: templates/marina/work_order_list.html:22
+#: templates/marina/work_order_list.html:41
 msgid "ID"
 msgstr "ID"
 
@@ -583,24 +581,25 @@ msgstr "Ημέρες"
 msgid "Services"
 msgstr "Υπηρεσίες"
 
-#: templates/marina/bookings_list.html:268
+#: templates/marina/bookings_list.html:269
 msgid "Loading booking data..."
 msgstr "Φόρτωση δεδομένων κράτησης..."
 
-#: templates/marina/bookings_list.html:278
+#: templates/marina/bookings_list.html:279
 msgid "Error loading booking data. Please try again."
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
+"Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 
-#: templates/marina/bookings_list.html:296
+#: templates/marina/bookings_list.html:297
 msgid "Are you sure you want to delete this booking?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτήν την κράτηση;"
 
-#: templates/marina/bookings_list.html:312
+#: templates/marina/bookings_list.html:313
 msgid "Services for Booking #"
 msgstr "Υπηρεσίες για την Κράτηση #"
 
-#: templates/marina/bookings_list.html:321
+#: templates/marina/bookings_list.html:322
 #: templates/marina/partials/booking_supplies_list.html:8
 #: templates/marina/partials/invoice_edit_modal.html:70
 #: templates/marina/partials/invoice_edit_modal.html:198
@@ -608,17 +607,17 @@ msgstr "Υπηρεσίες για την Κράτηση #"
 msgid "Qty"
 msgstr "Ποσότητα"
 
-#: templates/marina/bookings_list.html:322
+#: templates/marina/bookings_list.html:323
 #: templates/marina/partials/invoice_edit_modal.html:75
 msgid "Subtotal"
 msgstr "Μερικό σύνολο"
 
 # fuzzy (resolved)
-#: templates/marina/bookings_list.html:341
+#: templates/marina/bookings_list.html:342
 msgid "Total Services"
 msgstr "Σύνολο Υπηρεσιών"
 
-#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:25
+#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:44
 msgid "Timeline"
 msgstr "Χρονοδιάγραμμα"
 
@@ -697,42 +696,42 @@ msgstr "Ιδιόκτητα Σκάφη"
 msgid "No boats"
 msgstr "Δεν υπάρχουν σκάφη"
 
-#: templates/marina/customers_list.html:214
+#: templates/marina/customers_list.html:215
 msgid "Are you sure you want to delete this customer?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον πελάτη;"
 
-#: templates/marina/customers_list.html:227
+#: templates/marina/customers_list.html:228
 msgid "Boat Specifications"
 msgstr "Τεχνικά Χαρακτηριστικά Σκάφους"
 
 # fuzzy (resolved)
-#: templates/marina/customers_list.html:243
+#: templates/marina/customers_list.html:244
 msgid "Length"
 msgstr "Μήκος"
 
-#: templates/marina/customers_list.html:247
+#: templates/marina/customers_list.html:248
 msgid "Width"
 msgstr "Πλάτος"
 
-#: templates/marina/customers_list.html:251
+#: templates/marina/customers_list.html:252
 msgid "Draft"
 msgstr "Βύθισμα"
 
 # fuzzy (resolved)
-#: templates/marina/customers_list.html:259
+#: templates/marina/customers_list.html:260
 msgid "Weight"
 msgstr "Βάρος"
 
-#: templates/marina/customers_list.html:263
+#: templates/marina/customers_list.html:264
 msgid "Diesel"
 msgstr "Diesel"
 
-#: templates/marina/customers_list.html:267
+#: templates/marina/customers_list.html:268
 msgid "Water"
 msgstr "Νερό"
 
 # fuzzy (resolved)
-#: templates/marina/customers_list.html:276
+#: templates/marina/customers_list.html:277
 msgid "No technical notes recorded."
 msgstr "Δεν έχουν καταγραφεί τεχνικές σημειώσεις."
 
@@ -822,9 +821,8 @@ msgstr "ΕΚΠΡΟΘΕΣΜΟ"
 msgid "All paid! 🎉"
 msgstr "Όλα εξοφλημένα! 🎉"
 
-#: templates/marina/full_page_modal.html:16
 # fuzzy (resolved)
-#| msgid "Dashboard"
+#: templates/marina/full_page_modal.html:16
 msgid "Back to Dashboard"
 msgstr "Πίσω στο Dashboard"
 
@@ -866,6 +864,7 @@ msgid "Search customer, ID, item…"
 msgstr "Αναζήτηση πελάτη, ID, αντικειμένου…"
 
 #: templates/marina/invoices_list.html:99
+#: templates/marina/work_order_list.html:21
 msgid "All Statuses"
 msgstr "Όλες οι Καταστάσεις"
 
@@ -948,9 +947,8 @@ msgstr "Ημερομηνία"
 msgid "Amount"
 msgstr "Ποσό"
 
-#: templates/marina/modals/work_order_delete_confirm.html:5
 # fuzzy (resolved)
-#| msgid "Delete Order"
+#: templates/marina/modals/work_order_delete_confirm.html:5
 msgid "Delete Work Order"
 msgstr "Διαγραφή Εντολής Εργασίας"
 
@@ -982,39 +980,37 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: templates/marina/modals/work_order_delete_confirm.html:20
 # fuzzy (resolved)
-#| msgid "Delete Order"
+#: templates/marina/modals/work_order_delete_confirm.html:20
 msgid "Delete Permanently"
 msgstr "Οριστική Διαγραφή"
 
 # fuzzy (resolved)
-#: templates/marina/modals/work_order_form.html:5
 # fuzzy (resolved), python-format
-#| msgid "Work Orders (Yard)"
+#: templates/marina/modals/work_order_form.html:5
+#, python-format
 msgid "Edit Work Order #%(order_id)s"
 msgstr "Επεξεργασία Εντολής Εργασίας #%(order_id)s"
 
 # fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:5
 #: templates/marina/planning_grid.html:72
-#: templates/marina/work_order_list.html:14
+#: templates/marina/work_order_list.html:30
 msgid "New Work Order"
 msgstr "Νέα Εντολή Εργασίας"
 
 #: templates/marina/modals/work_order_form.html:22
 #: templates/marina/partials/booking_form.html:22
-#: templates/marina/work_order_list.html:23
+#: templates/marina/work_order_list.html:42
 #, fuzzy
 #| msgid "Customer"
 msgid "Boat / Customer"
 msgstr "Πελάτης"
 
 # fuzzy (resolved)
+# fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:31
 #: templates/marina/partials/booking_form.html:30
-# fuzzy (resolved)
-#| msgid "New Customer"
 msgid "Add New Customer/Boat"
 msgstr "Προσθήκη νέου πελάτη/σκάφους"
 
@@ -1023,15 +1019,13 @@ msgid "Work Place / Berth"
 msgstr "Χώρος Εργασίας / Θέση"
 
 # fuzzy (resolved)
-#: templates/marina/modals/work_order_form.html:44
 # fuzzy (resolved)
-#| msgid "Current Boat"
+#: templates/marina/modals/work_order_form.html:44
 msgid "Current Status"
 msgstr "Τρέχουσα Κατάσταση"
 
-#: templates/marina/modals/work_order_form.html:60
 # fuzzy (resolved)
-#| msgid "End Date"
+#: templates/marina/modals/work_order_form.html:60
 msgid "Estimated End Date"
 msgstr "Εκτιμώμενη ημερομηνία λήξης"
 
@@ -1048,16 +1042,14 @@ msgid "Task / Part"
 msgstr "Εργασία / Ανταλλακτικό"
 
 # fuzzy (resolved)
-#: templates/marina/modals/work_order_form.html:84
 # fuzzy (resolved)
-#| msgid "Search customers or boats..."
+#: templates/marina/modals/work_order_form.html:84
 msgid "Select task or part..."
 msgstr "Επιλέξτε εργασία ή ανταλλακτικό..."
 
+# fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:91
 #: templates/marina/partials/add_service_form.html:39
-# fuzzy (resolved)
-#| msgid "Quantity / Units"
 msgid "Quantity"
 msgstr "Ποσότητα"
 
@@ -1092,9 +1084,8 @@ msgstr "Δημιουργία & Κλείσιμο"
 msgid "Add Service Line Item"
 msgstr "Προσθήκη στοιχείου υπηρεσίας"
 
-#: templates/marina/partials/add_service_form.html:15
 # fuzzy (resolved)
-#| msgid "Booking"
+#: templates/marina/partials/add_service_form.html:15
 msgid "Booking for Boat"
 msgstr "Κράτηση για Σκάφος"
 
@@ -1105,22 +1096,19 @@ msgid "Berth %(block_name)s%(berth_num)s"
 msgstr "Θέση %(block_name)s%(berth_num)s"
 
 # fuzzy (resolved)
-#: templates/marina/partials/add_service_form.html:23
 # fuzzy (resolved)
-#| msgid "Service Breakdown"
+#: templates/marina/partials/add_service_form.html:23
 msgid "Service Selection"
 msgstr "Επιλογή Υπηρεσίας"
 
-#: templates/marina/partials/add_service_form.html:26
 # fuzzy (resolved)
-#| msgid "Search boat or owner..."
+#: templates/marina/partials/add_service_form.html:26
 msgid "Search or select service..."
 msgstr "Αναζήτηση ή επιλογή υπηρεσίας..."
 
+# fuzzy (resolved)
 #: templates/marina/partials/add_service_form.html:42
 #: templates/marina/partials/add_service_form.html:93
-# fuzzy (resolved)
-#| msgid "Unit"
 msgid "Units"
 msgstr "Μονάδες"
 
@@ -1148,9 +1136,8 @@ msgstr "Τεχνικές Σημειώσεις"
 msgid "Notes for provider or office..."
 msgstr "Σημειώσεις για τον πάροχο ή το γραφείο..."
 
-#: templates/marina/partials/add_service_form.html:66
 # fuzzy (resolved)
-#| msgid "Invoice"
+#: templates/marina/partials/add_service_form.html:66
 msgid "Add to Invoice"
 msgstr "Προσθήκη στο τιμολόγιο"
 
@@ -1192,10 +1179,9 @@ msgstr "Επεξεργασία σκάφους: %(boat_name)s"
 msgid "Add Boat for %(customer_name)s"
 msgstr "Προσθήκη σκάφους για %(customer_name)s"
 
+# fuzzy (resolved)
 #: templates/marina/partials/boat_form_modal.html:28
 #: templates/marina/partials/quick_boat_form.html:71
-# fuzzy (resolved)
-#| msgid "Max Length (m)"
 msgid "Length (m)"
 msgstr "Μήκος (μ)"
 
@@ -1224,9 +1210,8 @@ msgid "Water (L)"
 msgstr "Δεξαμενή Νερού (L)"
 
 # fuzzy (resolved)
-#: templates/marina/partials/boat_form_modal.html:77
 # fuzzy (resolved)
-#| msgid "Current Boat"
+#: templates/marina/partials/boat_form_modal.html:77
 msgid "Current photo"
 msgstr "Τρέχουσα φωτογραφία"
 
@@ -1234,17 +1219,15 @@ msgstr "Τρέχουσα φωτογραφία"
 msgid "Update Boat Data"
 msgstr "Ενημέρωση Στοιχείων Σκάφους"
 
+# fuzzy (resolved)
 #: templates/marina/partials/boat_form_modal.html:87
 #: templates/marina/partials/customer_form_modal.html:97
-# fuzzy (resolved)
-#| msgid "Boat"
 msgid "Add Boat"
 msgstr "Προσθήκη σκάφους"
 
 # fuzzy (resolved)
-#: templates/marina/partials/booking_delete_confirm.html:3
 # fuzzy (resolved)
-#| msgid "New Booking"
+#: templates/marina/partials/booking_delete_confirm.html:3
 msgid "Cancel Booking"
 msgstr "Ακύρωση Κράτησης"
 
@@ -1262,16 +1245,14 @@ msgid ""
 msgstr ""
 
 # fuzzy (resolved)
-#: templates/marina/partials/booking_delete_confirm.html:15
 # fuzzy (resolved)
-#| msgid "New Booking"
+#: templates/marina/partials/booking_delete_confirm.html:15
 msgid "Keep Booking"
 msgstr "Διατήρηση Κράτησης"
 
+# fuzzy (resolved)
 #: templates/marina/partials/booking_delete_confirm.html:16
 #: templates/marina/partials/customer_delete_confirm.html:3
-# fuzzy (resolved)
-#| msgid "Completed"
 msgid "Confirm Delete"
 msgstr "Επιβεβαίωση διαγραφής"
 
@@ -1281,15 +1262,13 @@ msgid "Edit Booking #%(booking_id)s"
 msgstr "Επεξεργασία Κράτησης #%(booking_id)s"
 
 # fuzzy (resolved)
-#: templates/marina/partials/booking_form.html:80
 # fuzzy (resolved)
-#| msgid "Current Boat"
+#: templates/marina/partials/booking_form.html:80
 msgid "Currently at sea"
 msgstr "Αυτή τη στιγμή στη θάλασσα"
 
-#: templates/marina/partials/booking_form.html:94
 # fuzzy (resolved)
-#| msgid "Service"
+#: templates/marina/partials/booking_form.html:94
 msgid "Booked Services"
 msgstr "Κρατημένες Υπηρεσίες"
 
@@ -1300,16 +1279,16 @@ msgstr "Διαχειριστείτε τις πρόσθετες υπηρεσίε�
 #: templates/marina/partials/booking_form.html:140
 msgid "Departure date cannot be before arrival date."
 msgstr "Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
+"Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
 
 #: templates/marina/partials/booking_supplies_list.html:7
 msgid "Utility / Item"
 msgstr "Παροχή / Είδος"
 
 # fuzzy (resolved)
+# fuzzy (resolved)
 #: templates/marina/partials/booking_supplies_list.html:10
 #: templates/marina/partials/invoice_edit_modal.html:76
-# fuzzy (resolved)
-#| msgid "Actions"
 msgid "Action"
 msgstr "Ενέργεια"
 
@@ -1325,22 +1304,19 @@ msgstr "Δεν έχουν καταγραφεί εφόδια (νερό, ρεύμ�
 msgid "Quick Add Supply..."
 msgstr "Γρήγορη Προσθήκη Εφοδίου..."
 
-#: templates/marina/partials/booking_supplies_list.html:84
 # fuzzy (resolved)
-#| msgid "Subtotal"
+#: templates/marina/partials/booking_supplies_list.html:84
 msgid "Supply Total"
 msgstr "Σύνολο Εφοδίων"
 
-#: templates/marina/partials/checkout_confirm.html:3
 # fuzzy (resolved)
-#| msgid "Check-Out"
+#: templates/marina/partials/checkout_confirm.html:3
 msgid "Finalize Checkout"
 msgstr "Οριστικοποίηση Check-out"
 
 # fuzzy (resolved)
-#: templates/marina/partials/checkout_confirm.html:32
 # fuzzy (resolved)
-#| msgid "Berth #"
+#: templates/marina/partials/checkout_confirm.html:32
 msgid "Berth Fee"
 msgstr "Τέλη ελλιμενισμού"
 
@@ -1350,16 +1326,14 @@ msgid "%(days)s days"
 msgstr "%(days)s ημέρες"
 
 # fuzzy (resolved)
-#: templates/marina/partials/checkout_confirm.html:38
 # fuzzy (resolved)
-#| msgid "Total Services"
+#: templates/marina/partials/checkout_confirm.html:38
 msgid "Additional Services"
 msgstr "Πρόσθετες Υπηρεσίες"
 
 # fuzzy (resolved)
-#: templates/marina/partials/checkout_confirm.html:49
 # fuzzy (resolved)
-#| msgid "Amount"
+#: templates/marina/partials/checkout_confirm.html:49
 msgid "Total Amount"
 msgstr "Συνολικό Ποσό"
 
@@ -1375,9 +1349,8 @@ msgstr ""
 msgid "Confirm & Edit Invoice"
 msgstr "Επιβεβαίωση & Επεξεργασία Τιμολογίου"
 
-#: templates/marina/partials/checkout_success.html:10
 # fuzzy (resolved)
-#| msgid "Check-Out"
+#: templates/marina/partials/checkout_success.html:10
 msgid "Checkout Complete"
 msgstr "Το Check-out ολοκληρώθηκε"
 
@@ -1387,9 +1360,8 @@ msgid ""
 "generated."
 msgstr ""
 
-#: templates/marina/partials/checkout_success.html:18
 # fuzzy (resolved)
-#| msgid "Invoice Management"
+#: templates/marina/partials/checkout_success.html:18
 msgid "Invoice Amount"
 msgstr "Ποσό Τιμολογίου"
 
@@ -1407,9 +1379,8 @@ msgid "View Billing History"
 msgstr "Προβολή Ιστορικού Χρεώσεων"
 
 # fuzzy (resolved)
-#: templates/marina/partials/checkout_success.html:38
 # fuzzy (resolved)
-#| msgid "Live Dashboard"
+#: templates/marina/partials/checkout_success.html:38
 msgid "Return to Dashboard"
 msgstr "Επιστροφή στο Dashboard"
 
@@ -1427,9 +1398,8 @@ msgid ""
 msgstr ""
 
 # fuzzy (resolved)
-#: templates/marina/partials/customer_delete_confirm.html:15
 # fuzzy (resolved)
-#| msgid "New Customer"
+#: templates/marina/partials/customer_delete_confirm.html:15
 msgid "Yes, Delete Customer"
 msgstr "Ναι, Διαγραφή Πελάτη"
 
@@ -1446,9 +1416,8 @@ msgstr "Παρακαλώ διορθώστε τα ακόλουθα σφάλματ
 msgid "Full Name / Company"
 msgstr "Ονοματεπώνυμο / Εταιρεία"
 
-#: templates/marina/partials/customer_form_modal.html:37
 # fuzzy (resolved)
-#| msgid "Nationality"
+#: templates/marina/partials/customer_form_modal.html:37
 msgid "Nationality (ISO)"
 msgstr "Εθνικότητα (ISO)"
 
@@ -1456,27 +1425,23 @@ msgstr "Εθνικότητα (ISO)"
 msgid "Language (ISO)"
 msgstr "Γλώσσα (ISO)"
 
-#: templates/marina/partials/customer_form_modal.html:52
 # fuzzy (resolved)
-#| msgid "Address"
+#: templates/marina/partials/customer_form_modal.html:52
 msgid "Email Address"
 msgstr "Διεύθυνση Email"
 
-#: templates/marina/partials/customer_form_modal.html:56
 # fuzzy (resolved)
-#| msgid "Passport Number"
+#: templates/marina/partials/customer_form_modal.html:56
 msgid "Phone Number"
 msgstr "Αριθμός Τηλεφώνου"
 
-#: templates/marina/partials/customer_form_modal.html:67
 # fuzzy (resolved)
-#| msgid "Address"
+#: templates/marina/partials/customer_form_modal.html:67
 msgid "Postal Address"
 msgstr "Ταχυδρομική Διεύθυνση"
 
-#: templates/marina/partials/customer_form_modal.html:79
 # fuzzy (resolved)
-#| msgid "Passport Number"
+#: templates/marina/partials/customer_form_modal.html:79
 msgid "Passport Number (Non-EU Tax-Free)"
 msgstr "Αριθμός Διαβατηρίου (Non-EU Tax-Free)"
 
@@ -1486,9 +1451,8 @@ msgstr "Αριθμός Διαβατηρίου (Non-EU Tax-Free)"
 msgid "Edit Boat"
 msgstr "Σκάφος"
 
-#: templates/marina/partials/customer_form_modal.html:122
 # fuzzy (resolved)
-#| msgid "New Boat"
+#: templates/marina/partials/customer_form_modal.html:122
 msgid "Delete Boat"
 msgstr "Διαγραφή σκάφους"
 
@@ -1497,9 +1461,8 @@ msgid "No boats assigned to this customer yet."
 msgstr "Δεν έχουν ανατεθεί ακόμη σκάφη σε αυτόν τον πελάτη."
 
 # fuzzy (resolved)
-#: templates/marina/partials/customer_form_modal.html:140
 # fuzzy (resolved)
-#| msgid "New Customer"
+#: templates/marina/partials/customer_form_modal.html:140
 msgid "Save Customer"
 msgstr "Αποθήκευση Πελάτη"
 
@@ -1522,9 +1485,8 @@ msgstr "Παρακαλώ διορθώστε τα παρακάτω σφάλματ
 msgid "Document Type"
 msgstr "Όλοι οι τύποι παραστατικών"
 
-#: templates/marina/partials/invoice_create_modal.html:33
 # fuzzy (resolved)
-#| msgid "Preferred Language"
+#: templates/marina/partials/invoice_create_modal.html:33
 msgid "PDF Language"
 msgstr "Γλώσσα PDF"
 
@@ -1578,9 +1540,8 @@ msgid ""
 "This will remove the billing record and all associated items from the system."
 msgstr ""
 
-#: templates/marina/partials/invoice_delete_confirm.html:15
 # fuzzy (resolved)
-#| msgid "New Invoice"
+#: templates/marina/partials/invoice_delete_confirm.html:15
 msgid "Yes, Delete Invoice"
 msgstr "Ναι, Διαγραφή Τιμολογίου"
 
@@ -1589,9 +1550,8 @@ msgstr "Ναι, Διαγραφή Τιμολογίου"
 msgid "Edit Invoice #%(invoice_id)s"
 msgstr "Επεξεργασία Τιμολογίου #%(invoice_id)s"
 
-#: templates/marina/partials/invoice_edit_modal.html:25
 # fuzzy (resolved)
-#| msgid "Invoices"
+#: templates/marina/partials/invoice_edit_modal.html:25
 msgid "Invoice Status"
 msgstr "Κατάσταση Τιμολογίου"
 
@@ -1614,9 +1574,8 @@ msgstr "Σκοπός (ΣΚΟΠΟΣ ΔΙΑΚΙΝΗΣΗΣ)"
 msgid "Remarks / Notes (ΠΑΡΑΤΗΡΗΣΕΙΣ)"
 msgstr "Παρατηρήσεις / Σημειώσεις (ΠΑΡΑΤΗΡΗΣΕΙΣ)"
 
-#: templates/marina/partials/invoice_edit_modal.html:60
 # fuzzy (resolved)
-#| msgid "Invoices"
+#: templates/marina/partials/invoice_edit_modal.html:60
 msgid "Invoice Items"
 msgstr "Στοιχεία Τιμολογίου"
 
@@ -1632,10 +1591,9 @@ msgstr "Λεπτομερής λίστα υπηρεσιών και εφοδίων
 msgid "Code"
 msgstr "Κωδικός ISO"
 
+# fuzzy (resolved)
 #: templates/marina/partials/invoice_edit_modal.html:72
 #: templates/marina/partials/invoice_edit_modal.html:206
-# fuzzy (resolved)
-#| msgid "Price Rate"
 msgid "Price"
 msgstr "Τιμή"
 
@@ -1673,9 +1631,8 @@ msgstr "Ημέρα(ες)"
 msgid "Piece"
 msgstr "Τεμάχιο"
 
-#: templates/marina/partials/invoice_edit_modal.html:124
 # fuzzy (resolved)
-#| msgid "Subtotal"
+#: templates/marina/partials/invoice_edit_modal.html:124
 msgid "Subtotal (Net)"
 msgstr "Μερικό σύνολο (Καθαρό)"
 
@@ -1692,21 +1649,18 @@ msgid "Add New Line Item"
 msgstr "Προσθήκη νέου στοιχείου"
 
 # fuzzy (resolved)
-#: templates/marina/partials/invoice_edit_modal.html:153
 # fuzzy (resolved)
-#| msgid "Search boat..."
+#: templates/marina/partials/invoice_edit_modal.html:153
 msgid "Search catalog..."
 msgstr "Αναζήτηση καταλόγου..."
 
-#: templates/marina/partials/invoice_edit_modal.html:165
 # fuzzy (resolved)
-#| msgid "Price per Unit"
+#: templates/marina/partials/invoice_edit_modal.html:165
 msgid "Price / Unit"
 msgstr "Τιμή / Μονάδα"
 
-#: templates/marina/partials/invoice_edit_modal.html:178
 # fuzzy (resolved)
-#| msgid "No service data yet"
+#: templates/marina/partials/invoice_edit_modal.html:178
 msgid "No services found in catalog."
 msgstr "Δεν βρέθηκαν υπηρεσίες στον κατάλογο."
 
@@ -1725,71 +1679,57 @@ msgid "Updating invoice records..."
 msgstr "Ενημέρωση στοιχείων τιμολογίου..."
 
 #: templates/marina/partials/invoice_edit_modal.html:288
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
 msgid "January"
 msgstr "Ιανουάριος"
 
 #: templates/marina/partials/invoice_edit_modal.html:289
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
 msgid "February"
 msgstr "Φεβρουάριος"
 
 #: templates/marina/partials/invoice_edit_modal.html:290
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
 msgid "March"
 msgstr "Μάρτιος"
 
 #: templates/marina/partials/invoice_edit_modal.html:291
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
 msgid "April"
 msgstr "Απρίλιος"
 
 #: templates/marina/partials/invoice_edit_modal.html:292
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
 msgid "May"
 msgstr "Μάιος"
 
 #: templates/marina/partials/invoice_edit_modal.html:293
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
 msgid "June"
 msgstr "Ιούνιος"
 
 #: templates/marina/partials/invoice_edit_modal.html:294
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
 msgid "July"
 msgstr "Ιούλιος"
 
 #: templates/marina/partials/invoice_edit_modal.html:295
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
 msgid "August"
 msgstr "Αύγουστος"
 
 #: templates/marina/partials/invoice_edit_modal.html:296
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
 msgid "September"
 msgstr "Σεπτέμβριος"
 
 #: templates/marina/partials/invoice_edit_modal.html:297
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
 msgid "October"
 msgstr "Οκτώβριος"
 
-#: templates/marina/partials/invoice_edit_modal.html:298
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
 # fuzzy (resolved)
-#| msgid "Number"
+#: templates/marina/partials/invoice_edit_modal.html:298
 msgid "November"
 msgstr "Νοέμβριος"
 
 #: templates/marina/partials/invoice_edit_modal.html:299
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
 msgid "December"
 msgstr "Δεκέμβριος"
 
 # fuzzy (resolved)
-#: templates/marina/partials/menu_preferences_modal.html:3
 # fuzzy (resolved)
-#| msgid "Customer Management"
+#: templates/marina/partials/menu_preferences_modal.html:3
 msgid "Customize Menu"
 msgstr "Προσαρμογή Μενού"
 
@@ -1825,16 +1765,14 @@ msgid ""
 "their provider field cleared."
 msgstr ""
 
-#: templates/marina/partials/provider_delete_confirm.html:13
 # fuzzy (resolved)
-#| msgid "Delete Order"
+#: templates/marina/partials/provider_delete_confirm.html:13
 msgid "Delete Provider"
 msgstr "Διαγραφή Παρόχου"
 
 # fuzzy (resolved)
-#: templates/marina/partials/provider_form.html:5
 # fuzzy (resolved)
-#| msgid "Edit Order"
+#: templates/marina/partials/provider_form.html:5
 msgid "Edit Provider"
 msgstr "Επεξεργασία Παρόχου"
 
@@ -1844,22 +1782,19 @@ msgstr "Επεξεργασία Παρόχου"
 msgid "New Provider"
 msgstr "Νέος Πάροχος"
 
-#: templates/marina/partials/provider_form.html:18
 # fuzzy (resolved)
-#| msgid "Provider Name"
+#: templates/marina/partials/provider_form.html:18
 msgid "Provider / Company Name"
 msgstr "Όνομα Παρόχου / Εταιρείας"
 
-#: templates/marina/partials/provider_form.html:35
 # fuzzy (resolved)
-#| msgid "Service Provider"
+#: templates/marina/partials/provider_form.html:35
 msgid "Save Provider"
 msgstr "Αποθήκευση Παρόχου"
 
 # fuzzy (resolved)
-#: templates/marina/partials/quick_boat_form.html:3
 # fuzzy (resolved)
-#| msgid "New Customer"
+#: templates/marina/partials/quick_boat_form.html:3
 msgid "New Customer & Boat Details"
 msgstr "Στοιχεία Νέου Πελάτη & Σκάφους"
 
@@ -1877,29 +1812,25 @@ msgstr "Πελάτης %(field_label)s: %(error)s"
 msgid "Boat %(field_label)s: %(error)s"
 msgstr "Σκάφος %(field_label)s: %(error)s"
 
-#: templates/marina/partials/quick_boat_form.html:35
 # fuzzy (resolved)
-#| msgid "Customers"
+#: templates/marina/partials/quick_boat_form.html:35
 msgid "Customer Details"
 msgstr "Στοιχεία Πελάτη"
 
 # fuzzy (resolved)
-#: templates/marina/partials/quick_boat_form.html:60
 # fuzzy (resolved)
-#| msgid "Boat Types"
+#: templates/marina/partials/quick_boat_form.html:60
 msgid "Boat Details"
 msgstr "Στοιχεία Σκάφους"
 
 # fuzzy (resolved)
-#: templates/marina/partials/quick_boat_form.html:67
 # fuzzy (resolved)
-#| msgid "Boat Types"
+#: templates/marina/partials/quick_boat_form.html:67
 msgid "Boat Type"
 msgstr "Τύπος Σκάφους"
 
-#: templates/marina/partials/quick_boat_form.html:83
 # fuzzy (resolved)
-#| msgid "Boat Photo"
+#: templates/marina/partials/quick_boat_form.html:83
 msgid "Boat Color"
 msgstr "Χρώμα σκάφους"
 
@@ -1908,15 +1839,13 @@ msgstr "Χρώμα σκάφους"
 msgid "Cancel & Back"
 msgstr "Ακύρωση & Πίσω"
 
-#: templates/marina/partials/quick_boat_form.html:107
 # fuzzy (resolved)
-#| msgid "Date Created"
+#: templates/marina/partials/quick_boat_form.html:107
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: templates/marina/partials/work_order_items_table.html:7
 # fuzzy (resolved)
-#| msgid "Service Name"
+#: templates/marina/partials/work_order_items_table.html:7
 msgid "Service / Part"
 msgstr "Υπηρεσία / Ανταλλακτικό"
 
@@ -1924,28 +1853,24 @@ msgstr "Υπηρεσία / Ανταλλακτικό"
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
 
-#: templates/marina/partials/work_order_items_table.html:19
 # fuzzy (resolved)
-#| msgid "Service"
+#: templates/marina/partials/work_order_items_table.html:19
 msgid "Yard Service"
 msgstr "Υπηρεσία Καρνάγιου"
 
-#: templates/marina/partials/work_order_items_table.html:38
 # fuzzy (resolved)
-#| msgid "No work orders recorded in the yard."
+#: templates/marina/partials/work_order_items_table.html:38
 msgid "No work or parts recorded yet."
 msgstr "Δεν έχουν καταγραφεί ακόμη εργασίες ή ανταλλακτικά."
 
 # fuzzy (resolved)
-#: templates/marina/partials/work_order_items_table.html:46
 # fuzzy (resolved)
-#| msgid "Search customers or boats..."
+#: templates/marina/partials/work_order_items_table.html:46
 msgid "Quick search tasks or parts..."
 msgstr "Γρήγορη αναζήτηση εργασιών ή ανταλλακτικών..."
 
-#: templates/marina/partials/work_order_items_table.html:93
 # fuzzy (resolved)
-#| msgid "Work Order Item"
+#: templates/marina/partials/work_order_items_table.html:93
 msgid "Total Work Order Value"
 msgstr "Συνολική Αξία Εντολής"
 
@@ -2070,1229 +1995,177 @@ msgid "Work Orders (Yard)"
 msgstr "Εντολές Εργασίας (Καρνάγιο)"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:10
+#: templates/marina/work_order_list.html:11
 msgid "Yard Service Management"
 msgstr "Διαχείριση Υπηρεσιών Καρνάγιου"
 
-#: templates/marina/work_order_list.html:11
+#: templates/marina/work_order_list.html:12
 msgid "Manage repairs, maintenance, and dry-dock projects"
 msgstr "Διαχειριστείτε επισκευές, συντήρηση και έργα dry-dock"
 
+#: templates/marina/work_order_list.html:18
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:24
-#, fuzzy
-#| msgid "Actions"
-msgid "Location"
-msgstr "Ενέργειες"
+#| msgid "Search boat or owner..."
+msgid "Search work orders..."
+msgstr "Αναζήτηση εντολών εργασίας..."
 
-#: templates/marina/work_order_list.html:27
-msgid "Value"
-msgstr "Αξία"
-
-#: templates/marina/work_order_list.html:43
-msgid "No location set"
-msgstr "Δεν έχει οριστεί τοποθεσία"
-
-#: templates/marina/work_order_list.html:49
-msgid "to"
-msgstr "έως"
-
-#: templates/marina/work_order_list.html:51
-msgid "Not scheduled"
-msgstr "Δεν έχει προγραμματιστεί"
-
-#: templates/marina/work_order_list.html:56
+#: templates/marina/work_order_list.html:22
+#: templates/marina/work_order_list.html:75
 #, fuzzy
 #| msgid "⏳ Pending"
 msgid "Pending"
 msgstr "⏳ Εκκρεμεί"
 
-#: templates/marina/work_order_list.html:58
+#: templates/marina/work_order_list.html:23
+#: templates/marina/work_order_list.html:77
 msgid "In Progress"
 msgstr "Σε Εξέληξη"
 
-#: templates/marina/work_order_list.html:60
+#: templates/marina/work_order_list.html:24
+#: templates/marina/work_order_list.html:79
 msgid "Completed"
 msgstr "Ολοκληρώθηκε"
 
+# fuzzy (resolved)
+#: templates/marina/work_order_list.html:43
+#, fuzzy
+#| msgid "Actions"
+msgid "Location"
+msgstr "Ενέργειες"
+
+#: templates/marina/work_order_list.html:46
+msgid "Value"
+msgstr "Αξία"
+
+#: templates/marina/work_order_list.html:62
+msgid "No location set"
+msgstr "Δεν έχει οριστεί τοποθεσία"
+
 #: templates/marina/work_order_list.html:68
+msgid "to"
+msgstr "έως"
+
+#: templates/marina/work_order_list.html:70
+msgid "Not scheduled"
+msgstr "Δεν έχει προγραμματιστεί"
+
+#: templates/marina/work_order_list.html:87
 msgid "Checkout & Bill"
 msgstr "Αναχώρηση & Τιμολόγηση"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:71
+#: templates/marina/work_order_list.html:90
 msgid "Edit Order"
 msgstr "Επεξεργασία Εντολής"
 
-#: templates/marina/work_order_list.html:74
+#: templates/marina/work_order_list.html:93
 msgid "Delete Order"
 msgstr "Διαγραφή Εντολής"
 
-#: templates/marina/work_order_list.html:84
+#: templates/marina/work_order_list.html:103
 msgid "No work orders recorded in the yard."
 msgstr "Δεν έχουν καταγραφεί εντολές εργασίας στο καρνάγιο."
 
-#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:15
-msgid "Messages"
-msgstr ""
+#: templates/marina/work_order_list.html:110
+msgid "No matching work orders found."
+msgstr "Δεν βρέθηκαν εντολές εργασίας που να ταιριάζουν."
 
-#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
-msgid "Site Maps"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
-msgid "Static Files"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
-msgid "Syndication"
-msgstr ""
-
-#. Translators: String used to replace omitted page numbers in elided page
-#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
-#: venv/lib/python3.12/site-packages/django/core/paginator.py:30
-msgid "…"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/paginator.py:50
-msgid "That page number is not an integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/paginator.py:52
-msgid "That page number is less than 1"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/paginator.py:54
-msgid "That page contains no results"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:22
-msgid "Enter a valid value."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:104
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:751
-msgid "Enter a valid URL."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:165
-msgid "Enter a valid integer."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:176
-msgid "Enter a valid email address."
-msgstr ""
-
-#. Translators: "letters" means latin letters: a-z and A-Z.
-#: venv/lib/python3.12/site-packages/django/core/validators.py:259
-msgid ""
-"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:267
-msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:281
-#: venv/lib/python3.12/site-packages/django/core/validators.py:289
-#: venv/lib/python3.12/site-packages/django/core/validators.py:318
-msgid "Enter a valid IPv4 address."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:298
-#: venv/lib/python3.12/site-packages/django/core/validators.py:319
-msgid "Enter a valid IPv6 address."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:310
-#: venv/lib/python3.12/site-packages/django/core/validators.py:317
-msgid "Enter a valid IPv4 or IPv6 address."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:353
-msgid "Enter only digits separated by commas."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:359
-#, python-format
-msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:394
-#, python-format
-msgid "Ensure this value is less than or equal to %(limit_value)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:403
-#, python-format
-msgid "Ensure this value is greater than or equal to %(limit_value)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:412
-#, python-format
-msgid "Ensure this value is a multiple of step size %(limit_value)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:422
-#, python-format
-msgid ""
-"Ensure this value has at least %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at least %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:440
-#, python-format
-msgid ""
-"Ensure this value has at most %(limit_value)d character (it has "
-"%(show_value)d)."
-msgid_plural ""
-"Ensure this value has at most %(limit_value)d characters (it has "
-"%(show_value)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:463
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:346
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:385
-msgid "Enter a number."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:465
-#, python-format
-msgid "Ensure that there are no more than %(max)s digit in total."
-msgid_plural "Ensure that there are no more than %(max)s digits in total."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:470
-#, python-format
-msgid "Ensure that there are no more than %(max)s decimal place."
-msgid_plural "Ensure that there are no more than %(max)s decimal places."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:475
-#, python-format
-msgid ""
-"Ensure that there are no more than %(max)s digit before the decimal point."
-msgid_plural ""
-"Ensure that there are no more than %(max)s digits before the decimal point."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:546
-#, python-format
-msgid ""
-"File extension “%(extension)s” is not allowed. Allowed extensions are: "
-"%(allowed_extensions)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/core/validators.py:607
-msgid "Null characters are not allowed."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/base.py:1423
-#: venv/lib/python3.12/site-packages/django/forms/models.py:893
-msgid "and"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/base.py:1425
-#, python-format
-msgid "%(model_name)s with this %(field_labels)s already exists."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/constraints.py:17
-#, python-format
-msgid "Constraint “%(name)s” is violated."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:128
-#, python-format
-msgid "Value %(value)r is not a valid choice."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:129
-msgid "This field cannot be null."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:130
-msgid "This field cannot be blank."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:131
-#, python-format
-msgid "%(model_name)s with this %(field_label)s already exists."
-msgstr ""
-
-#. Translators: The 'lookup_type' is one of 'date', 'year' or
-#. 'month'. Eg: "Title must be unique for pub_date year"
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
-#, python-format
-msgid ""
-"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:173
-#, python-format
-msgid "Field of type: %(field_type)s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1094
-#, python-format
-msgid "“%(value)s” value must be either True or False."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1095
-#, python-format
-msgid "“%(value)s” value must be either True, False, or None."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1097
-msgid "Boolean (Either True or False)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1147
-#, python-format
-msgid "String (up to %(max_length)s)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1149
-msgid "String (unlimited)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1253
-msgid "Comma-separated integers"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1354
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
-"format."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1358
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1493
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
-"date."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1362
-msgid "Date (without time)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1489
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
-"HH:MM[:ss[.uuuuuu]][TZ] format."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1497
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1502
-msgid "Date (with time)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1626
-#, python-format
-msgid "“%(value)s” value must be a decimal number."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1628
-msgid "Decimal number"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1789
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] "
-"[[HH:]MM:]ss[.uuuuuu] format."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1793
 #, fuzzy
-#| msgid "Description"
-msgid "Duration"
-msgstr "Περιγραφή"
+#~| msgid "Description"
+#~ msgid "Duration"
+#~ msgstr "Περιγραφή"
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1845
 #, fuzzy
-#| msgid "Address"
-msgid "Email address"
-msgstr "Διεύθυνση"
+#~| msgid "Address"
+#~ msgid "Email address"
+#~ msgstr "Διεύθυνση"
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1870
-msgid "File path"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1948
-#, python-format
-msgid "“%(value)s” value must be a float."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1950
-msgid "Floating point number"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1990
-#, python-format
-msgid "“%(value)s” value must be an integer."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1992
-msgid "Integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2088
-msgid "Big (8 byte) integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2105
-msgid "Small integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2113
 #, fuzzy
-#| msgid "Address"
-msgid "IPv4 address"
-msgstr "Διεύθυνση"
+#~| msgid "Address"
+#~ msgid "IPv4 address"
+#~ msgstr "Διεύθυνση"
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2144
 #, fuzzy
-#| msgid "Address"
-msgid "IP address"
-msgstr "Διεύθυνση"
+#~| msgid "Address"
+#~ msgid "IP address"
+#~ msgstr "Διεύθυνση"
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2237
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2238
-#, python-format
-msgid "“%(value)s” value must be either None, True or False."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2240
-msgid "Boolean (Either True, False or None)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2291
-msgid "Positive big integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2306
-msgid "Positive integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2321
-msgid "Positive small integer"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2337
-#, python-format
-msgid "Slug (up to %(max_length)s)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2373
-msgid "Text"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2448
-#, python-format
-msgid ""
-"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
-"format."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2452
-#, python-format
-msgid ""
-"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
-"invalid time."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2456
-msgid "Time"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2564
-msgid "URL"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2588
-msgid "Raw binary data"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2653
-#, python-format
-msgid "“%(value)s” is not a valid UUID."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2655
-msgid "Universally unique identifier"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:232
-msgid "File"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:26
-msgid "A JSON object"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:28
-msgid "Value must be valid JSON."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:919
-#, python-format
-msgid "%(model)s instance with %(field)s %(value)r does not exist."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:921
-msgid "Foreign Key (type determined by related field)"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1212
-msgid "One-to-one relationship"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1269
-#, python-format
-msgid "%(from)s-%(to)s relationship"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1271
-#, python-format
-msgid "%(from)s-%(to)s relationships"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1319
-msgid "Many-to-many relationship"
-msgstr ""
-
-#. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
-#: venv/lib/python3.12/site-packages/django/forms/boundfield.py:184
-msgid ":?.!"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:90
-msgid "This field is required."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:297
-msgid "Enter a whole number."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:466
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1231
-msgid "Enter a valid date."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:489
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1232
-msgid "Enter a valid time."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:516
-msgid "Enter a valid date/time."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:550
-msgid "Enter a valid duration."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:551
-#, python-brace-format
-msgid "The number of days must be between {min_days} and {max_days}."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:620
-msgid "No file was submitted. Check the encoding type on the form."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:621
-msgid "No file was submitted."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:622
-msgid "The submitted file is empty."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:624
-#, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
-msgid_plural ""
-"Ensure this filename has at most %(max)d characters (it has %(length)d)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:629
-msgid "Please either submit a file or check the clear checkbox, not both."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:693
-msgid ""
-"Upload a valid image. The file you uploaded was either not an image or a "
-"corrupted image."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:847
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:939
-#: venv/lib/python3.12/site-packages/django/forms/models.py:1566
-#, python-format
-msgid "Select a valid choice. %(value)s is not one of the available choices."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:941
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1060
-#: venv/lib/python3.12/site-packages/django/forms/models.py:1564
-msgid "Enter a list of values."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1061
-msgid "Enter a complete value."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1303
-msgid "Enter a valid UUID."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/fields.py:1333
-msgid "Enter a valid JSON."
-msgstr ""
-
-#. Translators: This is the default suffix added to form field labels
-#: venv/lib/python3.12/site-packages/django/forms/forms.py:98
-msgid ":"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/forms.py:244
-#: venv/lib/python3.12/site-packages/django/forms/forms.py:328
-#, python-format
-msgid "(Hidden field %(name)s) %(error)s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:63
-#, python-format
-msgid ""
-"ManagementForm data is missing or has been tampered with. Missing fields: "
-"%(field_names)s. You may need to file a bug report if the issue persists."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:67
-#, python-format
-msgid "Please submit at most %(num)d form."
-msgid_plural "Please submit at most %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:72
-#, python-format
-msgid "Please submit at least %(num)d form."
-msgid_plural "Please submit at least %(num)d forms."
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
 #, fuzzy
-#| msgid "Work Order"
-msgid "Order"
-msgstr "Εντολή Εργασίας"
+#~| msgid "Work Order"
+#~ msgid "Order"
+#~ msgstr "Εντολή Εργασίας"
 
-#: venv/lib/python3.12/site-packages/django/forms/models.py:886
-#, python-format
-msgid "Please correct the duplicate data for %(field)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:891
-#, python-format
-msgid "Please correct the duplicate data for %(field)s, which must be unique."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:898
-#, python-format
-msgid ""
-"Please correct the duplicate data for %(field_name)s which must be unique "
-"for the %(lookup)s in %(date_field)s."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:907
-msgid "Please correct the duplicate values below."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:1338
-msgid "The inline value did not match the parent instance."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:1429
-msgid "Select a valid choice. That choice is not one of the available choices."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/models.py:1568
-#, python-format
-msgid "“%(pk)s” is not a valid value."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/utils.py:226
-#, python-format
-msgid ""
-"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
-"may be ambiguous or it may not exist."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:463
-msgid "Clear"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:464
-msgid "Currently"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:465
-msgid "Change"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:794
-msgid "Unknown"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:795
-msgid "Yes"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:796
-msgid "No"
-msgstr ""
-
-#. Translators: Please do not add spaces around commas.
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:874
-msgid "yes,no,maybe"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:904
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:921
-#, python-format
-msgid "%(size)d byte"
-msgid_plural "%(size)d bytes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:923
-#, python-format
-msgid "%s KB"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:925
-#, python-format
-msgid "%s MB"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:927
-#, python-format
-msgid "%s GB"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:929
-#, python-format
-msgid "%s TB"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:931
-#, python-format
-msgid "%s PB"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:73
-msgid "p.m."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:74
-msgid "a.m."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:79
-msgid "PM"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:80
-msgid "AM"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:152
-msgid "midnight"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:154
-msgid "noon"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:7
-msgid "Monday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:8
-msgid "Tuesday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:9
-msgid "Wednesday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:10
-msgid "Thursday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:11
-msgid "Friday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:12
-msgid "Saturday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:13
-msgid "Sunday"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:16
-msgid "Mon"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:17
-msgid "Tue"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:18
-msgid "Wed"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:19
-msgid "Thu"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:20
-msgid "Fri"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:21
 #, fuzzy
-#| msgid "Status"
-msgid "Sat"
-msgstr "Κατάσταση"
+#~| msgid "Status"
+#~ msgid "Sat"
+#~ msgstr "Κατάσταση"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:22
-msgid "Sun"
-msgstr ""
+#~ msgctxt "abbrev. month"
+#~ msgid "March"
+#~ msgstr "Μάρτιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:39
-msgid "jan"
-msgstr ""
+#~ msgctxt "abbrev. month"
+#~ msgid "April"
+#~ msgstr "Απρίλιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:40
-msgid "feb"
-msgstr ""
+#~ msgctxt "abbrev. month"
+#~ msgid "May"
+#~ msgstr "Μάιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:41
-msgid "mar"
-msgstr ""
+#~ msgctxt "abbrev. month"
+#~ msgid "June"
+#~ msgstr "Ιούνιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:42
-msgid "apr"
-msgstr ""
+#~ msgctxt "abbrev. month"
+#~ msgid "July"
+#~ msgstr "Ιούλιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:43
-msgid "may"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "January"
+#~ msgstr "Ιανουάριος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:44
-msgid "jun"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "February"
+#~ msgstr "Φεβρουάριος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:45
-msgid "jul"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "March"
+#~ msgstr "Μάρτιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:46
-msgid "aug"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "April"
+#~ msgstr "Απρίλιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:47
-msgid "sep"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "May"
+#~ msgstr "Μάιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:48
-msgid "oct"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "June"
+#~ msgstr "Ιούνιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:49
-msgid "nov"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "July"
+#~ msgstr "Ιούλιος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:50
-msgid "dec"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "August"
+#~ msgstr "Αύγουστος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:53
-msgctxt "abbrev. month"
-msgid "Jan."
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "September"
+#~ msgstr "Σεπτέμβριος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:54
-msgctxt "abbrev. month"
-msgid "Feb."
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "October"
+#~ msgstr "Οκτώβριος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:55
-msgctxt "abbrev. month"
-msgid "March"
-msgstr "Μάρτιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:56
-msgctxt "abbrev. month"
-msgid "April"
-msgstr "Απρίλιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:57
-msgctxt "abbrev. month"
-msgid "May"
-msgstr "Μάιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:58
-msgctxt "abbrev. month"
-msgid "June"
-msgstr "Ιούνιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:59
-msgctxt "abbrev. month"
-msgid "July"
-msgstr "Ιούλιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:60
-msgctxt "abbrev. month"
-msgid "Aug."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:61
-msgctxt "abbrev. month"
-msgid "Sept."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:62
-msgctxt "abbrev. month"
-msgid "Oct."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:63
-msgctxt "abbrev. month"
-msgid "Nov."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:64
-msgctxt "abbrev. month"
-msgid "Dec."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:67
-msgctxt "alt. month"
-msgid "January"
-msgstr "Ιανουάριος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:68
-msgctxt "alt. month"
-msgid "February"
-msgstr "Φεβρουάριος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:69
-msgctxt "alt. month"
-msgid "March"
-msgstr "Μάρτιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:70
-msgctxt "alt. month"
-msgid "April"
-msgstr "Απρίλιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:71
-msgctxt "alt. month"
-msgid "May"
-msgstr "Μάιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:72
-msgctxt "alt. month"
-msgid "June"
-msgstr "Ιούνιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:73
-msgctxt "alt. month"
-msgid "July"
-msgstr "Ιούλιος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:74
-msgctxt "alt. month"
-msgid "August"
-msgstr "Αύγουστος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:75
-msgctxt "alt. month"
-msgid "September"
-msgstr "Σεπτέμβριος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:76
-msgctxt "alt. month"
-msgid "October"
-msgstr "Οκτώβριος"
-
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:77
 # fuzzy (resolved)
-#| msgid "Number"
-msgctxt "alt. month"
-msgid "November"
-msgstr "Νοέμβριος"
+#~| msgid "Number"
+#~ msgctxt "alt. month"
+#~ msgid "November"
+#~ msgstr "Νοέμβριος"
 
-#: venv/lib/python3.12/site-packages/django/utils/dates.py:78
-msgctxt "alt. month"
-msgid "December"
-msgstr "Δεκέμβριος"
-
-#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
-msgid "This is not a valid IPv6 address."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/text.py:138
-#, python-format
-msgctxt "String to return when truncating text"
-msgid "%(truncated_text)s…"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/text.py:319
-msgid "or"
-msgstr ""
-
-#. Translators: This string is used as a separator between list elements
-#: venv/lib/python3.12/site-packages/django/utils/text.py:338
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:135
-msgid ", "
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:8
-#, python-format
-msgid "%(num)d year"
-msgid_plural "%(num)d years"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
-#, python-format
-msgid "%(num)d month"
-msgid_plural "%(num)d months"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
-#, python-format
-msgid "%(num)d week"
-msgid_plural "%(num)d weeks"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
-#, python-format
-msgid "%(num)d day"
-msgid_plural "%(num)d days"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
-#, python-format
-msgid "%(num)d hour"
-msgid_plural "%(num)d hours"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
-#, python-format
-msgid "%(num)d minute"
-msgid_plural "%(num)d minutes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:111
-msgid "Forbidden"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:112
-msgid "CSRF verification failed. Request aborted."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:116
-msgid ""
-"You are seeing this message because this HTTPS site requires a “Referer "
-"header” to be sent by your web browser, but none was sent. This header is "
-"required for security reasons, to ensure that your browser is not being "
-"hijacked by third parties."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:122
-msgid ""
-"If you have configured your browser to disable “Referer” headers, please re-"
-"enable them, at least for this site, or for HTTPS connections, or for “same-"
-"origin” requests."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:127
-msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a "
-"rel=\"noreferrer\" …> for links to third-party sites."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:136
-msgid ""
-"You are seeing this message because this site requires a CSRF cookie when "
-"submitting forms. This cookie is required for security reasons, to ensure "
-"that your browser is not being hijacked by third parties."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:142
-msgid ""
-"If you have configured your browser to disable cookies, please re-enable "
-"them, at least for this site, or for “same-origin” requests."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/csrf.py:148
-msgid "More information is available with DEBUG=True."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:44
-msgid "No year specified"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:64
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:115
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:214
-msgid "Date out of range"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:94
-msgid "No month specified"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:147
-msgid "No day specified"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:194
-msgid "No week specified"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:349
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:380
-#, python-format
-msgid "No %(verbose_name_plural)s available"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:652
-#, python-format
-msgid ""
-"Future %(verbose_name_plural)s not available because "
-"%(class_name)s.allow_future is False."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:692
-#, python-format
-msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/detail.py:56
-#, python-format
-msgid "No %(verbose_name)s found matching the query"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/list.py:70
-msgid "Page is not “last”, nor can it be converted to an int."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/list.py:77
-#, python-format
-msgid "Invalid page (%(page_number)s): %(message)s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/generic/list.py:169
-#, python-format
-msgid "Empty list and “%(class_name)s.allow_empty” is False."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/static.py:38
-msgid "Directory indexes are not allowed here."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/static.py:40
-#, python-format
-msgid "“%(path)s” does not exist"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/static.py:79
-#, python-format
-msgid "Index of %(directory)s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:220
-msgid "The install worked successfully! Congratulations!"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
-#, python-format
-msgid ""
-"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
-"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:221
-#, python-format
-msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" "
-"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
-"configured any URLs."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:229
-msgid "Django Documentation"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:230
-msgid "Topics, references, &amp; how-to’s"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:238
-msgid "Tutorial: A Polling App"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:239
-msgid "Get started with Django"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:247
-msgid "Django Community"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:248
-msgid "Connect, get help, or contribute"
-msgstr ""
+#~ msgctxt "alt. month"
+#~ msgid "December"
+#~ msgstr "Δεκέμβριος"
