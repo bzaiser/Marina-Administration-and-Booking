@@ -99,7 +99,7 @@
                     <option value="">{% trans "All Statuses" %}</option>
                     <option value="OPEN"    {% if status == 'OPEN' %}selected{% endif %}>{% trans "Open" %}</option>
                     <option value="PAID"    {% if status == 'PAID' %}selected{% endif %}>{% trans "Paid" %}</option>
-                    <option value="PARTIAL" {% if status == 'PARTIAL' %}selected{% endif %}>Partial</option>
+                    <option value="PARTIAL" {% if status == 'PARTIAL' %}selected{% endif %}>{% trans "Partial" %}</option>
                 </select>
             </div>
 
@@ -107,20 +107,20 @@
             {# Document type #}
             <div class="col-6 col-md-2">
                 <select name="doc_type" class="form-select form-select-sm" onchange="this.form.submit()">
-                    <option value="">All Doc Types</option>
-                    <option value="RECEIPT"  {% if doc_type == 'RECEIPT' %}selected{% endif %}>Receipt</option>
-                    <option value="TAXFREE"  {% if doc_type == 'TAXFREE' %}selected{% endif %}>Tax Free</option>
-                    <option value="INVOICE"  {% if doc_type == 'INVOICE' %}selected{% endif %}>B2B Invoice</option>
+                    <option value="">{% trans "All Doc Types" %}</option>
+                    <option value="RECEIPT"  {% if doc_type == 'RECEIPT' %}selected{% endif %}>{% trans "Receipt" %}</option>
+                    <option value="TAXFREE"  {% if doc_type == 'TAXFREE' %}selected{% endif %}>{% trans "Tax Free" %}</option>
+                    <option value="INVOICE"  {% if doc_type == 'INVOICE' %}selected{% endif %}>{% trans "B2B Invoice" %}</option>
                 </select>
             </div>
 
             {# myDATA status #}
             <div class="col-6 col-md-2">
                 <select name="mydata" class="form-select form-select-sm" onchange="this.form.submit()">
-                    <option value="">All myDATA</option>
-                    <option value="submitted" {% if mydata == 'submitted' %}selected{% endif %}>✅ Submitted</option>
-                    <option value="pending"   {% if mydata == 'pending'   %}selected{% endif %}>⏳ Pending</option>
-                    <option value="overdue"   {% if mydata == 'overdue'   %}selected{% endif %}>🔴 Overdue</option>
+                    <option value="">{% trans "All myDATA" %}</option>
+                    <option value="submitted" {% if mydata == 'submitted' %}selected{% endif %}>{% trans "✅ Submitted" %}</option>
+                    <option value="pending"   {% if mydata == 'pending'   %}selected{% endif %}>{% trans "⏳ Pending" %}</option>
+                    <option value="overdue"   {% if mydata == 'overdue'   %}selected{% endif %}>{% trans "🔴 Overdue" %}</option>
                 </select>
             </div>
 
@@ -147,7 +147,7 @@
         {# Active filter badges #}
         {% if q or status or doc_type or mydata or date_from or date_to %}
         <div class="d-flex flex-wrap gap-1 mt-2">
-            <small class="text-muted align-self-center me-1">Active:</small>
+            <small class="text-muted align-self-center me-1">{% trans "Active:" %}</small>
 
             {% if q %}
             <span class="badge bg-primary text-white fw-normal">
@@ -159,7 +159,7 @@
             {% if status %}
             <span class="badge {% if status == 'PAID' %}bg-success{% elif status == 'OPEN' %}bg-warning text-dark{% else %}bg-info text-white{% endif %} fw-normal">
                 <i class="bi bi-flag me-1"></i>
-                {% if status == 'PAID' %}Paid{% elif status == 'OPEN' %}Open{% elif status == 'PARTIAL' %}Partial{% else %}{{ status }}{% endif %}
+                {% if status == 'PAID' %}{% trans "Paid" %}{% elif status == 'OPEN' %}{% trans "Open" %}{% elif status == 'PARTIAL' %}{% trans "Partial" %}{% else %}{{ status }}{% endif %}
                 <a href="?q={{ q }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="{% if status == 'OPEN' %}text-dark{% else %}text-white{% endif %} ms-1 text-decoration-none fw-bold">×</a>
             </span>
@@ -168,7 +168,7 @@
             {% if doc_type %}
             <span class="badge bg-secondary text-white fw-normal">
                 <i class="bi bi-file-text me-1"></i>
-                {% if doc_type == 'RECEIPT' %}Receipt{% elif doc_type == 'TAXFREE' %}Tax Free{% elif doc_type == 'INVOICE' %}B2B Invoice{% else %}{{ doc_type }}{% endif %}
+                {% if doc_type == 'RECEIPT' %}{% trans "Receipt" %}{% elif doc_type == 'TAXFREE' %}{% trans "Tax Free" %}{% elif doc_type == 'INVOICE' %}{% trans "B2B Invoice" %}{% else %}{{ doc_type }}{% endif %}
                 <a href="?q={{ q }}&status={{ status }}&mydata={{ mydata }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
@@ -176,7 +176,7 @@
 
             {% if date_from %}
             <span class="badge bg-success text-white fw-normal">
-                <i class="bi bi-calendar-event me-1"></i>From {{ date_from }}
+                <i class="bi bi-calendar-event me-1"></i>{% trans "From" %} {{ date_from }}
                 <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
@@ -184,7 +184,7 @@
 
             {% if date_to %}
             <span class="badge bg-success text-white fw-normal">
-                <i class="bi bi-calendar-event me-1"></i>To {{ date_to }}
+                <i class="bi bi-calendar-event me-1"></i>{% trans "To" %} {{ date_to }}
                 <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&mydata={{ mydata }}&date_from={{ date_from }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
@@ -193,7 +193,7 @@
             {% if mydata %}
             <span class="badge {% if mydata == 'submitted' %}bg-success{% elif mydata == 'overdue' %}bg-danger{% else %}bg-secondary{% endif %} text-white fw-normal">
                 <i class="bi bi-cloud me-1"></i>
-                {% if mydata == 'submitted' %}myDATA: Submitted{% elif mydata == 'pending' %}myDATA: Pending{% elif mydata == 'overdue' %}myDATA: Overdue{% endif %}
+                {% if mydata == 'submitted' %}{% trans "myDATA: Submitted" %}{% elif mydata == 'pending' %}{% trans "myDATA: Pending" %}{% elif mydata == 'overdue' %}{% trans "myDATA: Overdue" %}{% endif %}
                 <a href="?q={{ q }}&status={{ status }}&doc_type={{ doc_type }}&date_from={{ date_from }}&date_to={{ date_to }}&sort={{ sort }}"
                    class="text-white ms-1 text-decoration-none fw-bold">×</a>
             </span>
@@ -210,12 +210,12 @@
                     <tr>
                         <th style="width:40px;"></th>
 
-                        {# Sortable: ID #}
+                         {# Sortable: ID #}
                         {% with col="id" neg="-id" %}
                         <th>
                             <a href="?{{ base_params }}&sort={% if sort == col %}-{{ col }}{% else %}{{ col }}{% endif %}"
                                class="text-decoration-none text-dark d-flex align-items-center gap-1">
-                                ID
+                                {% trans "ID" %}
                                 {% if sort == col %}<i class="bi bi-caret-up-fill text-primary small"></i>
                                 {% elif sort == '-'|add:col %}<i class="bi bi-caret-down-fill text-primary small"></i>
                                 {% else %}<i class="bi bi-arrow-down-up text-muted small opacity-50"></i>{% endif %}
@@ -228,7 +228,7 @@
                         <th>
                             <a href="?{{ base_params }}&sort={% if sort == col %}-{{ col }}{% else %}{{ col }}{% endif %}"
                                class="text-decoration-none text-dark d-flex align-items-center gap-1">
-                                Customer
+                                {% trans "Customer" %}
                                 {% if sort == col %}<i class="bi bi-caret-up-fill text-primary small"></i>
                                 {% elif sort == '-'|add:col %}<i class="bi bi-caret-down-fill text-primary small"></i>
                                 {% else %}<i class="bi bi-arrow-down-up text-muted small opacity-50"></i>{% endif %}
@@ -241,7 +241,7 @@
                         <th>
                             <a href="?{{ base_params }}&sort={% if sort == col %}-{{ col }}{% else %}{{ col }}{% endif %}"
                                class="text-decoration-none text-dark d-flex align-items-center gap-1">
-                                Date
+                                {% trans "Date" %}
                                 {% if sort == col %}<i class="bi bi-caret-up-fill text-primary small"></i>
                                 {% elif sort == '-'|add:col %}<i class="bi bi-caret-down-fill text-primary small"></i>
                                 {% else %}<i class="bi bi-arrow-down-up text-muted small opacity-50"></i>{% endif %}
@@ -254,7 +254,7 @@
                         <th>
                             <a href="?{{ base_params }}&sort={% if sort == col %}-{{ col }}{% else %}{{ col }}{% endif %}"
                                class="text-decoration-none text-dark d-flex align-items-center gap-1">
-                                Status
+                                {% trans "Status" %}
                                 {% if sort == col %}<i class="bi bi-caret-up-fill text-primary small"></i>
                                 {% elif sort == '-'|add:col %}<i class="bi bi-caret-down-fill text-primary small"></i>
                                 {% else %}<i class="bi bi-arrow-down-up text-muted small opacity-50"></i>{% endif %}
@@ -267,7 +267,7 @@
                         <th class="text-end">
                             <a href="?{{ base_params }}&sort={% if sort == col %}-{{ col }}{% else %}{{ col }}{% endif %}"
                                class="text-decoration-none text-dark d-flex align-items-center justify-content-end gap-1">
-                                Amount
+                                {% trans "Amount" %}
                                 {% if sort == col %}<i class="bi bi-caret-up-fill text-primary small"></i>
                                 {% elif sort == '-'|add:col %}<i class="bi bi-caret-down-fill text-primary small"></i>
                                 {% else %}<i class="bi bi-arrow-down-up text-muted small opacity-50"></i>{% endif %}
@@ -275,7 +275,7 @@
                         </th>
                         {% endwith %}
 
-                        <th class="text-end">Actions</th>
+                        <th class="text-end">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>

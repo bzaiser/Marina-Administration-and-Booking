@@ -281,8 +281,8 @@
             <!-- Occupancy Chart Card -->
             <div class="card mb-3">
                 <div class="card-header bg-white py-1 px-3 border-0 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold small">Occupancy</h6>
-                    <div class="small text-muted" style="font-size: 0.7rem;">By Block</div>
+                    <h6 class="mb-0 fw-bold small">{% trans "Occupancy" %}</h6>
+                    <div class="small text-muted" style="font-size: 0.7rem;">{% trans "By Block" %}</div>
                 </div>
                 <div class="card-body py-1 text-center position-relative">
                     <div style="height: 120px;">
@@ -291,7 +291,7 @@
                     <!-- Central Text Overlay -->
                     <div class="position-absolute top-50 start-50 translate-middle text-center" style="pointer-events: none;">
                         <div class="fw-bold text-dark" style="font-size: 1.1rem; line-height: 1;">{{ total_percent }}%</div>
-                        <div class="xx-small text-muted">Full</div>
+                        <div class="xx-small text-muted">{% trans "Full" %}</div>
                     </div>
                 </div>
                 <div class="card-footer bg-white border-0 pt-0 pb-2">
@@ -309,7 +309,7 @@
             <!-- Upcoming Arrivals -->
             <div class="card mb-3">
                 <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold small">Upcoming Arrivals</h6>
+                    <h6 class="mb-0 fw-bold small">{% trans "Upcoming Arrivals" %}</h6>
                     <span class="badge bg-primary-subtle text-primary py-1 px-2" style="font-size: 0.65rem;">{{ upcoming_arrivals|length }}</span>
                 </div>
                 <div class="list-group list-group-flush">
@@ -326,7 +326,7 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="p-2 text-center text-muted small">No arrivals</div>
+                    <div class="p-2 text-center text-muted small">{% trans "No arrivals" %}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -334,7 +334,7 @@
             <!-- Upcoming Departures -->
             <div class="card mb-3 border-warning border-opacity-25">
                 <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold small">Check-Outs</h6>
+                    <h6 class="mb-0 fw-bold small">{% trans "Check-Outs" %}</h6>
                     <span class="badge bg-warning-subtle text-warning py-1 px-2" style="font-size: 0.65rem;">{{ upcoming_departures|length }}</span>
                 </div>
                 <div class="list-group list-group-flush">
@@ -351,7 +351,7 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="p-2 text-center text-muted small">No checkouts</div>
+                    <div class="p-2 text-center text-muted small">{% trans "No checkouts" %}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -359,8 +359,8 @@
             <!-- Pending Invoices -->
             <div class="card">
                 <div class="card-header bg-white py-1 px-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold small">Open Invoices</h6>
-                    <a href="{% url 'invoices_list' %}" class="xx-small text-decoration-none">View All</a>
+                    <h6 class="mb-0 fw-bold small">{% trans "Open Invoices" %}</h6>
+                    <a href="{% url 'invoices_list' %}" class="xx-small text-decoration-none">{% trans "View All" %}</a>
                 </div>
                 <div class="list-group list-group-flush">
                     {% for inv in pending_invoices %}
@@ -370,7 +370,7 @@
                                 <div class="fw-bold text-dark small">
                                     #{{ inv.id }} - {{ inv.customer.name }}
                                     {% if not inv.mydata_mark and inv.date < today %}
-                                        <span class="badge bg-danger ms-1 animate-pulse" style="font-size: 0.5rem;">OVERDUE</span>
+                                        <span class="badge bg-danger ms-1 animate-pulse" style="font-size: 0.5rem;">{% trans "OVERDUE" %}</span>
                                     {% endif %}
                                 </div>
                                 <div class="xx-small text-muted">{{ inv.date|date:"d.m.Y" }}</div>
@@ -381,7 +381,7 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="p-2 text-center text-muted small">All paid! 🎉</div>
+                    <div class="p-2 text-center text-muted small">{% trans "All paid! 🎉" %}</div>
                     {% endfor %}
                 </div>
             </div>

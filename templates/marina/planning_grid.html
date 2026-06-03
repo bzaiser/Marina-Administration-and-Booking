@@ -57,18 +57,18 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0"><i class="bi bi-calendar-range text-primary me-2"></i>Yearly Planning Matrix</h5>
+    <h5 class="mb-0"><i class="bi bi-calendar-range text-primary me-2"></i>{% trans "Yearly Planning Matrix" %}</h5>
     <div class="d-flex gap-2">
         <div class="input-group input-group-sm" style="width: 250px;">
             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" id="searchBoat" class="form-control border-start-0" placeholder="Search boat or owner..." oninput="filterByBoat()">
+            <input type="text" id="searchBoat" class="form-control border-start-0" placeholder="{% trans 'Search boat or owner...' %}" oninput="filterByBoat()">
         </div>
         <select id="year-selector" class="form-select form-select-sm" style="width: 100px;" onchange="loadData()">
             <option value="2026" selected>2026</option>
             <option value="2027">2027</option>
         </select>
         <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-warning" onclick="createWorkOrder()"><i class="bi bi-tools me-1"></i>New Work Order</button>
+            <button class="btn btn-outline-warning" onclick="createWorkOrder()"><i class="bi bi-tools me-1"></i>{% trans "New Work Order" %}</button>
             <button class="btn btn-outline-secondary" onclick="handleZoomIn()"><i class="bi bi-zoom-in"></i></button>
             <button class="btn btn-outline-secondary" onclick="handleZoomOut()"><i class="bi bi-zoom-out"></i></button>
             <button class="btn btn-outline-primary" onclick="loadData()"><i class="bi bi-arrow-clockwise"></i></button>
