@@ -214,6 +214,7 @@
         pagination: true,
         paginationPageSize: 20,
         domLayout: 'normal',
+        popupParent: document.body,
         getRowId: (params) => String(params.data.id),
         onGridReady: (params) => {
             gridApi = params.api;
