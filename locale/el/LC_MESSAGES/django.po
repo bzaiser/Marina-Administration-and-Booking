@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 17:23+0300\n"
+"POT-Creation-Date: 2026-06-03 17:32+0300\n"
 "Language: el\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,7 +214,7 @@ msgstr "Ημερομηνία Αναχώρησης"
 #: templates/marina/invoices_list.html:257
 #: templates/marina/partials/booking_form.html:47
 #: templates/marina/partials/invoice_create_modal.html:41
-#: templates/marina/work_order_list.html:45
+#: templates/marina/work_order_list.html:61
 msgid "Status"
 msgstr "Κατάσταση"
 
@@ -228,6 +228,7 @@ msgstr "Εν Πλω"
 
 #: marina/models.py:229 marina/models.py:347 marina/models.py:379
 #: templates/marina/customers_list.html:275
+#: templates/marina/work_order_list.html:143
 msgid "Notes"
 msgstr "Παρατηρήσεις"
 
@@ -384,6 +385,7 @@ msgstr "Προγραμματισμός"
 
 #: templates/base.html:107 templates/marina/bookings_list.html:320
 #: templates/marina/partials/menu_preferences_modal.html:86
+#: templates/marina/work_order_list.html:142
 msgid "Service"
 msgstr "Υπηρεσίες"
 
@@ -472,7 +474,7 @@ msgstr "Έξοδος"
 #: templates/marina/customers_list.html:164
 #: templates/marina/invoices_list.html:278
 #: templates/marina/providers_list.html:25
-#: templates/marina/work_order_list.html:47
+#: templates/marina/work_order_list.html:63
 msgid "Actions"
 msgstr "Ενέργειες"
 
@@ -540,7 +542,7 @@ msgid "Search bookings..."
 msgstr "Αναζήτηση κρατήσεων..."
 
 #: templates/marina/bookings_list.html:54
-#: templates/marina/work_order_list.html:26
+#: templates/marina/work_order_list.html:41
 msgid "Reset Filters"
 msgstr "Επαναφορά Φίλτρων"
 
@@ -551,7 +553,7 @@ msgstr "Πλέγμα Προγραμματισμού"
 
 #: templates/marina/bookings_list.html:83
 #: templates/marina/invoices_list.html:218
-#: templates/marina/work_order_list.html:41
+#: templates/marina/work_order_list.html:57
 msgid "ID"
 msgstr "ID"
 
@@ -590,6 +592,7 @@ msgid "Error loading booking data. Please try again."
 msgstr "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 "Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
+"Σφάλμα κατά τη φόρτωση των δεδομένων κράτησης. Παρακαλώ δοκιμάστε ξανά."
 
 #: templates/marina/bookings_list.html:297
 msgid "Are you sure you want to delete this booking?"
@@ -609,6 +612,7 @@ msgstr "Ποσότητα"
 
 #: templates/marina/bookings_list.html:323
 #: templates/marina/partials/invoice_edit_modal.html:75
+#: templates/marina/work_order_list.html:146
 msgid "Subtotal"
 msgstr "Μερικό σύνολο"
 
@@ -617,7 +621,7 @@ msgstr "Μερικό σύνολο"
 msgid "Total Services"
 msgstr "Σύνολο Υπηρεσιών"
 
-#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:44
+#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:60
 msgid "Timeline"
 msgstr "Χρονοδιάγραμμα"
 
@@ -864,7 +868,7 @@ msgid "Search customer, ID, item…"
 msgstr "Αναζήτηση πελάτη, ID, αντικειμένου…"
 
 #: templates/marina/invoices_list.html:99
-#: templates/marina/work_order_list.html:21
+#: templates/marina/work_order_list.html:36
 msgid "All Statuses"
 msgstr "Όλες οι Καταστάσεις"
 
@@ -995,13 +999,13 @@ msgstr "Επεξεργασία Εντολής Εργασίας #%(order_id)s"
 # fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:5
 #: templates/marina/planning_grid.html:72
-#: templates/marina/work_order_list.html:30
+#: templates/marina/work_order_list.html:45
 msgid "New Work Order"
 msgstr "Νέα Εντολή Εργασίας"
 
 #: templates/marina/modals/work_order_form.html:22
 #: templates/marina/partials/booking_form.html:22
-#: templates/marina/work_order_list.html:42
+#: templates/marina/work_order_list.html:58
 #, fuzzy
 #| msgid "Customer"
 msgid "Boat / Customer"
@@ -1050,6 +1054,7 @@ msgstr "Επιλέξτε εργασία ή ανταλλακτικό..."
 # fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:91
 #: templates/marina/partials/add_service_form.html:39
+#: templates/marina/work_order_list.html:144
 msgid "Quantity"
 msgstr "Ποσότητα"
 
@@ -1279,7 +1284,8 @@ msgstr "Διαχειριστείτε τις πρόσθετες υπηρεσίε�
 #: templates/marina/partials/booking_form.html:140
 msgid "Departure date cannot be before arrival date."
 msgstr "Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
-"Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
+"Η ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης.Η "
+"ημερομηνία αναχώρησης δεν μπορεί να είναι πριν από την ημερομηνία άφιξης."
 
 #: templates/marina/partials/booking_supplies_list.html:7
 msgid "Utility / Item"
@@ -1672,7 +1678,7 @@ msgstr "Έκπτ%"
 #: templates/marina/partials/invoice_edit_modal.html:217
 #, python-format
 msgid "VAT%%"
-msgstr ""
+msgstr "ΦΠΑ%%"
 
 #: templates/marina/partials/invoice_edit_modal.html:236
 msgid "Updating invoice records..."
@@ -1850,6 +1856,7 @@ msgid "Service / Part"
 msgstr "Υπηρεσία / Ανταλλακτικό"
 
 #: templates/marina/partials/work_order_items_table.html:9
+#: templates/marina/work_order_list.html:145
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
 
@@ -1995,78 +2002,83 @@ msgid "Work Orders (Yard)"
 msgstr "Εντολές Εργασίας (Καρνάγιο)"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:11
+#: templates/marina/work_order_list.html:26
 msgid "Yard Service Management"
 msgstr "Διαχείριση Υπηρεσιών Καρνάγιου"
 
-#: templates/marina/work_order_list.html:12
+#: templates/marina/work_order_list.html:27
 msgid "Manage repairs, maintenance, and dry-dock projects"
 msgstr "Διαχειριστείτε επισκευές, συντήρηση και έργα dry-dock"
 
-#: templates/marina/work_order_list.html:18
 # fuzzy (resolved)
-#| msgid "Search boat or owner..."
+#: templates/marina/work_order_list.html:33
 msgid "Search work orders..."
 msgstr "Αναζήτηση εντολών εργασίας..."
 
-#: templates/marina/work_order_list.html:22
-#: templates/marina/work_order_list.html:75
+#: templates/marina/work_order_list.html:37
+#: templates/marina/work_order_list.html:105
 #, fuzzy
 #| msgid "⏳ Pending"
 msgid "Pending"
 msgstr "⏳ Εκκρεμεί"
 
-#: templates/marina/work_order_list.html:23
-#: templates/marina/work_order_list.html:77
+#: templates/marina/work_order_list.html:38
+#: templates/marina/work_order_list.html:107
 msgid "In Progress"
 msgstr "Σε Εξέληξη"
 
-#: templates/marina/work_order_list.html:24
-#: templates/marina/work_order_list.html:79
+#: templates/marina/work_order_list.html:39
+#: templates/marina/work_order_list.html:109
 msgid "Completed"
 msgstr "Ολοκληρώθηκε"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:43
+#: templates/marina/work_order_list.html:59
 #, fuzzy
 #| msgid "Actions"
 msgid "Location"
 msgstr "Ενέργειες"
 
-#: templates/marina/work_order_list.html:46
+#: templates/marina/work_order_list.html:62
 msgid "Value"
 msgstr "Αξία"
 
-#: templates/marina/work_order_list.html:62
+#: templates/marina/work_order_list.html:92
 msgid "No location set"
 msgstr "Δεν έχει οριστεί τοποθεσία"
 
-#: templates/marina/work_order_list.html:68
+#: templates/marina/work_order_list.html:98
 msgid "to"
 msgstr "έως"
 
-#: templates/marina/work_order_list.html:70
+#: templates/marina/work_order_list.html:100
 msgid "Not scheduled"
 msgstr "Δεν έχει προγραμματιστεί"
 
-#: templates/marina/work_order_list.html:87
+#: templates/marina/work_order_list.html:117
 msgid "Checkout & Bill"
 msgstr "Αναχώρηση & Τιμολόγηση"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:90
+#: templates/marina/work_order_list.html:120
 msgid "Edit Order"
 msgstr "Επεξεργασία Εντολής"
 
-#: templates/marina/work_order_list.html:93
+#: templates/marina/work_order_list.html:123
 msgid "Delete Order"
 msgstr "Διαγραφή Εντολής"
 
-#: templates/marina/work_order_list.html:103
+#: templates/marina/work_order_list.html:136
+# fuzzy (resolved)
+#| msgid "Service"
+msgid "Services & Tasks"
+msgstr "Υπηρεσίες & Εργασίες"
+
+#: templates/marina/work_order_list.html:171
 msgid "No work orders recorded in the yard."
 msgstr "Δεν έχουν καταγραφεί εντολές εργασίας στο καρνάγιο."
 
-#: templates/marina/work_order_list.html:110
+#: templates/marina/work_order_list.html:178
 msgid "No matching work orders found."
 msgstr "Δεν βρέθηκαν εντολές εργασίας που να ταιριάζουν."
 

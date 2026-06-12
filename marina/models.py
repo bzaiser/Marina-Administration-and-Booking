@@ -593,3 +593,18 @@ class Tenant(models.Model):
     class Meta:
         verbose_name = "Tenant"
         verbose_name_plural = "Tenants"
+
+
+class VatRateConfig(models.Model):
+    rate = models.DecimalField(_("VAT Rate (%)"), max_digits=5, decimal_places=2, unique=True, help_text="e.g. 24.00, 17.00, 13.00")
+    mydata_vat_category = models.IntegerField(_("myDATA VAT Category Code"), help_text="myDATA VAT Category code (e.g. 1: 24%, 2: 13%, 4: 17%, 7: 0%, etc.)")
+    label = models.CharField(_("Label"), max_length=100, help_text="e.g. Standard rate, Samos reduced standard rate, etc.")
+
+    def __str__(self):
+        return f"{self.rate}% - {self.label} (myDATA code: {self.mydata_vat_category})"
+
+    class Meta:
+        verbose_name = _("VAT Rate Configuration")
+        verbose_name_plural = _("VAT Rate Configurations")
+        ordering = ['-rate']
+

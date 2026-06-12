@@ -108,7 +108,19 @@
                             <input type="number" step="0.1" class="form-control form-control-sm text-end" name="item_{{ item.id }}_discount_pct" value="{{ item.discount_pct|stringformat:".2f" }}" oninput="calculateRowTotal({{ item.id }})">
                         </td>
                         <td class="text-end">
-                            <input type="number" step="0.1" class="form-control form-control-sm text-end" name="item_{{ item.id }}_tax_rate" value="{{ item.tax_rate|stringformat:".1f" }}" oninput="calculateRowTotal({{ item.id }})">
+                            <select class="form-select form-select-sm text-end" name="item_{{ item.id }}_tax_rate" onchange="calculateRowTotal({{ item.id }})">
+                                {% for vr in vat_rates %}
+                                <option value="{{ vr.rate|stringformat:".2f" }}" {% if item.tax_rate == vr.rate %}selected{% endif %}>{{ vr.rate|floatformat:0 }}%</option>
+                                {% empty %}
+                                <option value="24.00" {% if item.tax_rate == 24.00 %}selected{% endif %}>24%</option>
+                                <option value="17.00" {% if item.tax_rate == 17.00 %}selected{% endif %}>17%</option>
+                                <option value="13.00" {% if item.tax_rate == 13.00 %}selected{% endif %}>13%</option>
+                                <option value="9.00" {% if item.tax_rate == 9.00 %}selected{% endif %}>9%</option>
+                                <option value="6.00" {% if item.tax_rate == 6.00 %}selected{% endif %}>6%</option>
+                                <option value="4.00" {% if item.tax_rate == 4.00 %}selected{% endif %}>4%</option>
+                                <option value="0.00" {% if item.tax_rate == 0.00 %}selected{% endif %}>0%</option>
+                                {% endfor %}
+                            </select>
                         </td>
                         <td class="text-end fw-bold text-dark pt-3" id="item-total-{{ item.id }}">
                             €{{ item.subtotal|floatformat:2 }}
@@ -144,7 +156,10 @@
         <!-- Add New Item Section (Inside the card but logic stays HTMX) -->
         <div class="card border-primary border-opacity-25 rounded-3 mb-3 shadow-sm">
             <div class="card-header bg-primary bg-opacity-10 py-2 d-flex justify-content-between align-items-center">
-                <small class="fw-bold text-primary text-uppercase xx-small">{% trans "Add New Line Item" %}</small>
+                <div class="d-flex align-items-center gap-2">
+                    <small class="fw-bold text-primary text-uppercase xx-small">{% trans "Add New Line Item" %}</small>
+                    <small class="text-muted xx-small" style="font-size: 75%;"><i class="bi bi-info-circle text-primary me-1"></i>{% trans "VAT rates map to myDATA categories." %}</small>
+                </div>
                 
                 <!-- Searchable service input logic with dropdown catalog -->
                 <div class="position-relative" style="width: 280px;">
@@ -167,7 +182,7 @@
                                 </thead>
                                 <tbody id="catalogSearchResultsBody">
                                     {% for s in services %}
-                                    <tr class="catalog-service-row" style="cursor: pointer;" data-name="{{ s.name }}" data-category="{{ s.category.name|default:'General' }}" data-description="{{ s.description|default:'' }}" data-price="{{ s.price_per_unit|stringformat:".2f" }}" data-unit="{{ s.unit }}" data-code="{{ s.id }}">
+                                    <tr class="catalog-service-row" style="cursor: pointer;" data-name="{{ s.name }}" data-category="{{ s.category.name|default:'General' }}" data-description="{{ s.description|default:'' }}" data-price="{{ s.price_per_unit|stringformat:".2f" }}" data-unit="{{ s.unit }}" data-code="{{ s.id }}" data-tax-rate="{{ s.tax_rate|stringformat:".2f" }}">
                                         <td class="ps-3 fw-bold text-primary">{{ s.name }}</td>
                                         <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ s.category.name|default:'General' }}</span></td>
                                         <td class="text-muted text-truncate" style="max-width: 180px;">{{ s.description|default:'-' }}</td>
@@ -272,7 +287,7 @@
         }
     }
 
-    function fillInvoiceItem(name, price, unit, code) {
+    function fillInvoiceItem(name, price, unit, code, taxRate) {
         const modal = document.querySelector('#modals-here');
         const codeField = modal.querySelector('#main-invoice-form input[name="item_code"]');
         const descField = modal.querySelector('#main-invoice-form input[name="description"]');
@@ -280,7 +295,7 @@
         const qtyField = modal.querySelector('#main-invoice-form input[name="quantity"]');
         const unitField = modal.querySelector('#main-invoice-form select[name="unit"]');
         const discField = modal.querySelector('#main-invoice-form input[name="discount_pct"]');
-        const vatField = modal.querySelector('#main-invoice-form input[name="tax_rate"]');
+        const vatField = modal.querySelector('#main-invoice-form [name="tax_rate"]');
         
         if (codeField && code) codeField.value = code;
         if (descField) {
@@ -307,7 +322,13 @@
         if (qtyField) qtyField.value = "1.0";
         if (unitField) unitField.value = unit;
         if (discField) discField.value = "0.0";
-        if (vatField) vatField.value = "24.0"; // Default Greek VAT
+        if (vatField) {
+            if (taxRate) {
+                vatField.value = taxRate;
+            } else {
+                vatField.value = "24.00"; // Default Greek VAT
+            }
+        }
         
         updatePreviewTotal();
         
@@ -360,8 +381,9 @@
                     const price = this.getAttribute('data-price');
                     const unit = this.getAttribute('data-unit');
                     const code = this.getAttribute('data-code');
+                    const taxRate = this.getAttribute('data-tax-rate');
                     
-                    fillInvoiceItem(name, price, unit, code);
+                    fillInvoiceItem(name, price, unit, code, taxRate);
                     resultsDiv.style.display = 'none';
                     searchInput.value = ""; // Clear search input
                 });

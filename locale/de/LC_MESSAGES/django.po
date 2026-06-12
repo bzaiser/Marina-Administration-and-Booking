@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 17:23+0300\n"
+"POT-Creation-Date: 2026-06-03 17:32+0300\n"
 "Language: de\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,7 +214,7 @@ msgstr "Abreisedatum"
 #: templates/marina/invoices_list.html:257
 #: templates/marina/partials/booking_form.html:47
 #: templates/marina/partials/invoice_create_modal.html:41
-#: templates/marina/work_order_list.html:45
+#: templates/marina/work_order_list.html:61
 msgid "Status"
 msgstr "Status"
 
@@ -228,6 +228,7 @@ msgstr "Auf See"
 
 #: marina/models.py:229 marina/models.py:347 marina/models.py:379
 #: templates/marina/customers_list.html:275
+#: templates/marina/work_order_list.html:143
 msgid "Notes"
 msgstr "Notizen"
 
@@ -384,6 +385,7 @@ msgstr "Planung"
 
 #: templates/base.html:107 templates/marina/bookings_list.html:320
 #: templates/marina/partials/menu_preferences_modal.html:86
+#: templates/marina/work_order_list.html:142
 msgid "Service"
 msgstr "Werft/Service"
 
@@ -472,7 +474,7 @@ msgstr "Out"
 #: templates/marina/customers_list.html:164
 #: templates/marina/invoices_list.html:278
 #: templates/marina/providers_list.html:25
-#: templates/marina/work_order_list.html:47
+#: templates/marina/work_order_list.html:63
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -540,7 +542,7 @@ msgid "Search bookings..."
 msgstr "Buchungen suchen..."
 
 #: templates/marina/bookings_list.html:54
-#: templates/marina/work_order_list.html:26
+#: templates/marina/work_order_list.html:41
 msgid "Reset Filters"
 msgstr "Filter zurücksetzen"
 
@@ -551,7 +553,7 @@ msgstr "Planungsraster"
 
 #: templates/marina/bookings_list.html:83
 #: templates/marina/invoices_list.html:218
-#: templates/marina/work_order_list.html:41
+#: templates/marina/work_order_list.html:57
 msgid "ID"
 msgstr "ID"
 
@@ -607,6 +609,7 @@ msgstr "Menge"
 
 #: templates/marina/bookings_list.html:323
 #: templates/marina/partials/invoice_edit_modal.html:75
+#: templates/marina/work_order_list.html:146
 msgid "Subtotal"
 msgstr "Zwischensumme"
 
@@ -615,7 +618,7 @@ msgstr "Zwischensumme"
 msgid "Total Services"
 msgstr "Dienstleistungen Gesamt"
 
-#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:44
+#: templates/marina/calendar.html:5 templates/marina/work_order_list.html:60
 msgid "Timeline"
 msgstr "Zeitachse"
 
@@ -862,7 +865,7 @@ msgid "Search customer, ID, item…"
 msgstr "Suche nach Kunde, ID, Position…"
 
 #: templates/marina/invoices_list.html:99
-#: templates/marina/work_order_list.html:21
+#: templates/marina/work_order_list.html:36
 msgid "All Statuses"
 msgstr "Alle Status"
 
@@ -993,13 +996,13 @@ msgstr "Arbeitsauftrag bearbeiten #%(order_id)s"
 # fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:5
 #: templates/marina/planning_grid.html:72
-#: templates/marina/work_order_list.html:30
+#: templates/marina/work_order_list.html:45
 msgid "New Work Order"
 msgstr "Neuer Arbeitsauftrag"
 
 #: templates/marina/modals/work_order_form.html:22
 #: templates/marina/partials/booking_form.html:22
-#: templates/marina/work_order_list.html:42
+#: templates/marina/work_order_list.html:58
 #, fuzzy
 #| msgid "Customer"
 msgid "Boat / Customer"
@@ -1048,6 +1051,7 @@ msgstr "Aufgabe oder Teil auswählen..."
 # fuzzy (resolved)
 #: templates/marina/modals/work_order_form.html:91
 #: templates/marina/partials/add_service_form.html:39
+#: templates/marina/work_order_list.html:144
 msgid "Quantity"
 msgstr "Menge"
 
@@ -1296,7 +1300,8 @@ msgstr "Marina-Lieferung"
 #: templates/marina/partials/booking_supplies_list.html:36
 msgid "No supplies (water, power, etc.) recorded for this stay."
 msgstr "Für diesen Aufenthalt wurden keine Vorräte (Wasser, Strom usw.) erfasst."
-"Für diesen Aufenthalt wurden keine Vorräte (Wasser, Strom usw.) erfasst."
+"Für diesen Aufenthalt wurden keine Vorräte (Wasser, Strom usw.) erfasst.Für "
+"diesen Aufenthalt wurden keine Vorräte (Wasser, Strom usw.) erfasst."
 
 #: templates/marina/partials/booking_supplies_list.html:45
 msgid "Quick Add Supply..."
@@ -1670,7 +1675,7 @@ msgstr "Rabatt%"
 #: templates/marina/partials/invoice_edit_modal.html:217
 #, python-format
 msgid "VAT%%"
-msgstr ""
+msgstr "MwSt.%%"
 
 #: templates/marina/partials/invoice_edit_modal.html:236
 msgid "Updating invoice records..."
@@ -1848,6 +1853,7 @@ msgid "Service / Part"
 msgstr "Dienstleistung / Teil"
 
 #: templates/marina/partials/work_order_items_table.html:9
+#: templates/marina/work_order_list.html:145
 msgid "Unit Price"
 msgstr "Einzelpreis"
 
@@ -1993,78 +1999,83 @@ msgid "Work Orders (Yard)"
 msgstr "Arbeitsaufträge (Werft)"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:11
+#: templates/marina/work_order_list.html:26
 msgid "Yard Service Management"
 msgstr "Werft-Serviceverwaltung"
 
-#: templates/marina/work_order_list.html:12
+#: templates/marina/work_order_list.html:27
 msgid "Manage repairs, maintenance, and dry-dock projects"
 msgstr "Verwalten Sie Reparaturen, Wartung und Trockendock-Projekte"
 
-#: templates/marina/work_order_list.html:18
 # fuzzy (resolved)
-#| msgid "Search boat or owner..."
+#: templates/marina/work_order_list.html:33
 msgid "Search work orders..."
 msgstr "Arbeitsaufträge suchen..."
 
-#: templates/marina/work_order_list.html:22
-#: templates/marina/work_order_list.html:75
+#: templates/marina/work_order_list.html:37
+#: templates/marina/work_order_list.html:105
 #, fuzzy
 #| msgid "⏳ Pending"
 msgid "Pending"
 msgstr "⏳ Ausstehend"
 
-#: templates/marina/work_order_list.html:23
-#: templates/marina/work_order_list.html:77
+#: templates/marina/work_order_list.html:38
+#: templates/marina/work_order_list.html:107
 msgid "In Progress"
 msgstr "In Bearbeitung"
 
-#: templates/marina/work_order_list.html:24
-#: templates/marina/work_order_list.html:79
+#: templates/marina/work_order_list.html:39
+#: templates/marina/work_order_list.html:109
 msgid "Completed"
 msgstr "Abgeschlossen"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:43
+#: templates/marina/work_order_list.html:59
 #, fuzzy
 #| msgid "Actions"
 msgid "Location"
 msgstr "Aktionen"
 
-#: templates/marina/work_order_list.html:46
+#: templates/marina/work_order_list.html:62
 msgid "Value"
 msgstr "Wert"
 
-#: templates/marina/work_order_list.html:62
+#: templates/marina/work_order_list.html:92
 msgid "No location set"
 msgstr "Kein Liegeplatz festgelegt"
 
-#: templates/marina/work_order_list.html:68
+#: templates/marina/work_order_list.html:98
 msgid "to"
 msgstr "bis"
 
-#: templates/marina/work_order_list.html:70
+#: templates/marina/work_order_list.html:100
 msgid "Not scheduled"
 msgstr "Nicht geplant"
 
-#: templates/marina/work_order_list.html:87
+#: templates/marina/work_order_list.html:117
 msgid "Checkout & Bill"
 msgstr "Abreise & Rechnung"
 
 # fuzzy (resolved)
-#: templates/marina/work_order_list.html:90
+#: templates/marina/work_order_list.html:120
 msgid "Edit Order"
 msgstr "Auftrag bearbeiten"
 
-#: templates/marina/work_order_list.html:93
+#: templates/marina/work_order_list.html:123
 msgid "Delete Order"
 msgstr "Auftrag löschen"
 
-#: templates/marina/work_order_list.html:103
+#: templates/marina/work_order_list.html:136
+# fuzzy (resolved)
+#| msgid "Service"
+msgid "Services & Tasks"
+msgstr "Dienstleistungen & Aufgaben"
+
+#: templates/marina/work_order_list.html:171
 msgid "No work orders recorded in the yard."
 msgstr "Keine Arbeitsaufträge in der Werft erfasst."
 
-#: templates/marina/work_order_list.html:110
+#: templates/marina/work_order_list.html:178
 msgid "No matching work orders found."
 msgstr "Keine passenden Arbeitsaufträge gefunden."
 

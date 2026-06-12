@@ -3,6 +3,21 @@
 
 {% block title %}{% trans "Work Orders (Yard)" %} - Marina Samos{% endblock %}
 
+{% block extra_css %}
+<style>
+    .toggle-items-btn .bi-chevron-right {
+        display: inline-block;
+        transition: transform 0.2s ease-in-out;
+    }
+    .toggle-items-btn[aria-expanded="true"] .bi-chevron-right {
+        transform: rotate(90deg);
+    }
+    .items-row {
+        background-color: #f8f9fa !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="card shadow-sm border-0">
     <div class="card-header bg-white py-3">
@@ -38,6 +53,7 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
+                        <th style="width: 40px;"></th>
                         <th>{% trans "ID" %}</th>
                         <th>{% trans "Boat / Customer" %}</th>
                         <th>{% trans "Location" %}</th>
@@ -50,7 +66,21 @@
                 <tbody id="work-order-table-body">
                     {% for order in orders %}
                     <tr class="align-middle work-order-row" data-status="{{ order.status }}">
-                        <td><span class="text-muted">#{{ order.id }}</span></td>
+                        <td class="text-center">
+                            {% if order.items.all %}
+                            <button class="btn btn-sm btn-link p-0 text-muted toggle-items-btn" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#items-collapse-{{ order.id }}" 
+                                    aria-expanded="false" 
+                                    aria-controls="items-collapse-{{ order.id }}">
+                                <i class="bi bi-chevron-right fs-6 text-warning"></i>
+                            </button>
+                            {% else %}
+                            <i class="bi bi-dash text-muted small"></i>
+                            {% endif %}
+                        </td>
+                        <td><span class="text-muted order-id">#{{ order.id }}</span></td>
                         <td>
                             <div class="fw-bold boat-name">{{ order.boat.name }}</div>
                             <div class="small text-muted customer-name">{{ order.customer.name }}</div>
@@ -96,16 +126,54 @@
                             </div>
                         </td>
                     </tr>
+                    {% if order.items.all %}
+                    <tr class="items-row bg-light" id="items-row-{{ order.id }}" data-status="{{ order.status }}">
+                        <td colspan="8" class="p-0 border-0">
+                            <div class="collapse" id="items-collapse-{{ order.id }}">
+                                <div class="px-4 py-3 border-bottom bg-light">
+                                    <h6 class="fw-bold mb-3 text-secondary d-flex align-items-center">
+                                        <i class="bi bi-list-task me-2 text-warning"></i>
+                                        {% trans "Services & Tasks" %}
+                                    </h6>
+                                    <div class="table-responsive bg-white rounded-3 shadow-sm border overflow-hidden">
+                                        <table class="table table-sm table-borderless mb-0 align-middle">
+                                            <thead class="table-light border-bottom">
+                                                <tr class="small text-uppercase text-muted fw-bold">
+                                                    <th class="ps-3 py-2">{% trans "Service" %}</th>
+                                                    <th class="py-2">{% trans "Notes" %}</th>
+                                                    <th class="text-end py-2">{% trans "Quantity" %}</th>
+                                                    <th class="text-end py-2">{% trans "Unit Price" %}</th>
+                                                    <th class="text-end py-2 pe-3">{% trans "Subtotal" %}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in order.items.all %}
+                                                <tr class="border-bottom-0">
+                                                    <td class="ps-3 py-2 fw-semibold text-dark">{{ item.service.name }}</td>
+                                                    <td class="py-2 text-muted small">{{ item.notes|default:"-" }}</td>
+                                                    <td class="text-end py-2">{{ item.quantity }}</td>
+                                                    <td class="text-end py-2">€{{ item.unit_price|floatformat:2 }}</td>
+                                                    <td class="text-end py-2 pe-3 fw-bold text-dark">€{{ item.total_price|floatformat:2 }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
                     {% empty %}
                     <tr id="empty-row">
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <i class="bi bi-tools fs-1 d-block mb-2"></i>
                             {% trans "No work orders recorded in the yard." %}
                         </td>
                     </tr>
                     {% endfor %}
                     <tr id="no-results-row" style="display: none;">
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-muted">
                             <i class="bi bi-search fs-1 d-block mb-2"></i>
                             {% trans "No matching work orders found." %}
                         </td>
@@ -131,11 +199,14 @@
         let visibleCount = 0;
 
         rows.forEach(row => {
-            const orderId = row.querySelector('td:first-child').textContent.toLowerCase();
+            const orderIdEl = row.querySelector('.order-id');
+            const orderId = orderIdEl ? orderIdEl.textContent.toLowerCase() : '';
             const boatName = row.querySelector('.boat-name') ? row.querySelector('.boat-name').textContent.toLowerCase() : '';
             const customerName = row.querySelector('.customer-name') ? row.querySelector('.customer-name').textContent.toLowerCase() : '';
             const location = row.querySelector('.location-badge') ? row.querySelector('.location-badge').textContent.toLowerCase() : '';
             const rowStatus = row.getAttribute('data-status');
+            const orderIdClean = orderId.replace('#', '').trim();
+            const itemsRow = document.getElementById(`items-row-${orderIdClean}`);
 
             const matchesQuery = !query || 
                 orderId.includes(query) || 
@@ -147,9 +218,20 @@
 
             if (matchesQuery && matchesStatus) {
                 row.style.display = '';
+                if (itemsRow) {
+                    itemsRow.style.display = '';
+                }
                 visibleCount++;
             } else {
                 row.style.display = 'none';
+                if (itemsRow) {
+                    itemsRow.style.display = 'none';
+                    // also collapse it if it was open
+                    const collapseEl = document.getElementById(`items-collapse-${orderIdClean}`);
+                    if (collapseEl && collapseEl.classList.contains('show')) {
+                        bootstrap.Collapse.getOrCreateInstance(collapseEl).hide();
+                    }
+                }
             }
         });
 

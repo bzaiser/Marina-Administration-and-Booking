@@ -89,10 +89,36 @@ def send_invoice_to_mydata(invoice):
         row.line_number = i
         row.net_value = Decimal(str(item.unit_price * Decimal(item.quantity)))
         
-        # Mapping VAT (Assuming 24% by default for GR)
-        # TODO: Use item's actual tax rate if available
-        row.vat_category = VatCategory.VAT_1 # 24%
-        row.vat_amount = row.net_value * Decimal("0.24")
+        # Mapping VAT dynamically based on VatRateConfig
+        from marina.models import VatRateConfig
+        item_tax_rate = Decimal(str(item.tax_rate or 24.00))
+        
+        # Default fallback is VAT_1 (24%)
+        row.vat_category = VatCategory.VAT_1
+        
+        # Try to find corresponding category in DB
+        vat_cfg = VatRateConfig.objects.filter(rate=item_tax_rate).first()
+        if vat_cfg:
+            try:
+                row.vat_category = VatCategory(vat_cfg.mydata_vat_category)
+            except ValueError:
+                pass
+        else:
+            # Fallback mappings for standard Greek rates if not found in DB
+            fallback_map = {
+                Decimal("24.00"): VatCategory.VAT_1,
+                Decimal("13.00"): VatCategory.VAT_2,
+                Decimal("6.00"): VatCategory.VAT_3,
+                Decimal("17.00"): VatCategory.VAT_4,
+                Decimal("9.00"): VatCategory.VAT_5,
+                Decimal("4.00"): VatCategory.VAT_6,
+                Decimal("0.00"): VatCategory.VAT_7,
+            }
+            if item_tax_rate in fallback_map:
+                row.vat_category = fallback_map[item_tax_rate]
+
+        # Calculate VAT amount
+        row.vat_amount = row.net_value * (item_tax_rate / Decimal("100.0"))
         
         # Classification (Mandatory for myDATA)
         row.income_classification = [

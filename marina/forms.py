@@ -1,5 +1,5 @@
 from django import forms
-from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider, Service, WorkOrder, WorkOrderItem, BookingSupply
+from .models import Booking, Boat, Customer, Berth, Country, Invoice, InvoiceItem, ServiceProvider, Service, WorkOrder, WorkOrderItem, BookingSupply, VatRateConfig
 
 class InvoiceForm(forms.ModelForm):
     discount = forms.DecimalField(required=False, initial=0, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}))
@@ -39,6 +39,22 @@ class InvoiceForm(forms.ModelForm):
         }
 
 class InvoiceItemForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            configs = VatRateConfig.objects.all().order_by('-rate')
+            choices = [(f"{cfg.rate:.2f}", f"{cfg.rate:.0f}% ({cfg.label})") for cfg in configs]
+            if not choices:
+                choices = [("24.00", "24%"), ("17.00", "17%"), ("13.00", "13%"), ("9.00", "9%"), ("6.00", "6%"), ("4.00", "4%"), ("0.00", "0%")]
+        except Exception:
+            choices = [("24.00", "24%"), ("17.00", "17%"), ("13.00", "13%"), ("9.00", "9%"), ("6.00", "6%"), ("4.00", "4%"), ("0.00", "0%")]
+        
+        self.fields['tax_rate'] = forms.ChoiceField(
+            choices=choices,
+            widget=forms.Select(attrs={'class': 'form-select'}),
+            label="VAT %"
+        )
+
     class Meta:
         model = InvoiceItem
         fields = ['item_code', 'description', 'quantity', 'unit', 'unit_price', 'discount_pct', 'tax_rate']
@@ -49,7 +65,6 @@ class InvoiceItemForm(forms.ModelForm):
             'unit': forms.Select(attrs={'class': 'form-select'}),
             'unit_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'discount_pct': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '0.00%'}),
-            'tax_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': '24.00%'}),
         }
 
 class ServiceProviderForm(forms.ModelForm):

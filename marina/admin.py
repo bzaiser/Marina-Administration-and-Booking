@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models.functions import Length
-from .models import Customer, Boat, Berth, Booking, PriceRate, Service, ServiceCategory, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply, TenantConfig, UserMenuPreference, Tenant
+from .models import Customer, Boat, Berth, Booking, PriceRate, Service, ServiceCategory, Invoice, InvoiceItem, Block, WorkOrder, WorkOrderItem, Country, ServiceProvider, BookingSupply, TenantConfig, UserMenuPreference, Tenant, VatRateConfig
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -130,3 +130,11 @@ class TenantAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'owner_email', 'is_active', 'created_at')
     search_fields = ('name', 'slug', 'owner_email')
     list_filter = ('is_active',)
+
+
+@admin.register(VatRateConfig)
+class VatRateConfigAdmin(admin.ModelAdmin):
+    list_display = ('rate', 'label', 'mydata_vat_category')
+    search_fields = ('label',)
+    ordering = ('-rate',)
+

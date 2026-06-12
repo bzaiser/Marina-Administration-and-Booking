@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utils import render_to_pdf
-from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, WorkOrder, WorkOrderItem, BookingSupply, TenantConfig, UserMenuPreference
+from .models import Berth, Booking, Customer, Invoice, Block, Boat, InvoiceItem, Service, ServiceProvider, WorkOrder, WorkOrderItem, BookingSupply, TenantConfig, UserMenuPreference, VatRateConfig
 from .forms import BookingForm, CustomerForm, BoatForm, InvoiceForm, InvoiceItemForm, WorkOrderForm, WorkOrderItemForm, BookingSupplyForm
 from .mydata_utils import send_invoice_to_mydata
 from django.contrib import messages
@@ -900,6 +900,7 @@ def invoice_edit(request, pk):
     # These should be available for both GET and invalid POST
     item_form = InvoiceItemForm()
     services = Service.objects.all().order_by('name')
+    vat_rates = VatRateConfig.objects.all().order_by('-rate')
     
     template = 'marina/partials/invoice_edit_modal.html'
     if not request.htmx:
@@ -910,10 +911,12 @@ def invoice_edit(request, pk):
         'form': form,
         'item_form': item_form,
         'services': services,
+        'vat_rates': vat_rates,
         'partial_template': 'marina/partials/invoice_edit_modal.html',
         'title': f'Edit Invoice #{invoice.id}',
         'wrapper_class': 'col-lg-10 col-xl-9 col-xxl-8 col-md-12'
     })
+
 
 @login_required
 def invoice_add_item(request, pk):
@@ -937,14 +940,17 @@ def invoice_add_item(request, pk):
         form = InvoiceForm(instance=invoice)
         item_form = InvoiceItemForm()
         services = Service.objects.all().order_by('name')
+        vat_rates = VatRateConfig.objects.all().order_by('-rate')
         return render(request, 'marina/partials/invoice_edit_modal.html', {
             'invoice': invoice,
             'form': form,
             'item_form': item_form,
             'services': services,
+            'vat_rates': vat_rates,
             'title': f'Edit Invoice #{invoice.id}'
         })
     return redirect('invoice_edit', pk=pk)
+
 
 @login_required
 def invoice_remove_item(request, pk):
@@ -965,11 +971,13 @@ def invoice_remove_item(request, pk):
         form = InvoiceForm(instance=invoice)
         item_form = InvoiceItemForm()
         services = Service.objects.all().order_by('name')
+        vat_rates = VatRateConfig.objects.all().order_by('-rate')
         return render(request, 'marina/partials/invoice_edit_modal.html', {
             'invoice': invoice,
             'form': form,
             'item_form': item_form,
             'services': services,
+            'vat_rates': vat_rates,
             'title': f'Edit Invoice #{invoice.id}'
         })
     return redirect('invoice_edit', pk=invoice.id)
